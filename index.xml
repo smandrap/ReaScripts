@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="5c3b4f92bad9684eb7d96b94e7f3e458050b586f">
+<index version="1" name="smandrap ReaScripts" commit="afae86833f7205a1daa8f7987fb21dd7df78ec5d">
+  <category name="Items">
+    <reapack name="smandrap_Add Empty MIDI take to selected MIDI Items.lua" type="script" desc="Add Empty MIDI take to selected MIDI Items">
+      <version name="1.0" author="smandrap" time="2023-08-30T15:21:09Z">
+        <changelog><![CDATA[Initial release]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/afae86833f7205a1daa8f7987fb21dd7df78ec5d/Items/smandrap_Add%20Empty%20MIDI%20take%20to%20selected%20MIDI%20Items.lua</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Various">
     <reapack name="smandrap_Set selected tracks pan mode based on media items.lua" type="script" desc="Set selected tracks pan mode based on media items">
       <metadata>
