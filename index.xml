@@ -27,10 +27,24 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 smandrap ReaScripts\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 The URL to import in ReaPack is {\field{\*\fldinst{HYPERLINK "https://github.com/smandrap/ReaScripts/raw/master/index.xml"}}{\fldrslt{\ul
-https://github.com/smandrap/Reascripts/raw/master/index.xml
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 INSTALL\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab {\field{\*\fldinst{HYPERLINK "https://reapack.com/"}}{\fldrslt{\ul
+Install ReaPack from Website
 }}}
-.\par}
+\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab In REAPER go to Extensions -> Reapack -> Import repositories...\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab Copy/Paste {\field{\*\fldinst{HYPERLINK "https://github.com/smandrap/ReaScripts/raw/master/index.xml"}}{\fldrslt{\ul
+this link
+}}}
+ in the box and press OK\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab Go to Extensions -> Reapack -> Browse packages...\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab Type smandrap in the search box\par}
+{\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab To install a script right click it, select "Install" and press Apply (bottom right of the window)\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 DONATION\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 If you find my scripts useful, {\field{\*\fldinst{HYPERLINK "https://paypal.me/smandrap"}}{\fldrslt{\ul
+a donation is VERY appreciated
+}}}
+. Thanks for your support.\par}
 }
 ]]></description>
   </metadata>
