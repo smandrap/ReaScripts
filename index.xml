@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="afae86833f7205a1daa8f7987fb21dd7df78ec5d">
+<index version="1" name="smandrap ReaScripts" commit="1200e496216ad7e71808de8bd19d1a34dde8d0b8">
+  <category name="Freeze">
+    <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
+      <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
+        <changelog><![CDATA[Initial release]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/1200e496216ad7e71808de8bd19d1a34dde8d0b8/Freeze/smandrap_Freeze%20tracks%20up%20to%20first%20instrument.lua</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Items">
     <reapack name="smandrap_Add Empty MIDI take to selected MIDI Items.lua" type="script" desc="Add Empty MIDI take to selected MIDI Items">
       <version name="1.0" author="smandrap" time="2023-08-30T15:21:09Z">
