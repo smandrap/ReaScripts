@@ -7,7 +7,7 @@
 
 local reaper = reaper
 
-local script_name = "manup_Select all items with crossfades"
+local script_name = "smandrap_Select all items with crossfades"
 
 local overlapping_items = {}
 local crossfade_items = {}
