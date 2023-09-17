@@ -2,8 +2,8 @@
 -- @author smandrap
 -- @version 0.1
 -- @about
--- Select all crossfaded items in project.
--- Will likely not work properly with fixed item lanes.
+--   Select all crossfaded items in project.
+--   Will likely not work properly with fixed item lanes.
 
 local reaper = reaper
 
