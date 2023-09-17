@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="1200e496216ad7e71808de8bd19d1a34dde8d0b8">
+<index version="1" name="smandrap ReaScripts" commit="7b8399e68bbad5bef1421fb049cdeddcbcb87ead">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -13,6 +13,20 @@
       <version name="1.0" author="smandrap" time="2023-08-30T15:21:09Z">
         <changelog><![CDATA[Initial release]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/afae86833f7205a1daa8f7987fb21dd7df78ec5d/Items/smandrap_Add%20Empty%20MIDI%20take%20to%20selected%20MIDI%20Items.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Select all items with crossfades.lua" type="script" desc="Select all items with crossfades">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Select all crossfaded items in project. Will likely not work properly with fixed item lanes.\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.1" author="smandrap" time="2023-09-17T17:48:20Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/aaabece555dc56186953c2bb1d520f9a813b9cdc/Items/smandrap_Select%20all%20items%20with%20crossfades.lua</source>
       </version>
     </reapack>
   </category>
