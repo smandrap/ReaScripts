@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="7b8399e68bbad5bef1421fb049cdeddcbcb87ead">
+<index version="1" name="smandrap ReaScripts" commit="e8160140738bb3dfd5d6ae2e94a8dbe8b884c5b4">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -48,6 +48,21 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2023-08-30T09:39:29Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/19662dfb1ff4ed8b339bb6d0763ac8a82cfc4716/Various/smandrap_Set%20selected%20tracks%20pan%20mode%20based%20on%20media%20items.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Smart Rec-Arm.lua" type="script" desc="Smart Rec-Arm">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Makes the record arm workflow similar to Pro Tools/Cubase/Etc.\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2023-09-20T09:03:00Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/e8160140738bb3dfd5d6ae2e94a8dbe8b884c5b4/Various/smandrap_Smart%20Rec-Arm.lua</source>
       </version>
     </reapack>
   </category>
