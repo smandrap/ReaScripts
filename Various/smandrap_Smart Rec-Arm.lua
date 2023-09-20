@@ -1,10 +1,16 @@
 -- @description Smart Rec-Arm
 -- @author smandrap
--- @version 1.0
+-- @version 1.1
+-- @changelog
+--  + Add dependency check
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Makes the record arm workflow similar to Pro Tools/Cubase/Etc.
 
+if not reaper.CF_GetSWSVersion() then
+  reaper.MB("This script requires SWS Extensions. Download here: https://www.sws-extension.org/", "Missing Dependency", 0)
+  return
+end
 
 local function main()
   local sel_tracks_cnt = reaper.CountSelectedTracks(0)
