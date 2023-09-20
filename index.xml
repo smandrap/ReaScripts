@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="e8160140738bb3dfd5d6ae2e94a8dbe8b884c5b4">
+<index version="1" name="smandrap ReaScripts" commit="11c1f1bdd0970fdfaa03c0e6ca2024d53d081ee7">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -63,6 +63,10 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2023-09-20T09:03:00Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/e8160140738bb3dfd5d6ae2e94a8dbe8b884c5b4/Various/smandrap_Smart%20Rec-Arm.lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2023-09-20T09:13:19Z">
+        <changelog><![CDATA[+ Add dependency check]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/11c1f1bdd0970fdfaa03c0e6ca2024d53d081ee7/Various/smandrap_Smart%20Rec-Arm.lua</source>
       </version>
     </reapack>
   </category>
