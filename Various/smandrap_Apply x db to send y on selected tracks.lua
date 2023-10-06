@@ -1,18 +1,14 @@
 -- @description Apply x db to send y on selected tracks
 -- @author smandrap
--- @version 1.0
+-- @version 1.1
+-- @changelog
+--    + fixed undo
 -- @donation https://paypal.me/smandrap
 -- @about
---  Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351
---  
---  Db to value (and viceversa) functions are taken from the forums. Can't remember where sorry.
---  If someone can point it out, i will give credit.
---
---  Usage: 
---    Duplicate the script and change DB_AMOUNT and SEND_IDX to taste.
---
---  Known issues:
---    Undo doesn't work correctly
+--   Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351
+--   
+--  Db to value conversion functions are taken from someone (can't remember who, sorry)
+
 
 ---------------------
 
@@ -51,4 +47,4 @@ end
 
 reaper.Undo_BeginBlock()
 main()
-reaper.Undo_EndBlock("Apply "..DB_AMOUNT.." db to Send "..SEND_IDX.." on selected tracks", -1)
+reaper.Undo_EndBlock("Apply "..DB_AMOUNT.." db to Send "..SEND_IDX.." on selected tracks", 1)
