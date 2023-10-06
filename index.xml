@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="11c1f1bdd0970fdfaa03c0e6ca2024d53d081ee7">
+<index version="1" name="smandrap ReaScripts" commit="3e604c7dd597f59ea408789c82503cdbd3a6f22d">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -31,6 +31,24 @@
     </reapack>
   </category>
   <category name="Various">
+    <reapack name="smandrap_Apply x db to send y on selected tracks.lua" type="script" desc="Apply x db to send y on selected tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Db to value (and viceversa) functions are taken from the forums. Can't remember where sorry. If someone can point it out, i will give credit.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Usage: Duplicate the script and change DB_AMOUNT and SEND_IDX to taste.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Known issues: Undo doesn't work correctly\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2023-10-06T09:54:54Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/3e604c7dd597f59ea408789c82503cdbd3a6f22d/Various/smandrap_Apply%20x%20db%20to%20send%20y%20on%20selected%20tracks.lua</source>
+      </version>
+    </reapack>
     <reapack name="smandrap_Set selected tracks pan mode based on media items.lua" type="script" desc="Set selected tracks pan mode based on media items">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
