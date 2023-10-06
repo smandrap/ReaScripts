@@ -5,9 +5,8 @@
 --    fixed undo
 -- @donation https://paypal.me/smandrap
 -- @about
---   Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351
---   
---  Db to value conversion functions are taken from someone (can't remember who, sorry)
+--   Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351 
+--    Db to value conversion functions are taken from someone (can't remember who, sorry)
 
 
 ---------------------
