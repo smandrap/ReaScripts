@@ -2,7 +2,7 @@
 -- @author smandrap
 -- @version 1.1
 -- @changelog
---    + fixed undo
+--    fixed undo
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Bassman002 request. https://forum.cockos.com/showthread.php?p=2718351#post2718351
