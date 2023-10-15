@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="00c349e45bc472dc685680b4570a3d1b6514ad2f">
+<index version="1" name="smandrap ReaScripts" commit="2599aa3d23c5c1cb170b05c4b5cbe2a1ba8ca37f">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -27,6 +27,23 @@
       </metadata>
       <version name="0.1" author="smandrap" time="2023-09-17T17:48:20Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/aaabece555dc56186953c2bb1d520f9a813b9cdc/Items/smandrap_Select%20all%20items%20with%20crossfades.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Tracks">
+    <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search. REQUIRES REAIMGUI !! Shortcuts: Cmd/Ctrl+F : focus search field Arrows/Tab: navigate Enter/Double Click on name: GO Drag/Drop on Track: Create send Esc: Exit\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2023-10-15T15:04:55Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/2599aa3d23c5c1cb170b05c4b5cbe2a1ba8ca37f/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
