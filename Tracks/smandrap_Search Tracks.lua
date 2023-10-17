@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.1
+-- @version 1.1.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --  + Add basic send tooltip (maybe will improve)
@@ -41,7 +41,6 @@
 
 
 local script_name = "Search Tracks"
-local version = 1.1
 local reaper = reaper
 if not reaper.ImGui_GetVersion() then
   local ok = reaper.MB('Install now?', 'ReaImGui Missing', 1)
@@ -49,17 +48,18 @@ if not reaper.ImGui_GetVersion() then
   return
 end
 
-
+--[[
 local separator = (reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64") and "\\" or "/"
 local data_path = reaper.GetResourcePath()..separator..'Data'
 local config_filename = 'smandrap_SearchTracks_cfg.ini'
 local config_path = data_path..separator..config_filename
-
+--]]
 ----------------------
 -- DEFAULT SETTINGS
 ----------------------
 
 local settings = {
+  version = '1.1.1',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -112,7 +112,7 @@ local colorbox_flags =  reaper.ImGui_ColorEditFlags_NoAlpha()
                   
 local was_dragging = false
 
-local help_text = script_name..' v'..tostring(version)..'\n'..
+local help_text = script_name..' v'..settings.version..'\n'..
 [[- Cmd/Ctrl+F : focus search field
 - Arrows/Tab: navigate
 - Enter/Double Click on name: GO
@@ -225,6 +225,8 @@ local function DoActionOnTrack(track)
   if settings.close_on_action then open = false end
 end
 
+-- Deprecated in v1.1.1
+--[[
 local function ReadSettingsFromConfigFile()
   if not reaper.file_exists(config_path) then return end  -- Use defaults if file not found
   
@@ -257,6 +259,22 @@ local function WriteSettingsToConfigFile()
   file:write(table.concat(buf, '\n'))
   
   io.close(file)
+end
+--]]
+
+local function ReadSettingsFromExtState()
+  if not reaper.HasExtState('smandrap_SearchTracks', 'version') then return end
+  
+  for k, v in pairs(settings) do
+    settings[k] = reaper.GetExtState('smandrap_SearchTracks', tostring(k)) == 'true' and true or false
+  end
+
+end
+
+local function WriteSettingsToExtState()
+  for k, v in pairs(settings) do
+    reaper.SetExtState('smandrap_SearchTracks', k, tostring(v), true)
+  end
 end
 
 ----------------------
@@ -503,12 +521,12 @@ local function init()
   reaper.ImGui_Attach(ctx, tooltip_font)
   reaper.ImGui_SetConfigVar(ctx, reaper.ImGui_ConfigVar_MouseDoubleClickTime(), 0.2)
   
-  ReadSettingsFromConfigFile()
+  ReadSettingsFromExtState()
   UpdateAllData()
 end
 
 local function exit()
-  WriteSettingsToConfigFile()
+  WriteSettingsToExtState()
 end
 
 
