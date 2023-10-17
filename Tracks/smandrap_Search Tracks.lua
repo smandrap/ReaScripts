@@ -3,6 +3,7 @@
 -- @version 1.1.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
+--  # 1.1.1 Store settings in ExtState
 --  + Add basic send tooltip (maybe will improve)
 --  + Dim font color on tcp hidden tracks
 --  + Add settings menu (right click search filter, config stored in REAPER/Data folder)
