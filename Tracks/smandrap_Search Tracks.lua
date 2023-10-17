@@ -3,21 +3,8 @@
 -- @version 1.1.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # 1.1.1 Store settings in ExtState
---  + Add basic send tooltip (maybe will improve)
---  + Dim font color on tcp hidden tracks
---  + Add settings menu (right click search filter, config stored in REAPER/Data folder)
---  + Add option to display track color indicator (deafault: on)
---  + Add option to keep script open after selection (default: off)
---  + Add option to uncollapse actioned track if it's a folder (default: off)
---  + Add options to unhide tracks in TCP/MCP after selection (default: TCP on, MCP off)
---  + Add option to show track number (default: off)
---  + Add help menu
---  # Internal refactor (fetch track data on project update)
---  # Avoid creating sends by dragging on arrange view
---  # Fix close button if no matches or no tracks in project
---  # Change first use window size
---  # Increase font size by 1 px
+--  # 1.1.1 Store settings in ExtState instead of REAPER/Data folder
+--  (REAPER/Data/smandrap_SearchTracks_cfg.ini is no longer needed, you can delete it)
 -- @about
 --  Cubase style track search.
 --  Shortcuts:
