@@ -4,15 +4,9 @@
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --  # 1.1.1 Store settings in ExtState instead of REAPER/Data folder
---  (REAPER/Data/smandrap_SearchTracks_cfg.ini is no longer needed, you can delete it)
 -- @about
 --  Cubase style track search.
---  Shortcuts:
---    Cmd/Ctrl+F : focus search field
---    Arrows/Tab: navigate
---    Enter/Double Click on name: GO
---    Drag/Drop on Track: Create send
---    Esc: Exit
+
 
 -- TODO: 
 
