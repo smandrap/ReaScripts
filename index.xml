@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="2599aa3d23c5c1cb170b05c4b5cbe2a1ba8ca37f">
+<index version="1" name="smandrap ReaScripts" commit="7120ca141f56470326eede180d32eb6195ac56b2">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -37,13 +37,30 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search. REQUIRES REAIMGUI !! Shortcuts: Cmd/Ctrl+F : focus search field Arrows/Tab: navigate Enter/Double Click on name: GO Drag/Drop on Track: Create send Esc: Exit\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search. Shortcuts: Cmd/Ctrl+F : focus search field Arrows/Tab: navigate Enter/Double Click on name: GO Drag/Drop on Track: Create send Esc: Exit\par}
 }
 ]]></description>
         <link rel="donation">https://paypal.me/smandrap</link>
       </metadata>
       <version name="1.0" author="smandrap" time="2023-10-15T15:04:55Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/2599aa3d23c5c1cb170b05c4b5cbe2a1ba8ca37f/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2023-10-17T11:17:12Z">
+        <changelog><![CDATA[+ Add basic send tooltip (maybe will improve)
++ Dim font color on tcp hidden tracks
++ Add settings menu (right click search filter, config stored in REAPER/Data folder)
++ Add option to display track color indicator (deafault: on)
++ Add option to keep script open after selection (default: off)
++ Add option to uncollapse actioned track if it's a folder (default: off)
++ Add options to unhide tracks in TCP/MCP after selection (default: TCP on, MCP off)
++ Add option to show track number (default: off)
++ Add help menu
+# Internal refactor (fetch track data on project update)
+# Avoid creating sends by dragging on arrange view
+# Fix close button if no matches or no tracks in project
+# Change first use window size
+# Increase font size by 1 px]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/7120ca141f56470326eede180d32eb6195ac56b2/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
