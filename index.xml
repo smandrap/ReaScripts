@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="fde56eca0312e51f2e61d7e3e762ea71a94da418">
+<index version="1" name="smandrap ReaScripts" commit="d60b6b4218b44347b13331b088bc188d16c576fc">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -37,7 +37,7 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search. Shortcuts: Cmd/Ctrl+F : focus search field Arrows/Tab: navigate Enter/Double Click on name: GO Drag/Drop on Track: Create send Esc: Exit\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search.\par}
 }
 ]]></description>
         <link rel="donation">https://paypal.me/smandrap</link>
