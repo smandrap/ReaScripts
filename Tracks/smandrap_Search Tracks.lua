@@ -1,21 +1,15 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.2
+-- @version 1.3
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Support receive creation (Cmd/Ctrl during drag and drop to switch source/destination)
---  # Improve tooltip for drag drop routing
+--  + Support sidechain send creation (Drag/Drop on FX Gui, send created on ch 3-4)
 -- @about
---  Cubase style track search.
---  Shortcuts:
---    Cmd/Ctrl+F : focus search field
---    Arrows/Tab: navigate
---    Enter/Double Click on name: GO
---    Drag/Drop on Track: Create send (Cmd/Ctrl to switch source/destination
---    Esc: Exit
+--  Cubase style track search with routing capabilities
 
 -- TODO: 
 
+--  Allow Sidechain creation (dragdrop on fx)
 --  Draw hierarchy tree left of track list
 --  Reduce tree identation
 --  Define disabled tracks (muted? locked? fx_offline?)
@@ -50,7 +44,7 @@ local config_path = data_path..separator..config_filename
 
 
 local settings = {
-  version = '1.2',
+  version = '1.3',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -111,6 +105,7 @@ local help_text = script_name..' v'..settings.version..'\n\n'..
 - Arrows/Tab : Navigate
 - Enter/Double Click on name : Select in project
 - Drag/Drop on TCP/MCP : Create send
+- Drag/Drop on FX : Create sidechain send (ch 3-4)
 - Cmd/Ctrl while dragging : Create receive
 - Esc: Exit]]
 
@@ -171,6 +166,14 @@ local function GetTracks()
   end
   
   return t
+end
+
+local function IncreaseTrackChannelCnt(track)
+  local tr_ch_cnt = reaper.GetMediaTrackInfo_Value(track, 'I_NCHAN')
+  
+  if tr_ch_cnt > 4 then return end
+  tr_ch_cnt = reaper.SetMediaTrackInfo_Value(track, 'I_NCHAN', 4)
+
 end
 
 local function UpdateTrackList()
@@ -365,49 +368,58 @@ local function DrawSearchFilter()
 end
 
 
+
 local function SetupDragDrop(track)
     -- TODO: Custom cursor??
     -- TODO: Optimize Drag drop
+    
+    
+    -- TODO: OMG REFACTOR THIS SHIT
     
     if reaper.ImGui_BeginDragDropSource(ctx) then
       reaper.ImGui_SetDragDropPayload(ctx, '_TREENODE', nil, 0)
       
       was_dragging = true
       dragged_track = track.track
-      local mousepos_x, mousepos_y = reaper.GetMousePosition()
-      dest_track, info = reaper.GetThingFromPoint(mousepos_x, mousepos_y)
+      dest_track, info = reaper.GetThingFromPoint(reaper.GetMousePosition())
       
-      dest_track = info:match('tcp') and dest_track or nil
+      dest_track = (info:match('tcp') or info:match('fx_')) and dest_track or nil
       local dest_track_name = dest_track and select(2, reaper.GetTrackName(dest_track)) or '...'
       
-      -- Tooltip
-      
-      if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
-        -- RECEIVE
-        reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..dest_track_name..' ]\n\nTO:\n\n[ '..track.name..' ]')
+      if info:match('fx_') then
+        reaper.ImGui_Text(ctx, 'SEND (Sidechain 3-4):\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]')
       else
-        -- SEND
-        reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]')
+        if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+          reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..dest_track_name..' ]\n\nTO:\n\n[ '..track.name..' ]') -- RECEIVE
+        else
+          reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]') -- SEND
+        end
       end
       
       reaper.ImGui_EndDragDropSource(ctx)
     end
     
-    -- End of DragnDrop
+    -- End of DragnDrop so create send
     if was_dragging and not reaper.ImGui_IsMouseDown(ctx, 0) then
       
-      if dest_track and dragged_track and info:match('tcp') then
-          reaper.Undo_BeginBlock()
-          if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
-            -- RECEIVE
-            reaper.CreateTrackSend(dest_track, dragged_track)
-          else
-            -- SEND
-             reaper.CreateTrackSend(dragged_track, dest_track)
-            
-          end
+      if dest_track and dragged_track then
+        reaper.Undo_BeginBlock()
+        
+        if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+          if not info:match('fx_') then reaper.CreateTrackSend(dest_track, dragged_track) end
+        else
+          -- SEND
+          local send_idx = reaper.CreateTrackSend(dragged_track, dest_track)
           
-          reaper.Undo_EndBlock("Create Send", -1)
+          -- SIDECHAIN
+          if info:match('fx_') then
+            IncreaseTrackChannelCnt(dest_track)
+            reaper.SetTrackSendInfo_Value(dragged_track, 0, send_idx, 'I_DSTCHAN', 2)
+          end
+        end
+        
+        
+        reaper.Undo_EndBlock("Create Send", -1)
       end 
       
       was_dragging = false
