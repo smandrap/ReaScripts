@@ -1,25 +1,30 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.1.1
+-- @version 1.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # 1.1.1 Store settings in ExtState instead of REAPER/Data folder
+--  + Support receive creation (Cmd/Ctrl during drag and drop to switch source/destination)
+--  # Improve tooltip for drag drop routing
 -- @about
 --  Cubase style track search.
-
+--  Shortcuts:
+--    Cmd/Ctrl+F : focus search field
+--    Arrows/Tab: navigate
+--    Enter/Double Click on name: GO
+--    Drag/Drop on Track: Create send (Cmd/Ctrl to switch source/destination
+--    Esc: Exit
 
 -- TODO: 
 
 --  Draw hierarchy tree left of track list
 --  Reduce tree identation
 --  Define disabled tracks (muted? locked? fx_offline?)
---  Support adding receives
 --  Custom cursor for sends
---  Better Tooltip for sends dragndrop
 --  Filters (is:muted, is:soloed, is:hidden, etc)
 --  Pin searchbar to top of window
 --  Shift click on node: collapse/uncollapse all
 --  Make clear that routing is possible
+--  Always show parent?
 
 
 local script_name = "Search Tracks"
@@ -36,19 +41,24 @@ local data_path = reaper.GetResourcePath()..separator..'Data'
 local config_filename = 'smandrap_SearchTracks_cfg.ini'
 local config_path = data_path..separator..config_filename
 --]]
+
+
+
 ----------------------
 -- DEFAULT SETTINGS
 ----------------------
 
+
 local settings = {
-  version = '1.1.1',
+  version = '1.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
   close_on_action = true,
   show_track_number = false,
-  show_color_box = true
+  show_color_box = true,
 }
+
 
 ----------------------
 -- APP VARS
@@ -61,8 +71,10 @@ local filtered_tracks = {}
 
 local selected_track
 local dragged_track
+local dest_track, info
 
 local search_string = ''
+
 
 ----------------------
 -- GUI VARS
@@ -94,15 +106,17 @@ local colorbox_flags =  reaper.ImGui_ColorEditFlags_NoAlpha()
                   
 local was_dragging = false
 
-local help_text = script_name..' v'..settings.version..'\n'..
-[[- Cmd/Ctrl+F : focus search field
-- Arrows/Tab: navigate
-- Enter/Double Click on name: GO
-- Drag/Drop on Track: Create send
+local help_text = script_name..' v'..settings.version..'\n\n'..
+[[- Cmd/Ctrl+F : Focus search field
+- Arrows/Tab : Navigate
+- Enter/Double Click on name : Select in project
+- Drag/Drop on TCP/MCP : Create send
+- Cmd/Ctrl while dragging : Create receive
 - Esc: Exit]]
 
+
 ----------------------
--- APP FUNCS
+-- HELPERS
 ----------------------
 
 local function table_copy(t)
@@ -117,6 +131,11 @@ local function table_delete(t)
   for i = 0, #t do t[i] = nil end
 end
 
+
+----------------------
+-- APP FUNCS
+----------------------
+
 local function IsProjectChanged()
   
   local buf = reaper.GetProjectStateChangeCount(0)
@@ -128,22 +147,27 @@ local function IsProjectChanged()
 
 end
 
+local function GetTrackInfo(track)
+  local track_info = {}
+    
+  track_info.track = track
+  track_info.number = i
+  track_info.name = select(2, reaper.GetTrackName(track))
+  track_info.color = reaper.ImGui_ColorConvertNative(reaper.GetTrackColor(track))
+  track_info.showtcp = reaper.GetMediaTrackInfo_Value(track, 'B_SHOWINTCP')
+  track_info.showmcp = reaper.GetMediaTrackInfo_Value(track, 'B_SHOWINMIXER')
+  track_info.folderdepth = reaper.GetMediaTrackInfo_Value(track, 'I_FOLDERDEPTH')
+  
+  return track_info
+end
+
 local function GetTracks()
   local t = {}
   
   for i = 1, reaper.CountTracks(0) do
-    local track_info = {}
     local track = reaper.GetTrack(0, i - 1)
     
-    track_info.track = track
-    track_info.number = i
-    track_info.name = select(2, reaper.GetTrackName(track))
-    track_info.color = reaper.ImGui_ColorConvertNative(reaper.GetTrackColor(track))
-    track_info.showtcp = reaper.GetMediaTrackInfo_Value(track, 'B_SHOWINTCP')
-    track_info.showmcp = reaper.GetMediaTrackInfo_Value(track, 'B_SHOWINMIXER')
-    track_info.folderdepth = reaper.GetMediaTrackInfo_Value(track, 'I_FOLDERDEPTH')
-    
-    t[i] = track_info
+    t[i] = GetTrackInfo(track)
   end
   
   return t
@@ -343,28 +367,45 @@ end
 
 local function SetupDragDrop(track)
     -- TODO: Custom cursor??
+    -- TODO: Optimize Drag drop
+    
     if reaper.ImGui_BeginDragDropSource(ctx) then
       reaper.ImGui_SetDragDropPayload(ctx, '_TREENODE', nil, 0)
       
-      -- TODO: Improve this
-      reaper.ImGui_Text(ctx, 'Send '..track.name..' to..')
-      
       was_dragging = true
       dragged_track = track.track
+      local mousepos_x, mousepos_y = reaper.GetMousePosition()
+      dest_track, info = reaper.GetThingFromPoint(mousepos_x, mousepos_y)
+      
+      dest_track = info:match('tcp') and dest_track or nil
+      local dest_track_name = dest_track and select(2, reaper.GetTrackName(dest_track)) or '...'
+      
+      -- Tooltip
+      
+      if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+        -- RECEIVE
+        reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..dest_track_name..' ]\n\nTO:\n\n[ '..track.name..' ]')
+      else
+        -- SEND
+        reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]')
+      end
       
       reaper.ImGui_EndDragDropSource(ctx)
     end
     
     -- End of DragnDrop
     if was_dragging and not reaper.ImGui_IsMouseDown(ctx, 0) then
-    
-      local mousepos_x, mousepos_y = reaper.GetMousePosition()
-      local dest_track, info = reaper.GetThingFromPoint(mousepos_x, mousepos_y)
-
+      
       if dest_track and dragged_track and info:match('tcp') then
           reaper.Undo_BeginBlock()
-          
-          local sendidx = reaper.CreateTrackSend(dragged_track, dest_track)
+          if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+            -- RECEIVE
+            reaper.CreateTrackSend(dest_track, dragged_track)
+          else
+            -- SEND
+             reaper.CreateTrackSend(dragged_track, dest_track)
+            
+          end
           
           reaper.Undo_EndBlock("Create Send", -1)
       end 
