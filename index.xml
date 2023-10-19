@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="f4d40795de105c354b689981c1fd7a0ff37490c5">
+<index version="1" name="smandrap ReaScripts" commit="c57de0ceaf877b3fec5cba10250de3e2d1431258">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -87,6 +87,13 @@
       <version name="1.3" author="smandrap" time="2023-10-18T10:50:52Z">
         <changelog><![CDATA[+ Support sidechain send creation (Drag/Drop on FX Gui, send created on ch 3-4)]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/f4d40795de105c354b689981c1fd7a0ff37490c5/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.4" author="smandrap" time="2023-10-19T08:43:54Z">
+        <changelog><![CDATA[+ Add option to hide script titlebar
+# Fix crash on startup (oops)
+# Sligthly round searchbar and color box
+# Fix searchbar resize logic]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/c57de0ceaf877b3fec5cba10250de3e2d1431258/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
