@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.4.2
+-- @version 1.5
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # Fix incorrect Tree node id push
+--  + Add option to show all parents of actioned track (default: on)
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -37,10 +37,11 @@ end
 
 
 local settings = {
-  version = '1.4.2',
+  version = '1.5',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
+  unhide_parents = true,
   close_on_action = true,
   show_track_number = false,
   show_color_box = true,
@@ -224,6 +225,19 @@ local function DoActionOnTrack(track)
   if settings.show_in_tcp then reaper.SetMediaTrackInfo_Value(track.track, 'B_SHOWINTCP', 1) end
   if settings.show_in_mcp then reaper.SetMediaTrackInfo_Value(track.track, 'B_SHOWINMIXER', 1) end
   
+  -- Unhide Parents
+  if settings.unhide_parents then
+    local buf = track.track
+    
+    for j = reaper.GetTrackDepth(buf), 0, -1 do
+      buf = reaper.GetParentTrack(buf)
+      if buf then 
+        if settings.show_in_tcp then reaper.SetMediaTrackInfo_Value(buf, 'B_SHOWINTCP', 1) end
+        if settings.show_in_mcp then reaper.SetMediaTrackInfo_Value(buf, 'B_SHOWINMIXER', 1) end
+      end
+    end
+  end
+  
   -- Select
   reaper.SetOnlyTrackSelected(track.track)
   reaper.Main_OnCommand(40913, 0) -- Vertical scroll to track
@@ -282,6 +296,7 @@ local function DrawSettingsMenu()
     reaper.ImGui_MenuItem(ctx, 'Unhide in:', nil, nil, false)
     _, settings.show_in_tcp = reaper.ImGui_MenuItem(ctx, 'TCP', nil, settings.show_in_tcp)
     _, settings.show_in_mcp = reaper.ImGui_MenuItem(ctx, 'MCP', nil, settings.show_in_mcp)
+    _, settings.unhide_parents = reaper.ImGui_MenuItem(ctx, 'Also affect parents', nil, settings.unhide_parents)
     
     reaper.ImGui_Separator(ctx)
     
