@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.4.1
+-- @version 1.4.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # Default to show script titlebar
+--  # Fix incorrect Tree node id push
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -37,7 +37,7 @@ end
 
 
 local settings = {
-  version = '1.4.1',
+  version = '1.4.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -97,6 +97,8 @@ local colorbox_flags =  reaper.ImGui_ColorEditFlags_NoAlpha()
                       | reaper.ImGui_ColorEditFlags_NoTooltip()
                   
 local was_dragging = false
+
+local enter_tracklist_focus = false
 
 local help_text = script_name..' v'..settings.version..'\n\n'..
 [[- Cmd/Ctrl+F : Focus search field
@@ -445,7 +447,7 @@ local function SetupTrackTree()
       
       local node_flags = is_folder and node_flags_base or node_flags_leaf
       
-      is_parent_open = reaper.ImGui_TreeNodeEx(ctx, i, '', node_flags)
+      is_parent_open = reaper.ImGui_TreeNodeEx(ctx, 'treenode'..i, '', node_flags)
       if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track) end
       SetupDragDrop(track)
       DrawTrackNode(track)
@@ -488,8 +490,24 @@ end
 local function DrawWindow()
   local changed = DrawSearchFilter()
   if changed then UpdateTrackList() end
-
+  
+  --[[
+  if reaper.ImGui_BeginChild(ctx, 'tracklist') then
+    if enter_tracklist_focus then           -- CFILLION FUNCTION
+      reaper.ImGui_SetKeyboardFocusHere(ctx)
+      enter_tracklist_focus = false
+    end
+  end
+  --]]
+  
   BeginTrackTree()
+  
+  --[[
+  reaper.ImGui_EndChild( ctx )
+  if reaper.ImGui_IsItemFocused(ctx) then
+    enter_tracklist_focus = true
+  end
+  --]]
 end
 
 
