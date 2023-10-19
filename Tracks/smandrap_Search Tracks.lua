@@ -1,15 +1,19 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.3
+-- @version 1.4
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Support sidechain send creation (Drag/Drop on FX Gui, send created on ch 3-4)
+--  + Add option to hide script titlebar
+--  # Fix crash on startup (oops)
+--  # Sligthly round searchbar and color box
+--  # Fix searchbar resize logic
 -- @about
 --  Cubase style track search with routing capabilities
 
 -- TODO: 
 
---  Allow Sidechain creation (dragdrop on fx)
+--  Fix buggy Tab navigation
+--  Font scaling
 --  Draw hierarchy tree left of track list
 --  Reduce tree identation
 --  Define disabled tracks (muted? locked? fx_offline?)
@@ -29,14 +33,6 @@ if not reaper.ImGui_GetVersion() then
   return
 end
 
---[[
-local separator = (reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64") and "\\" or "/"
-local data_path = reaper.GetResourcePath()..separator..'Data'
-local config_filename = 'smandrap_SearchTracks_cfg.ini'
-local config_path = data_path..separator..config_filename
---]]
-
-
 
 ----------------------
 -- DEFAULT SETTINGS
@@ -44,15 +40,15 @@ local config_path = data_path..separator..config_filename
 
 
 local settings = {
-  version = '1.3',
+  version = '1.4',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
   close_on_action = true,
   show_track_number = false,
   show_color_box = true,
+  hide_titlebar = true
 }
-
 
 ----------------------
 -- APP VARS
@@ -69,10 +65,11 @@ local dest_track, info
 
 local search_string = ''
 
-
 ----------------------
 -- GUI VARS
 ----------------------
+
+local FLT_MIN, FLT_MAX = reaper.ImGui_NumericLimits_Float()
 
 local ctx = reaper.ImGui_CreateContext(script_name, reaper.ImGui_ConfigFlags_NavEnableKeyboard())
 local visible
@@ -85,7 +82,9 @@ local font_size = 13
 local tooltip_font_size = font_size - 3
 local font = reaper.ImGui_CreateFont('sans-serif', font_size)
 local tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
-local window_flags =  reaper.ImGui_WindowFlags_NoCollapse()
+
+local default_wflags =  reaper.ImGui_WindowFlags_NoCollapse()
+local notitle_wflags = default_wflags | reaper.ImGui_WindowFlags_NoTitleBar()
 
 local node_flags_base = reaper.ImGui_TreeNodeFlags_OpenOnArrow() 
                       | reaper.ImGui_TreeNodeFlags_DefaultOpen()
@@ -95,6 +94,8 @@ local node_flags_leaf = node_flags_base
                       | reaper.ImGui_TreeNodeFlags_Leaf() 
                       | reaper.ImGui_TreeNodeFlags_NoTreePushOnOpen()
                       
+                      
+local colorbox_size = font_size * 0.6
 local colorbox_flags =  reaper.ImGui_ColorEditFlags_NoAlpha() 
                       | reaper.ImGui_ColorEditFlags_NoTooltip()
                   
@@ -146,7 +147,7 @@ local function GetTrackInfo(track)
   local track_info = {}
     
   track_info.track = track
-  track_info.number = i
+  track_info.number = math.floor(reaper.GetMediaTrackInfo_Value(track, 'IP_TRACKNUMBER'))
   track_info.name = select(2, reaper.GetTrackName(track))
   track_info.color = reaper.ImGui_ColorConvertNative(reaper.GetTrackColor(track))
   track_info.showtcp = reaper.GetMediaTrackInfo_Value(track, 'B_SHOWINTCP')
@@ -234,42 +235,6 @@ local function DoActionOnTrack(track)
   if settings.close_on_action then open = false end
 end
 
--- Deprecated in v1.1.1
---[[
-local function ReadSettingsFromConfigFile()
-  if not reaper.file_exists(config_path) then return end  -- Use defaults if file not found
-  
-  local file = io.open(config_path, 'r')
-  local config = {}
-    
-  for cfg_line in file:lines() do
-    table.insert(config, cfg_line)    
-  end
-  file:close()
-
-  for i = 1, #config do
-    for k, v in config[i]:gmatch('(.+)=(.+)') do
-      settings[k] = (v == 'true') and true or false
-    end
-  end
-
-end
-
-
-local function WriteSettingsToConfigFile()
-  local file = io.open(config_path, 'w')
-  local buf = {}
-  
-  for k, v in pairs(settings) do
-
-    table.insert(buf, k..'='..tostring(v))
-  end
-  
-  file:write(table.concat(buf, '\n'))
-  
-  io.close(file)
-end
---]]
 
 local function ReadSettingsFromExtState()
   if not reaper.HasExtState('smandrap_SearchTracks', 'version') then return end
@@ -305,7 +270,9 @@ local function IsEnterPressedOnItem()
   return reaper.ImGui_IsItemFocused(ctx) and enter
 end
 
+
 local function DrawSettingsMenu()
+
   if reaper.ImGui_BeginPopup(ctx, 'settings', reaper.ImGui_SelectableFlags_DontClosePopups()) then
   
     reaper.ImGui_MenuItem(ctx, 'Show:', nil, nil, false)
@@ -327,6 +294,10 @@ local function DrawSettingsMenu()
     
     reaper.ImGui_Separator(ctx)
     
+    if reaper.ImGui_BeginMenu(ctx, 'GUI') then
+      _, settings.hide_titlebar = reaper.ImGui_MenuItem(ctx, 'Hide Titlebar', nil, settings.hide_titlebar)
+      reaper.ImGui_EndMenu(ctx)
+    end
     
     -- HELP here
     if reaper.ImGui_BeginMenu(ctx, 'Help') then
@@ -344,8 +315,12 @@ local function DrawSearchFilter()
   
   if IsSearchShortcutPressed() or first_frame then reaper.ImGui_SetKeyboardFocusHere(ctx) end
 
-  reaper.ImGui_SetNextItemWidth(ctx, reaper.ImGui_GetWindowWidth(ctx) - 15)
-  changed, search_string = reaper.ImGui_InputTextWithHint(ctx, '##searchfilter', 'Search' , search_string)
+  reaper.ImGui_SetNextItemWidth(ctx, -FLT_MIN)
+  
+  reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 2)
+  changed, search_string = 
+    reaper.ImGui_InputTextWithHint(ctx, '##searchfilter', settings.hide_titlebar and 'Search Tracks' or '' , search_string)
+  reaper.ImGui_PopStyleVar(ctx)
   
   -- Tooltip
   if reaper.ImGui_IsItemHovered(ctx) and not open_settings then
@@ -429,13 +404,16 @@ end
 
 
 local function DrawTrackNode(track)
-
   if settings.show_color_box then
     reaper.ImGui_SameLine(ctx)
     
     local cursor_pos_x, cursor_pos_y = reaper.ImGui_GetCursorPos(ctx)
     reaper.ImGui_SetCursorPos(ctx, cursor_pos_x, cursor_pos_y + 3)
-    reaper.ImGui_ColorButton(ctx, 'color', track.color, colorbox_flags, 8, 8)
+    
+    reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 12)
+    
+    reaper.ImGui_ColorButton(ctx, 'color', track.color, colorbox_flags, colorbox_size, colorbox_size)
+    reaper.ImGui_PopStyleVar(ctx)
     reaper.ImGui_SetCursorPos(ctx, cursor_pos_x, cursor_pos_y)
   end
   
@@ -474,7 +452,6 @@ local function SetupTrackTree()
       if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track) end
       SetupDragDrop(track)
       DrawTrackNode(track)
-      
     end
     
     depth = depth + depth_delta
@@ -514,7 +491,7 @@ end
 local function DrawWindow()
   local changed = DrawSearchFilter()
   if changed then UpdateTrackList() end
-  
+
   BeginTrackTree()
 end
 
@@ -524,7 +501,7 @@ local function BeginGui()
   reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_WindowRounding(), 5)
   reaper.ImGui_SetNextWindowSize(ctx, 250, 350, reaper.ImGui_Cond_FirstUseEver())
   
-  visible, open = reaper.ImGui_Begin(ctx, script_name, true, window_flags)
+  visible, open = reaper.ImGui_Begin(ctx, script_name, true, settings.hide_titlebar and notitle_wflags or default_wflags)
   
   if visible then
     DrawWindow()
