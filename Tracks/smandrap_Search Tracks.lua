@@ -1,12 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.4
+-- @version 1.4.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Add option to hide script titlebar
---  # Fix crash on startup (oops)
---  # Sligthly round searchbar and color box
---  # Fix searchbar resize logic
+--  # Default to show script titlebar
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -40,14 +37,14 @@ end
 
 
 local settings = {
-  version = '1.4',
+  version = '1.4.1',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
   close_on_action = true,
   show_track_number = false,
   show_color_box = true,
-  hide_titlebar = true
+  hide_titlebar = false
 }
 
 ----------------------
