@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="c57de0ceaf877b3fec5cba10250de3e2d1431258">
+<index version="1" name="smandrap ReaScripts" commit="d88b85f669892f87ed038759d69fa9be456e1001">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -94,6 +94,10 @@
 # Sligthly round searchbar and color box
 # Fix searchbar resize logic]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/c57de0ceaf877b3fec5cba10250de3e2d1431258/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.4.1" author="smandrap" time="2023-10-19T09:09:08Z">
+        <changelog><![CDATA[# Default to show script titlebar]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d88b85f669892f87ed038759d69fa9be456e1001/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
