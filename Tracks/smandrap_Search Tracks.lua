@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.6
+-- @version 1.6.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Use Reaper's ROUTINGDRAG cursor while drag/drop routing (requires JS_Api)
+--  + Make routing cursor optional (default: on if JS_Api is installed)
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -34,8 +34,11 @@ end
 ----------------------
 
 
+local js_api = reaper.JS_ReaScriptAPI_Version() and true or false
+local cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
+
 local settings = {
-  version = '1.6',
+  version = '1.6.1',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -43,7 +46,8 @@ local settings = {
   close_on_action = true,
   show_track_number = false,
   show_color_box = true,
-  hide_titlebar = false
+  hide_titlebar = false,
+  use_routing_cursor = js_api == true and true or false
 }
 
 ----------------------
@@ -51,9 +55,6 @@ local settings = {
 ----------------------
 
 local proj_change_cnt = 0
-
-local js_api = reaper.JS_ReaScriptAPI_Version() and true or false
-local cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
 
 local tracks = {}
 local filtered_tracks = {}
@@ -311,6 +312,12 @@ local function DrawSettingsMenu()
     
     if reaper.ImGui_BeginMenu(ctx, 'GUI') then
       _, settings.hide_titlebar = reaper.ImGui_MenuItem(ctx, 'Hide Titlebar', nil, settings.hide_titlebar)
+      _, settings.use_routing_cursor = reaper.ImGui_MenuItem(ctx, 'Use Routing Cursor', nil, settings.use_routing_cursor, js_api)
+      if reaper.ImGui_IsItemHovered(ctx) and js_api == false then
+        reaper.ImGui_BeginTooltip(ctx)
+        reaper.ImGui_Text(ctx, 'Requires JS_Api')
+        reaper.ImGui_EndTooltip(ctx)
+      end
       reaper.ImGui_EndMenu(ctx)
     end
     
@@ -369,7 +376,7 @@ local function SetupDragDrop(track)
     if reaper.ImGui_BeginDragDropSource(ctx) then
       reaper.ImGui_SetDragDropPayload(ctx, '_TREENODE', nil, 0)
       
-      if js_api then reaper.JS_Mouse_SetCursor(cursor) end
+      if js_api and settings.use_routing_cursor then reaper.JS_Mouse_SetCursor(cursor) end
       
       was_dragging = true
       dragged_track = track.track
