@@ -1,9 +1,10 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.6.1
+-- @version 1.6.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Make routing cursor optional (default: on if JS_Api is installed)
+--  # Fix routing cursor option disabled if JS_API is installed after running script for the first time
+--  # Fix routing cursor not returning to normal after action
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -29,16 +30,19 @@ if not reaper.ImGui_GetVersion() then
   return
 end
 
+
+local js_api = false
+if reaper.APIExists('JS_ReaScriptAPI_Version') then js_api = true end
+local routing_cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
+local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
+
 ----------------------
 -- DEFAULT SETTINGS
 ----------------------
 
 
-local js_api = reaper.JS_ReaScriptAPI_Version() and true or false
-local cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
-
 local settings = {
-  version = '1.6.1',
+  version = '1.6.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -47,7 +51,7 @@ local settings = {
   show_track_number = false,
   show_color_box = true,
   hide_titlebar = false,
-  use_routing_cursor = js_api == true and true or false
+  use_routing_cursor = true
 }
 
 ----------------------
@@ -312,11 +316,22 @@ local function DrawSettingsMenu()
     
     if reaper.ImGui_BeginMenu(ctx, 'GUI') then
       _, settings.hide_titlebar = reaper.ImGui_MenuItem(ctx, 'Hide Titlebar', nil, settings.hide_titlebar)
+      
       _, settings.use_routing_cursor = reaper.ImGui_MenuItem(ctx, 'Use Routing Cursor', nil, settings.use_routing_cursor, js_api)
-      if reaper.ImGui_IsItemHovered(ctx) and js_api == false then
-        reaper.ImGui_BeginTooltip(ctx)
-        reaper.ImGui_Text(ctx, 'Requires JS_Api')
-        reaper.ImGui_EndTooltip(ctx)
+      if not js_api then
+        
+        if reaper.ImGui_IsItemHovered(ctx, reaper.ImGui_HoveredFlags_AllowWhenDisabled()) then
+          if reaper.ImGui_IsMouseClicked(ctx, 0) then
+            reaper.ReaPack_BrowsePackages('JS_ReascriptAPI')
+          end
+  
+          if reaper.ImGui_BeginTooltip(ctx)then
+            reaper.ImGui_PushFont(ctx, tooltip_font)
+            reaper.ImGui_Text(ctx, 'Requires JS_Api.\n(Click to install)')
+            reaper.ImGui_PopFont(ctx)
+            reaper.ImGui_EndTooltip(ctx)
+          end
+        end
       end
       reaper.ImGui_EndMenu(ctx)
     end
@@ -367,16 +382,16 @@ end
 
 
 local function SetupDragDrop(track)
-    -- TODO: Custom cursor??
     -- TODO: Optimize Drag drop
     
     
     -- TODO: OMG REFACTOR THIS SHIT
     
     if reaper.ImGui_BeginDragDropSource(ctx) then
-      reaper.ImGui_SetDragDropPayload(ctx, '_TREENODE', nil, 0)
-      
-      if js_api and settings.use_routing_cursor then reaper.JS_Mouse_SetCursor(cursor) end
+      reaper.ImGui_SetDragDropPayload(ctx, 'dragdrop', 'track', 0) 
+      if js_api and settings.use_routing_cursor and routing_cursor then
+        reaper.JS_Mouse_SetCursor(routing_cursor)
+      end
       
       was_dragging = true
       dragged_track = track.track
@@ -385,21 +400,28 @@ local function SetupDragDrop(track)
       dest_track = (info:match('tcp') or info:match('fx_')) and dest_track or nil
       local dest_track_name = dest_track and select(2, reaper.GetTrackName(dest_track)) or '...'
       
-      if info:match('fx_') then
-        reaper.ImGui_Text(ctx, 'SEND (Sidechain 3-4):\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]')
-      else
-        if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
-          reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..dest_track_name..' ]\n\nTO:\n\n[ '..track.name..' ]') -- RECEIVE
+      if reaper.ImGui_BeginTooltip(ctx) then
+        if info:match('fx_') then
+          reaper.ImGui_Text(ctx, 'SEND (Sidechain 3-4):\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]')
         else
-          reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]') -- SEND
+          if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+            reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..dest_track_name..' ]\n\nTO:\n\n[ '..track.name..' ]') -- RECEIVE
+          else
+            reaper.ImGui_Text(ctx, 'SEND:\n\n[ '..track.name..' ]\n\nTO:\n\n[ '..dest_track_name..' ]') -- SEND
+          end
         end
       end
+      reaper.ImGui_EndTooltip(ctx)
       
       reaper.ImGui_EndDragDropSource(ctx)
     end
-    
     -- End of DragnDrop so create send
     if was_dragging and not reaper.ImGui_IsMouseDown(ctx, 0) then
+      
+      if js_api and settings.use_routing_cursor then 
+        reaper.JS_Mouse_SetCursor(normal_cursor)
+      end
+      
       
       if dest_track and dragged_track then
         reaper.Undo_BeginBlock()
@@ -419,7 +441,7 @@ local function SetupDragDrop(track)
         
         
         reaper.Undo_EndBlock("Create Send", -1)
-      end 
+      end
       
       was_dragging = false
       dragged_track = nil
@@ -565,7 +587,6 @@ local function main()
   
   BeginGui()
   
-  
   if open then reaper.defer(main) end
   if first_frame then first_frame = false end
 end
@@ -576,6 +597,8 @@ local function init()
   reaper.ImGui_SetConfigVar(ctx, reaper.ImGui_ConfigVar_MouseDoubleClickTime(), 0.2)
   
   ReadSettingsFromExtState()
+  if not js_api then settings.use_routing_cursor = false end
+  
   UpdateAllData()
 end
 
@@ -586,4 +609,4 @@ end
 
 reaper.atexit(exit)
 init()
-main()
+reaper.defer(main)
