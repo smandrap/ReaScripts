@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="b4ec741a9f27e0e484f261e3dc1b4e03f2b91948">
+<index version="1" name="smandrap ReaScripts" commit="c0e5d8bca0db50e0afc091d8ef65ff31b584ce4d">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -110,6 +110,10 @@
       <version name="1.6" author="smandrap" time="2023-10-20T08:31:19Z">
         <changelog><![CDATA[+ Use Reaper's ROUTINGDRAG cursor while drag/drop routing (requires JS_Api)]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/b4ec741a9f27e0e484f261e3dc1b4e03f2b91948/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.6.1" author="smandrap" time="2023-10-20T08:44:36Z">
+        <changelog><![CDATA[+ Make routing cursor optional (default: on if JS_Api is installed)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/c0e5d8bca0db50e0afc091d8ef65ff31b584ce4d/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
