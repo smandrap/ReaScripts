@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.5
+-- @version 1.6
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Add option to show all parents of actioned track (default: on)
+--  + Use Reaper's ROUTINGDRAG cursor while drag/drop routing (requires JS_Api)
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -14,7 +14,6 @@
 --  Draw hierarchy tree left of track list
 --  Reduce tree identation
 --  Define disabled tracks (muted? locked? fx_offline?)
---  Custom cursor for sends
 --  Filters (is:muted, is:soloed, is:hidden, etc)
 --  Pin searchbar to top of window
 --  Shift click on node: collapse/uncollapse all
@@ -30,14 +29,13 @@ if not reaper.ImGui_GetVersion() then
   return
 end
 
-
 ----------------------
 -- DEFAULT SETTINGS
 ----------------------
 
 
 local settings = {
-  version = '1.5',
+  version = '1.6',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -53,6 +51,9 @@ local settings = {
 ----------------------
 
 local proj_change_cnt = 0
+
+local js_api = reaper.JS_ReaScriptAPI_Version() and true or false
+local cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
 
 local tracks = {}
 local filtered_tracks = {}
@@ -368,6 +369,8 @@ local function SetupDragDrop(track)
     if reaper.ImGui_BeginDragDropSource(ctx) then
       reaper.ImGui_SetDragDropPayload(ctx, '_TREENODE', nil, 0)
       
+      if js_api then reaper.JS_Mouse_SetCursor(cursor) end
+      
       was_dragging = true
       dragged_track = track.track
       dest_track, info = reaper.GetThingFromPoint(reaper.GetMousePosition())
@@ -538,6 +541,7 @@ local function BeginGui()
     reaper.ImGui_End(ctx)
   end
   
+ 
   reaper.ImGui_PopStyleVar(ctx)
   reaper.ImGui_PopFont(ctx)
   
@@ -553,6 +557,7 @@ local function main()
   if IsProjectChanged() then UpdateAllData() end
   
   BeginGui()
+  
   
   if open then reaper.defer(main) end
   if first_frame then first_frame = false end
