@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="7f5a5b3766c456a629713ccdded3a86cd1111e93">
+<index version="1" name="smandrap ReaScripts" commit="1a54b8bc1d7a07632b38161bd654f5bc52a72d4e">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -21,12 +21,17 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 Select all crossfaded items in project. Will likely not work properly with fixed item lanes.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Select all crossfaded items in project.\par}
 }
 ]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
       </metadata>
       <version name="0.1" author="smandrap" time="2023-09-17T17:48:20Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/aaabece555dc56186953c2bb1d520f9a813b9cdc/Items/smandrap_Select%20all%20items%20with%20crossfades.lua</source>
+      </version>
+      <version name="0.2" author="smandrap" time="2023-10-22T17:57:09Z">
+        <changelog><![CDATA[+ Support v7 FixedLanes]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/1a54b8bc1d7a07632b38161bd654f5bc52a72d4e/Items/smandrap_Select%20all%20items%20with%20crossfades.lua</source>
       </version>
     </reapack>
   </category>
