@@ -1,10 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.6.2
+-- @version 1.6.3
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # Fix routing cursor option disabled if JS_API is installed after running script for the first time
---  # Fix routing cursor not returning to normal after action
+--  # Fix ImGui depencency check (thanks cfillion)
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -24,7 +23,7 @@
 
 local script_name = "Search Tracks"
 local reaper = reaper
-if not reaper.ImGui_GetVersion() then
+if not reaper.ImGui_GetVersion then
   local ok = reaper.MB('Install now?', 'ReaImGui Missing', 1)
   if ok == 1 then reaper.ReaPack_BrowsePackages("ReaImGui API") end
   return
@@ -42,7 +41,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.6.2',
+  version = '1.6.3',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -494,7 +493,10 @@ local function SetupTrackTree()
       
       local node_flags = is_folder and node_flags_base or node_flags_leaf
       
+      local fp_x, fp_y = reaper.ImGui_GetStyleVar(ctx, reaper.ImGui_StyleVar_FramePadding())
+      
       is_parent_open = reaper.ImGui_TreeNodeEx(ctx, 'treenode'..i, '', node_flags)
+      
       if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track) end
       SetupDragDrop(track)
       DrawTrackNode(track)
