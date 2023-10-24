@@ -1,7 +1,7 @@
 -- @description Quantize all or selected notes
 -- @author smandrap
 -- @version 1.1
--- @provides main=midi_editor
+-- @provides midi_editor
 -- @donation https://paypal.me/smandrap
 -- @about
 --   sproost request. https://forum.cockos.com/showthread.php?t=283072
