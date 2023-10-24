@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="0f2090366d755cbe6faf7cd3800d750678528c41">
+<index version="1" name="smandrap ReaScripts" commit="b5cf88ea8e85bbd4eaaffce378bae464b60e0c4c">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -171,10 +171,22 @@
     </reapack>
     <reapack name="smandrap_Set record mode according to time selection (background).lua" type="script" desc="Set record mode according to time selection (background)">
       <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 mlprod request. https://forum.cockos.com/showthread.php?t=284064\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Auto change record mode to Time selection autopunch if there's a time selection Does not change record mode during record if time selection is changed\par}
+}
+]]></description>
         <link rel="donation">https://paypal.me/smandrap</link>
       </metadata>
       <version name="1.0" author="smandrap" time="2023-10-24T16:58:37Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/5f8924e36de00f857ce0d2630fba18cedeb442a9/Various/smandrap_Set%20record%20mode%20according%20to%20time%20selection%20(background).lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2023-10-24T17:18:55Z">
+        <changelog><![CDATA[# Change state only when not recording]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/b5cf88ea8e85bbd4eaaffce378bae464b60e0c4c/Various/smandrap_Set%20record%20mode%20according%20to%20time%20selection%20(background).lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Set selected tracks pan mode based on media items.lua" type="script" desc="Set selected tracks pan mode based on media items">
