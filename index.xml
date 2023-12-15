@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="2e6c97830b45a7e41f3fe4c5520b8d53651ef356">
+<index version="1" name="smandrap ReaScripts" commit="21bf3edc60a3fd36a51115e7d4c7cc1f69441bfd">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -153,6 +153,13 @@
 + Support Shift + Cmd/Ctrl + 1-9 to select among first 9 search results
 # Fix project state change check]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/2e6c97830b45a7e41f3fe4c5520b8d53651ef356/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.7.1" author="smandrap" time="2023-12-15T16:20:24Z">
+        <changelog><![CDATA[+ Add (very bad) UI feedback when holding Cmd
++ Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
+# Fix hidden in tcp track tinting
+# Prevent performing selection with Cmd/ctrl + 1-9 while routing]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/21bf3edc60a3fd36a51115e7d4c7cc1f69441bfd/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
   </category>
