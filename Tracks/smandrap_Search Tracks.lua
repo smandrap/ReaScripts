@@ -1,12 +1,12 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.7
+-- @version 1.7.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  + Support adding track to selection with shift+double click or Shift + Enter
---  + Support Cmd/Ctrl + 1-9 to select among first 9 search results
---  + Support Shift + Cmd/Ctrl + 1-9 to select among first 9 search results
---  # Fix project state change check
+-- + Add (very bad) UI feedback when holding Cmd
+-- + Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
+-- # Fix hidden in tcp track tinting
+-- # Prevent performing selection with Cmd/ctrl + 1-9 while routing
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -14,7 +14,6 @@
 
 --  Filtering (robotron FR https://forum.cockos.com/showthread.php?t=285978)
 --  Improved channel routing behaviour (twofiveone251 FR)
---  Improve visual feedback for alfred-like shortcuts
 
 --  Fix buggy Tab navigation
 --  Font scaling
@@ -48,7 +47,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.7',
+  version = '1.7.1',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -57,7 +56,8 @@ local settings = {
   show_track_number = false,
   show_color_box = true,
   hide_titlebar = false,
-  use_routing_cursor = true
+  use_routing_cursor = true,
+  dim_hidden_tracks = true
 }
 
 ----------------------
@@ -379,7 +379,7 @@ local function DrawSettingsMenu()
     
     if reaper.ImGui_BeginMenu(ctx, 'GUI') then
       _, settings.hide_titlebar = reaper.ImGui_MenuItem(ctx, 'Hide Titlebar', nil, settings.hide_titlebar)
-      
+      _, settings.dim_hidden_tracks = reaper.ImGui_MenuItem(ctx, 'Dim Hidden track names', nil, settings.dim_hidden_tracks)
       _, settings.use_routing_cursor = reaper.ImGui_MenuItem(ctx, 'Use Routing Cursor', nil, settings.use_routing_cursor, js_api)
       if not js_api then
         
@@ -512,7 +512,13 @@ local function SetupDragDrop(track)
 end
 
 
-local function DrawTrackNode(track)
+local function DrawTrackNode(track, idx)
+  -- Alfred IDX
+  if idx < 10 and not dragged_track and reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+    reaper.ImGui_SameLine(ctx)
+    reaper.ImGui_TextColored(ctx, 0xFFFFFF55, '['..idx..']')
+  end
+  
   if settings.show_color_box then
     reaper.ImGui_SameLine(ctx)
     
@@ -528,7 +534,10 @@ local function DrawTrackNode(track)
   
   reaper.ImGui_SameLine(ctx, nil, 5)
   local displayed_string = settings.show_track_number and track.number..': '..track.name or track.name
-  reaper.ImGui_TextColored(ctx, not track.showintcp and 0xFFFFFFFF or 0xFFFFFF55, displayed_string)
+  local displayed_color = 0xFFFFFFFF
+  
+  
+  reaper.ImGui_TextColored(ctx, (settings.dim_hidden_tracks and track.showtcp == 0) and 0xFFFFFF55 or 0xFFFFFFFF, displayed_string)
 
 end
 
@@ -563,7 +572,7 @@ local function SetupTrackTree()
       
       if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track, reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift())) end
       SetupDragDrop(track)
-      DrawTrackNode(track)
+      DrawTrackNode(track, i)
     end
     
     depth = depth + depth_delta
@@ -652,7 +661,7 @@ local function main()
   if IsProjectChanged() then UpdateAllData() end
   
   BeginGui()
-  DoAlfredStyleCmd()
+  if not dragged_track then DoAlfredStyleCmd() end
   
   if open then reaper.defer(main) end
   if first_frame then first_frame = false end
