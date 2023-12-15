@@ -3,10 +3,10 @@
 -- @version 1.7.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
--- + Add (very bad) UI feedback when holding Cmd
--- + Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
--- # Fix hidden in tcp track tinting
--- # Prevent performing selection with Cmd/ctrl + 1-9 while routing
+--   + Add (very bad) UI feedback when holding Cmd
+--   + Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
+--   # Fix hidden in tcp track tinting
+--   # Prevent performing selection with Cmd/ctrl + 1-9 while routing
 -- @about
 --  Cubase style track search with routing capabilities
 
