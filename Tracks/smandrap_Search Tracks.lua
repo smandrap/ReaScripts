@@ -1,13 +1,20 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.6.3
+-- @version 1.7
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # Fix ImGui depencency check (thanks cfillion)
+--  + Support adding track to selection with shift+double click or Shift + Enter
+--  + Support Cmd/Ctrl + 1-9 to select among first 9 search results
+--  + Support Shift + Cmd/Ctrl + 1-9 to select among first 9 search results
+--  # Fix project state change check
 -- @about
 --  Cubase style track search with routing capabilities
 
 -- TODO: 
+
+--  Filtering (robotron FR https://forum.cockos.com/showthread.php?t=285978)
+--  Improved channel routing behaviour (twofiveone251 FR)
+--  Improve visual feedback for alfred-like shortcuts
 
 --  Fix buggy Tab navigation
 --  Font scaling
@@ -41,7 +48,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.6.3',
+  version = '1.7',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -109,11 +116,17 @@ local enter_tracklist_focus = false
 local help_text = script_name..' v'..settings.version..'\n\n'..
 [[- Cmd/Ctrl+F : Focus search field
 - Arrows/Tab : Navigate
+- Esc: Exit
+
 - Enter/Double Click on name : Select in project
+- Shift + Enter/Double Click : Add to selection
+- Cmd/Ctrl + 1..9 : Select search result 1..9
+- Shift + Cmd/Ctrl + 1..9 : Add to sel search result 1..9
+
 - Drag/Drop on TCP/MCP : Create send
 - Drag/Drop on FX : Create sidechain send (ch 3-4)
 - Cmd/Ctrl while dragging : Create receive
-- Esc: Exit]]
+]]
 
 
 ----------------------
@@ -143,7 +156,7 @@ local function IsProjectChanged()
   
   if proj_change_cnt == buf then return false end
   
-  proj_change_cnt = buffer
+  proj_change_cnt = buf
   return true
 
 end
@@ -209,7 +222,7 @@ local function UpdateAllData()
 end
 
 
-local function DoActionOnTrack(track)
+local function DoActionOnTrack(track, add_to_selection)
   if not track then return end
   
   reaper.Undo_BeginBlock()
@@ -243,14 +256,65 @@ local function DoActionOnTrack(track)
     end
   end
   
-  -- Select
-  reaper.SetOnlyTrackSelected(track.track)
+
+  if add_to_selection then
+    reaper.SetTrackSelected(track.track, true)
+  else
+    reaper.SetOnlyTrackSelected(track.track)
+  end
   reaper.Main_OnCommand(40913, 0) -- Vertical scroll to track
   
   reaper.Undo_EndBlock("Change Track Selection", -1)
   
   -- Close program
   if settings.close_on_action then open = false end
+end
+
+local function DoAlfredStyleCmd()
+  local trackidx = -1
+  
+  if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+   
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_1()) 
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad1()) 
+      then trackidx = 1
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_2())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad2()) 
+      then trackidx = 2
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_3())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad3()) 
+      then trackidx = 3
+    
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_4())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad4()) 
+      then trackidx = 4
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_5())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad5()) 
+      then trackidx = 5
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_6())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad6()) 
+      then trackidx = 6
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_7())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad7()) 
+      then trackidx = 7
+    
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_8())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad8()) 
+      then trackidx = 8
+      
+    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_9())
+    or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Keypad9()) 
+      then trackidx = 9
+    end
+  end
+  
+  
+  if trackidx > 0 then DoActionOnTrack(filtered_tracks[trackidx], reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift())) end
 end
 
 
@@ -369,7 +433,7 @@ local function DrawSearchFilter()
   
   -- If search filter is focused and enter is pressed, do thing to first search result
   if reaper.ImGui_IsItemFocused(ctx) and reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Enter()) then
-    DoActionOnTrack(filtered_tracks[1])
+    DoActionOnTrack(filtered_tracks[1], reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift()))
   end
   
   if reaper.ImGui_IsItemClicked(ctx, 1) then reaper.ImGui_OpenPopup(ctx, 'settings') end
@@ -497,7 +561,7 @@ local function SetupTrackTree()
       
       is_parent_open = reaper.ImGui_TreeNodeEx(ctx, 'treenode'..i, '', node_flags)
       
-      if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track) end
+      if IsItemDoubleClicked() or IsEnterPressedOnItem() then DoActionOnTrack(track, reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift())) end
       SetupDragDrop(track)
       DrawTrackNode(track)
     end
@@ -588,6 +652,7 @@ local function main()
   if IsProjectChanged() then UpdateAllData() end
   
   BeginGui()
+  DoAlfredStyleCmd()
   
   if open then reaper.defer(main) end
   if first_frame then first_frame = false end
