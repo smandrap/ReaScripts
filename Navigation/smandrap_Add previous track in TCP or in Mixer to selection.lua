@@ -1,3 +1,9 @@
+-- @description smandrap_Add previous track in TCP or in Mixer to selection.lua
+-- @author smandrap
+-- @noindex
+-- @about Add previous visible track in TCP or Mixer to selection. 
+-- @readme_skip
+
 local mixer_hwnd = reaper.JS_Window_Find("Mixer", true)
 local focus = reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())
 
