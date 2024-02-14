@@ -1,3 +1,9 @@
+-- @description smandrap_Select next track in TCP or in Mixer.lua
+-- @author smandrap
+-- @noindex
+-- @about Select next visible track in TCP or Mixer.
+-- @readme_skip
+
 local mixer_hwnd = reaper.JS_Window_Find("Mixer", true)
 local focus = reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())
 
