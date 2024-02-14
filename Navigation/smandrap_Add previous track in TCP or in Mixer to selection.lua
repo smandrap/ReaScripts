@@ -1,6 +1,7 @@
 -- @description smandrap_Add previous track in TCP or in Mixer to selection.lua
 -- @author smandrap
 -- @noindex
+-- @version 1.0.0
 -- @about Add previous visible track in TCP or Mixer to selection. 
 -- @readme_skip
 
