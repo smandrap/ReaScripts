@@ -1,5 +1,6 @@
 -- @description smandrap_Select next track in TCP or in Mixer.lua
 -- @author smandrap
+-- @version 1.0.0
 -- @noindex
 -- @about Select next visible track in TCP or Mixer.
 -- @readme_skip
