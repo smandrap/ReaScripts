@@ -1,6 +1,5 @@
 -- @description smandrap_Select next track in TCP or in Mixer.lua
 -- @author smandrap
--- @version 1.0.0
 -- @noindex
 -- @about Select next visible track in TCP or Mixer.
 -- @readme_skip
@@ -13,20 +12,20 @@ local function next_in_mcp()
   local id = 0
   
   if first_sel_t then id = reaper.GetMediaTrackInfo_Value(first_sel_t, 'IP_TRACKNUMBER') end
-  
-  
+
   local tr_cnt = reaper.CountTracks()
-  if id >= tr_cnt then return end
-  
- 
+  --if id >= tr_cnt then return end
   
   for i = id, tr_cnt - 1 do
     local t = reaper.GetTrack(-1, i)
-    if reaper.IsTrackVisible(t, true) then
+    
+    if reaper.IsTrackVisible(t, true) and reaper.GetMediaTrackInfo_Value(t, 'I_MCPW') > 0 then
       reaper.SetOnlyTrackSelected(t)
-      return t
+      return
     end
   end
+  
+  reaper.SetOnlyTrackSelected(first_sel_t) -- if everything fails
   
 end
 
