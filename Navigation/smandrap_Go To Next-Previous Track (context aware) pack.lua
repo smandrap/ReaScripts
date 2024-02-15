@@ -1,6 +1,6 @@
 -- @author smandrap
 -- @description Go To Next-Previous track (context aware) pack
--- @version 1.0.0
+-- @version 1.0.1
 -- @about
 --   If Mixer has focus, go to next/previous track that is visible in the mixer (or add it to the selection).\n
 --   Requires JS_Reascript API
