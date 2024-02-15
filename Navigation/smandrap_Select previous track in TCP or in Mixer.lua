@@ -14,13 +14,11 @@ local function prev_in_mcp()
   
   for i = id -2, 0, -1 do
     local t = reaper.GetTrack(-1, i)
-    if reaper.IsTrackVisible(t, true) and reaper.GetMediaTrackInfo_Value(t, 'I_MCPW') > 0 then
-      reaper.SetOnlyTrackSelected(t)
+    if reaper.IsTrackVisible(t, true) and reaper.GetMediaTrackInfo_Value(t, 'I_MCPW') > 0 and not reaper.IsTrackSelected(t) then
+      reaper.SetTrackSelected(t, true)
       return
     end
   end
-  
-  reaper.SetOnlyTrackSelected(first_sel_t)
 end
 
 
@@ -29,5 +27,6 @@ if focus == mixer_hwnd then
   prev_in_mcp()
   reaper.Undo_EndBlock("Select Previous Track in Mixer", 0)
 else
-  reaper.Main_OnCommand(40286, 0)
+  reaper.Main_OnCommand(40288, 0)
 end
+
