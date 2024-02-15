@@ -1,10 +1,8 @@
--- @description smandrap_Select previous track in TCP or in Mixer.lua
+-- @description Select previous track in TCP or in Mixer.lua
 -- @author smandrap
--- @version 1.0.0
 -- @noindex
 -- @about Select previous visible track in TCP or Mixer.
 -- @readme_skip
-
 local mixer_hwnd = reaper.JS_Window_Find("Mixer", true)
 local focus = reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())
 
@@ -16,11 +14,13 @@ local function prev_in_mcp()
   
   for i = id -2, 0, -1 do
     local t = reaper.GetTrack(-1, i)
-    if reaper.IsTrackVisible(t, true) then
+    if reaper.IsTrackVisible(t, true) and reaper.GetMediaTrackInfo_Value(t, 'I_MCPW') > 0 then
       reaper.SetOnlyTrackSelected(t)
       return
     end
   end
+  
+  reaper.SetOnlyTrackSelected(first_sel_t)
 end
 
 
