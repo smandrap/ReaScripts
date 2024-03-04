@@ -1,30 +1,45 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.7.1
+-- @version 1.7.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Add (very bad) UI feedback when holding Cmd
---   + Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
---   # Fix hidden in tcp track tinting
---   # Prevent performing selection with Cmd/ctrl + 1-9 while routing
+--   + Add rudimentary support for Pre-Post Actions, defined insde the script.
 -- @about
 --  Cubase style track search with routing capabilities
 
--- TODO: 
 
---  Filtering (robotron FR https://forum.cockos.com/showthread.php?t=285978)
---  Improved channel routing behaviour (twofiveone251 FR)
+--------------------------------------
+------- USER AREA --------------------
+--------------------------------------
 
---  Fix buggy Tab navigation
---  Font scaling
---  Draw hierarchy tree left of track list
---  Reduce tree identation
---  Define disabled tracks (muted? locked? fx_offline?)
---  Filters (is:muted, is:soloed, is:hidden, etc)
---  Pin searchbar to top of window
---  Shift click on node: collapse/uncollapse all
---  Make clear that routing is possible
---  Always show parent?
+--[[
+PRE-POST ACTIONS:
+
+Insert actions command ID in the curly brackets, 
+surrounded by "" and comma separated.
+
+BACKUP THESE ACTIONS YOURSELF!!!! Updates will (at the moment) wipe them out
+
+Example:
+
+PRE_ACTIONS = {
+  "40183",
+  "_RS144139a961beeafd979a8734b53d703449faccf3"
+}
+
+--]]
+
+  
+PRE_ACTIONS = {
+}
+
+POST_ACTIONS = {
+
+}
+
+------------------------------------------
+-------  END USER AREA --------------------
+-------------------------------------------
 
 
 local script_name = "Search Tracks"
@@ -47,7 +62,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.7.1',
+  version = '1.7.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -57,7 +72,9 @@ local settings = {
   show_color_box = true,
   hide_titlebar = false,
   use_routing_cursor = true,
-  dim_hidden_tracks = true
+  dim_hidden_tracks = true,
+  do_pre_actions = false,
+  do_post_actions = false
 }
 
 ----------------------
@@ -128,7 +145,9 @@ local help_text = script_name..' v'..settings.version..'\n\n'..
 - Cmd/Ctrl while dragging : Create receive
 ]]
 
-
+local help_text_actions = [[You can define actions to execute before and/or after the track selection happens.
+These actions are defined inside the script, search for "USER AREA".
+]]
 ----------------------
 -- HELPERS
 ----------------------
@@ -215,17 +234,23 @@ local function UpdateTrackList()
   end
 end
 
-
 local function UpdateAllData()
   tracks = GetTracks()
   UpdateTrackList()
 end
 
+local function DoActions(t)
+  for i = 1, #t do
+    reaper.Main_OnCommand(reaper.NamedCommandLookup(tostring(t[i])), 0)
+  end
+end
 
 local function DoActionOnTrack(track, add_to_selection)
   if not track then return end
   
   reaper.Undo_BeginBlock()
+  
+  if PRE_ACTIONS and settings.do_pre_actions == true then DoActions(PRE_ACTIONS) end
   
    -- Uncollapse Parents
   
@@ -263,6 +288,8 @@ local function DoActionOnTrack(track, add_to_selection)
     reaper.SetOnlyTrackSelected(track.track)
   end
   reaper.Main_OnCommand(40913, 0) -- Vertical scroll to track
+  
+  if POST_ACTIONS and settings.do_post_actions == true then DoActions(POST_ACTIONS) end
   
   reaper.Undo_EndBlock("Change Track Selection", -1)
   
@@ -373,6 +400,20 @@ local function DrawSettingsMenu()
     
     reaper.ImGui_Separator(ctx)
     
+    reaper.ImGui_MenuItem(ctx, 'Run Actions (?):', nil, nil, false)
+    if reaper.ImGui_IsItemHovered(ctx, reaper.ImGui_HoveredFlags_AllowWhenDisabled()) then
+      if reaper.ImGui_BeginTooltip(ctx)then
+        reaper.ImGui_PushFont(ctx, tooltip_font)
+        reaper.ImGui_Text(ctx, help_text_actions)
+        reaper.ImGui_PopFont(ctx)
+        reaper.ImGui_EndTooltip(ctx)
+      end
+    end
+    _, settings.do_pre_actions = reaper.ImGui_MenuItem(ctx, 'Pre-actions', nil, settings.do_pre_actions)
+    _, settings.do_post_actions = reaper.ImGui_MenuItem(ctx, 'Post-actions', nil, settings.do_post_actions)
+    
+    
+    reaper.ImGui_Separator(ctx)
     _, settings.close_on_action = reaper.ImGui_MenuItem(ctx, 'Quit after selection', nil, settings.close_on_action)
     
     reaper.ImGui_Separator(ctx)
