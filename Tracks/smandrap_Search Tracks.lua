@@ -1,12 +1,13 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.7.2
+-- @version 1.7.3
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Add rudimentary support for Pre-Post Actions, defined insde the script.
+--   + Add rudimentary support for pre-post actions (default: disabled)
+--   # Display pre-post actions count in settings (that's exquisite UI work here lol)
+--
 -- @about
 --  Cubase style track search with routing capabilities
-
 
 --------------------------------------
 ------- USER AREA --------------------
@@ -31,6 +32,7 @@ PRE_ACTIONS = {
 
   
 PRE_ACTIONS = {
+
 }
 
 POST_ACTIONS = {
@@ -62,7 +64,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.7.2',
+  version = '1.7.3',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -73,8 +75,8 @@ local settings = {
   hide_titlebar = false,
   use_routing_cursor = true,
   dim_hidden_tracks = true,
-  do_pre_actions = false,
-  do_post_actions = false
+  do_pre_actions = true,
+  do_post_actions = true
 }
 
 ----------------------
@@ -409,8 +411,8 @@ local function DrawSettingsMenu()
         reaper.ImGui_EndTooltip(ctx)
       end
     end
-    _, settings.do_pre_actions = reaper.ImGui_MenuItem(ctx, 'Pre-actions', nil, settings.do_pre_actions)
-    _, settings.do_post_actions = reaper.ImGui_MenuItem(ctx, 'Post-actions', nil, settings.do_post_actions)
+    _, settings.do_pre_actions = reaper.ImGui_MenuItem(ctx, 'Pre-actions ('..#PRE_ACTIONS..')', nil, settings.do_pre_actions)
+    _, settings.do_post_actions = reaper.ImGui_MenuItem(ctx, 'Post-actions ('..#POST_ACTIONS..')', nil, settings.do_post_actions)
     
     
     reaper.ImGui_Separator(ctx)
