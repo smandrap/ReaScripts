@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="36c4e668022ec07a85dcdc22cf75b9cd0f768488">
+<index version="1" name="smandrap ReaScripts" commit="19cb996ea495b1dfb8df0009592fa481f3d4aab6">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -101,6 +101,12 @@
         <source main="main" file="smandrap_Insert new subproject in Subproject folder (prompt for name)">https://github.com/smandrap/ReaScripts/raw/36c4e668022ec07a85dcdc22cf75b9cd0f768488/Subprojects/smandrap_Insert%20new%20subproject%20in%20Subproject%20folder%20(prompt%20for%20name)</source>
         <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/36c4e668022ec07a85dcdc22cf75b9cd0f768488/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
         <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/36c4e668022ec07a85dcdc22cf75b9cd0f768488/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
+      </version>
+      <version name="1.0.1" author="smandrap" time="2024-03-12T15:15:16Z">
+        <changelog><![CDATA[#oopsie with filenames]]></changelog>
+        <source main="main" file="smandrap_Insert new subproject in Subproject folder (prompt for name).lua">https://github.com/smandrap/ReaScripts/raw/19cb996ea495b1dfb8df0009592fa481f3d4aab6/Subprojects/smandrap_Insert%20new%20subproject%20in%20Subproject%20folder%20(prompt%20for%20name).lua</source>
+        <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/19cb996ea495b1dfb8df0009592fa481f3d4aab6/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
+        <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/19cb996ea495b1dfb8df0009592fa481f3d4aab6/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
       </version>
     </reapack>
   </category>
