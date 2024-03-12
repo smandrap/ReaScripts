@@ -1,6 +1,6 @@
 -- @author smandrap
 -- @description Prompt name for subprojects (pack)
--- @version 1.0.1
+-- @version 1.1
 -- @changelog
 --   #oopsie with filenames
 -- @about
