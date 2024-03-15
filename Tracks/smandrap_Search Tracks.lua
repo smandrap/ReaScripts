@@ -1,13 +1,13 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8
+-- @version 1.8.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   + Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
 --   # Add "All selected" tooltip to describe where you're routing from/to
+--   # Add support for mcp routing
 -- @about
 --  Cubase style track search with routing capabilities
-
 
 --------------------------------------
 ------- USER AREA --------------------
@@ -504,7 +504,7 @@ local function SetupDragDrop(track)
       dragged_track = track.track
       dest_track, info = reaper.GetThingFromPoint(reaper.GetMousePosition())
       
-      dest_track = (info:match('tcp') or info:match('fx_')) and dest_track or nil
+      dest_track = (info:match('tcp') or info:match('mcp') or info:match('fx_')) and dest_track or nil
       local dest_track_name = dest_track and select(2, reaper.GetTrackName(dest_track)) or '...'
       if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift()) then dest_track_name = "ALL SELECTED" end
       
