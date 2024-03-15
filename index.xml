@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="f47d825051a309fbce8a17a9566e125ccf3f0578">
+<index version="1" name="smandrap ReaScripts" commit="e24e4035685b39a5fc4fe81a9e2ab33c823df377">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -232,6 +232,11 @@
         <changelog><![CDATA[+ Add rudimentary support for pre-post actions (default: disabled)
 # Display pre-post actions count in settings (that's exquisite UI work here lol)]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/0a40aa7aac8511296a301746db1d79d66fae2276/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.8" author="smandrap" time="2024-03-15T14:08:02Z">
+        <changelog><![CDATA[+ Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
+# Add "All selected" tooltip to describe where you're routing from/to]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/e24e4035685b39a5fc4fe81a9e2ab33c823df377/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
