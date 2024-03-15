@@ -1,13 +1,13 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.7.3
+-- @version 1.8
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Add rudimentary support for pre-post actions (default: disabled)
---   # Display pre-post actions count in settings (that's exquisite UI work here lol)
---
+--   + Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
+--   # Add "All selected" tooltip to describe where you're routing from/to
 -- @about
 --  Cubase style track search with routing capabilities
+
 
 --------------------------------------
 ------- USER AREA --------------------
@@ -64,7 +64,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.7.3',
+  version = '1.8',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -145,6 +145,7 @@ local help_text = script_name..' v'..settings.version..'\n\n'..
 - Drag/Drop on TCP/MCP : Create send
 - Drag/Drop on FX : Create sidechain send (ch 3-4)
 - Cmd/Ctrl while dragging : Create receive
+- Shift while dragging : send/receive to/from all selected tracks
 ]]
 
 local help_text_actions = [[You can define actions to execute before and/or after the track selection happens.
@@ -505,6 +506,7 @@ local function SetupDragDrop(track)
       
       dest_track = (info:match('tcp') or info:match('fx_')) and dest_track or nil
       local dest_track_name = dest_track and select(2, reaper.GetTrackName(dest_track)) or '...'
+      if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift()) then dest_track_name = "ALL SELECTED" end
       
       if reaper.ImGui_BeginTooltip(ctx) then
         if info:match('fx_') then
@@ -532,12 +534,28 @@ local function SetupDragDrop(track)
       if dest_track and dragged_track then
         reaper.Undo_BeginBlock()
         
+        -- RECEIVES
         if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
-          if not info:match('fx_') then reaper.CreateTrackSend(dest_track, dragged_track) end
+          if not info:match('fx_') then
+            -- RECEIVE FROM SELECTED
+            if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift()) then
+              for i = 0, reaper.CountSelectedTracks(0) - 1 do
+                reaper.CreateTrackSend(reaper.GetSelectedTrack(0, i), dragged_track) 
+              end
+            else
+              reaper.CreateTrackSend(dest_track, dragged_track) 
+            end
+          end
         else
           -- SEND
-          local send_idx = reaper.CreateTrackSend(dragged_track, dest_track)
-          
+          local send_idx = nil
+          if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shift()) then
+            for i = 0, reaper.CountSelectedTracks(0) - 1 do
+              reaper.CreateTrackSend(dragged_track, reaper.GetSelectedTrack(0, i)) 
+            end
+          else
+            send_idx = reaper.CreateTrackSend(dragged_track, dest_track)
+          end
           -- SIDECHAIN
           if info:match('fx_') then
             IncreaseTrackChannelCnt(dest_track)
