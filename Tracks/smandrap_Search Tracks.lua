@@ -1,11 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.1
+-- @version 1.8.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
---   # Add "All selected" tooltip to describe where you're routing from/to
---   # Add support for mcp routing
+--   # Scroll to track in MCP on action
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -64,7 +62,7 @@ local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
 
 
 local settings = {
-  version = '1.8',
+  version = '1.8.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -291,6 +289,7 @@ local function DoActionOnTrack(track, add_to_selection)
     reaper.SetOnlyTrackSelected(track.track)
   end
   reaper.Main_OnCommand(40913, 0) -- Vertical scroll to track
+  reaper.SetMixerScroll(track.track)
   
   if POST_ACTIONS and settings.do_post_actions == true then DoActions(POST_ACTIONS) end
   
