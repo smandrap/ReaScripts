@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="f53ba172478dec1c687ed57aa2f6b1cae65b1c35">
+<index version="1" name="smandrap ReaScripts" commit="9b71e1dbdf00fde365325ee5ba54e6eb58c85068">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -243,6 +243,10 @@
 # Add "All selected" tooltip to describe where you're routing from/to
 # Add support for mcp routing]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/f53ba172478dec1c687ed57aa2f6b1cae65b1c35/Tracks/smandrap_Search%20Tracks.lua</source>
+      </version>
+      <version name="1.8.2" author="smandrap" time="2024-03-30T12:33:47Z">
+        <changelog><![CDATA[# Scroll to track in MCP on action]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/9b71e1dbdf00fde365325ee5ba54e6eb58c85068/Tracks/smandrap_Search%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
