@@ -1,9 +1,11 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.2
+-- @version 1.8.2a
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   # Scroll to track in MCP on action
+--   + Try fuzzy search (fzy-lua)
+-- @provides
+--   modules/fzy.lua
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -55,6 +57,9 @@ local js_api = false
 if reaper.APIExists('JS_ReaScriptAPI_Version') then js_api = true end
 local routing_cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
 local normal_cursor = js_api and reaper.JS_Mouse_LoadCursor(0)
+
+package.path = package.path..';'..debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] .. "?.lua;" -- GET DIRECTORY FOR REQUIRE
+local fzy = require("modules.fzy")
 
 ----------------------
 -- DEFAULT SETTINGS
@@ -216,22 +221,34 @@ local function IncreaseTrackChannelCnt(track)
 end
 
 local function UpdateTrackList()
-  if search_filter == '' then 
+  if search_string == '' then 
     filtered_tracks = table_copy(tracks)
     return
   end
   
   table_delete(filtered_tracks)
   --filtered_tracks = {}
+  local tracknames = {}
   
   for i = 1, #tracks do
     if tracks[i] == nil then goto continue end
-    
-    if string.match(string.lower(tracks[i].name), string.lower(search_string)) then
-      table.insert(filtered_tracks, tracks[i])
-    end
-    
+    tracknames[i] = string.lower(tracks[i].name)
     ::continue::
+  end
+  
+  local searchresult = fzy.filter(string.lower(search_string), tracknames)
+  
+  -- longer the search string, more precision required
+  local targetscore = string.len(search_string) * 0.4 * 2
+  
+  
+  
+  for i = 1, #searchresult do
+    local score = searchresult[i][3]
+    if searchresult[i][2][1] == 1 then score = score * 2 end
+    if score > targetscore then
+      table.insert(filtered_tracks, tracks[searchresult[i][1]])
+    end
   end
 end
 
