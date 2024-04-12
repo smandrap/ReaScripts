@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="d330e881da466e6fbd664136ed13aeedeb9bddc4">
+<index version="1" name="smandrap ReaScripts" commit="8683c81669c74b85e99fdaa383009b53002cbe98">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -252,6 +252,11 @@
         <changelog><![CDATA[+ Try fuzzy search (fzy-lua)]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/d330e881da466e6fbd664136ed13aeedeb9bddc4/Tracks/smandrap_Search%20Tracks.lua</source>
         <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/d330e881da466e6fbd664136ed13aeedeb9bddc4/Tracks/modules/fzy.lua</source>
+      </version>
+      <version name="1.8.3a" author="smandrap" time="2024-04-12T08:41:08Z">
+        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/8683c81669c74b85e99fdaa383009b53002cbe98/Tracks/smandrap_Search%20Tracks.lua</source>
+        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/8683c81669c74b85e99fdaa383009b53002cbe98/Tracks/modules/fzy.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
