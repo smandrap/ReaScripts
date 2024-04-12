@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3d
+-- @version 1.8.3e
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
@@ -404,7 +404,6 @@ end
 
 local function WriteSettingsToExtState()
   for k, v in pairs(settings) do
-    reaper.ShowConsoleMsg("Writing: "..k.." v: "..tostring(v)..'\n')
     reaper.SetExtState('smandrap_SearchTracks', k, tostring(v), true)
   end
 end
