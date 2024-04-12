@@ -1,9 +1,10 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3b
+-- @version 1.8.3d
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
+--   + Add font scaling
 -- @provides
 --   modules/fzy.lua
 -- @about
@@ -82,7 +83,8 @@ local settings = {
   use_routing_cursor = true,
   dim_hidden_tracks = true,
   do_pre_actions = true,
-  do_post_actions = true
+  do_post_actions = true,
+  font_size = 13
 }
 
 ----------------------
@@ -113,10 +115,12 @@ local first_frame = true
 
 local open_settings = false
 
-local font_size = 13
+local font_size = tonumber(reaper.GetExtState('smandrap_SearchTracks', 'font_size')) or settings.font_size
+local new_fontsize = font_size
 local tooltip_font_size = font_size - 3
-local font = reaper.ImGui_CreateFont('sans-serif', font_size)
-local tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
+
+local font = nil         -- created in init()
+local tooltip_font = nil -- created in init()
 
 local default_wflags = reaper.ImGui_WindowFlags_NoCollapse()
 local notitle_wflags = default_wflags | reaper.ImGui_WindowFlags_NoTitleBar()
@@ -238,7 +242,7 @@ local function UpdateTrackList()
 
   local words = {}
   for word in search_string:gmatch("%S+") do table.insert(words, string.lower(word)) end
---[[   reaper.ClearConsole()
+  --[[   reaper.ClearConsole()
   for j = 1, #words do
       reaper.ShowConsoleMsg(j..' '..words[j]..' ')
   end
@@ -255,7 +259,7 @@ local function UpdateTrackList()
     if match_cnt == word_cnt then table.insert(filtered_tracks, tracks[i]) end
   end
 
-  
+
   -- If word matching fails, proceed to fuzzy search
   if #filtered_tracks > 0 then return end
   --reaper.ShowConsoleMsg("fzy")
@@ -271,7 +275,6 @@ local function UpdateTrackList()
       table.insert(filtered_tracks, tracks[searchresult[i][1]])
     end
   end
-
 end
 
 local function UpdateAllData()
@@ -390,12 +393,18 @@ local function ReadSettingsFromExtState()
   if not reaper.HasExtState('smandrap_SearchTracks', 'version') then return end
 
   for k, v in pairs(settings) do
-    settings[k] = reaper.GetExtState('smandrap_SearchTracks', tostring(k)) == 'true' and true or false
+    local extstate = reaper.GetExtState('smandrap_SearchTracks', k)
+    if tonumber(extstate) then
+      settings[k] = tonumber(extstate)
+    else
+      settings[k] = extstate == "true" and true or false
+    end
   end
 end
 
 local function WriteSettingsToExtState()
   for k, v in pairs(settings) do
+    reaper.ShowConsoleMsg("Writing: "..k.." v: "..tostring(v)..'\n')
     reaper.SetExtState('smandrap_SearchTracks', k, tostring(v), true)
   end
 end
@@ -481,6 +490,15 @@ local function DrawSettingsMenu()
           end
         end
       end
+      reaper.ImGui_Separator(ctx)
+
+      reaper.ImGui_AlignTextToFramePadding(ctx)
+      reaper.ImGui_Text(ctx, 'Font Size:')
+      reaper.ImGui_SameLine(ctx)
+      reaper.ImGui_SetNextItemWidth(ctx, 50)
+      local fontsize_changed = false
+      _, new_fontsize = reaper.ImGui_InputInt(ctx, "##FontSize", new_fontsize, 0)
+      new_fontsize = new_fontsize < 10 and 10 or new_fontsize > 20 and 20 or new_fontsize
       reaper.ImGui_EndMenu(ctx)
     end
 
@@ -629,11 +647,12 @@ local function DrawTrackNode(track, idx)
     reaper.ImGui_SetCursorPos(ctx, cursor_pos_x, cursor_pos_y + 3)
 
     reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 12)
-
     reaper.ImGui_ColorButton(ctx, 'color', track.color, colorbox_flags, colorbox_size, colorbox_size)
     reaper.ImGui_PopStyleVar(ctx)
+
     reaper.ImGui_SetCursorPos(ctx, cursor_pos_x, cursor_pos_y)
   end
+
 
   reaper.ImGui_SameLine(ctx, nil, 5)
   local displayed_string = settings.show_track_number and track.number .. ': ' .. track.name or track.name
@@ -736,8 +755,23 @@ local function DrawWindow()
   --]]
 end
 
+local function UpdateFontSizes()
+  font_size = new_fontsize
+  tooltip_font_size = font_size - 3
+  font = reaper.ImGui_CreateFont('sans-serif', font_size)
+  tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
+
+  settings.font_size = font_size
+
+  colorbox_size = font_size * 0.6
+
+  reaper.ImGui_Attach(ctx, font)
+  reaper.ImGui_Attach(ctx, tooltip_font)
+end
 
 local function BeginGui()
+  if new_fontsize ~= font_size then UpdateFontSizes() end
+
   reaper.ImGui_PushFont(ctx, font)
   reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_WindowRounding(), 5)
   reaper.ImGui_SetNextWindowSize(ctx, 250, 350, reaper.ImGui_Cond_FirstUseEver())
@@ -748,7 +782,6 @@ local function BeginGui()
     DrawWindow()
     reaper.ImGui_End(ctx)
   end
-
 
   reaper.ImGui_PopStyleVar(ctx)
   reaper.ImGui_PopFont(ctx)
@@ -772,11 +805,17 @@ local function main()
 end
 
 local function init()
+  ReadSettingsFromExtState()
+
+  font = reaper.ImGui_CreateFont('sans-serif', font_size)
+  tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
+
+  new_fontsize = font_size
+
   reaper.ImGui_Attach(ctx, font)
   reaper.ImGui_Attach(ctx, tooltip_font)
   reaper.ImGui_SetConfigVar(ctx, reaper.ImGui_ConfigVar_MouseDoubleClickTime(), 0.2)
 
-  ReadSettingsFromExtState()
   if not js_api then settings.use_routing_cursor = false end
 
   UpdateAllData()
