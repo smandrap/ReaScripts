@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3a
+-- @version 1.8.3b
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
@@ -258,11 +258,11 @@ local function UpdateTrackList()
   
   -- If word matching fails, proceed to fuzzy search
   if #filtered_tracks > 0 then return end
-
+  --reaper.ShowConsoleMsg("fzy")
   local searchresult = fzy.filter(string.lower(search_string), tracknames)
 
-  -- longer the search string, more precision required
-  local targetscore = string.len(search_string) * 0.4 * 2
+  -- longer the search string, less precision required
+  local targetscore = 0.00001 + 1 / string.len(search_string)
 
   for i = 1, #searchresult do
     local score = searchresult[i][3]
