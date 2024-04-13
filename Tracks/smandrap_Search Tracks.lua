@@ -53,7 +53,6 @@ if not reaper.ImGui_GetVersion then
   return
 end
 
-
 local js_api = false
 if reaper.APIExists('JS_ReaScriptAPI_Version') then js_api = true end
 local routing_cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
@@ -64,6 +63,8 @@ package.path = package.path ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
 local fzy = require("modules.fzy")
+
+local extstate_section = 'smandrap_SearchTracks'
 
 ----------------------
 -- DEFAULT SETTINGS
@@ -115,7 +116,7 @@ local first_frame = true
 
 local open_settings = false
 
-local font_size = tonumber(reaper.GetExtState('smandrap_SearchTracks', 'font_size')) or settings.font_size
+local font_size = tonumber(reaper.GetExtState(extstate_section, 'font_size')) or settings.font_size
 local new_fontsize = font_size
 local tooltip_font_size = font_size - 3
 
@@ -390,10 +391,10 @@ end
 
 
 local function ReadSettingsFromExtState()
-  if not reaper.HasExtState('smandrap_SearchTracks', 'version') then return end
+  if not reaper.HasExtState(extstate_section, 'version') then return end
 
   for k, v in pairs(settings) do
-    local extstate = reaper.GetExtState('smandrap_SearchTracks', k)
+    local extstate = reaper.GetExtState(extstate_section, k)
     if tonumber(extstate) then
       settings[k] = tonumber(extstate)
     else
@@ -404,7 +405,7 @@ end
 
 local function WriteSettingsToExtState()
   for k, v in pairs(settings) do
-    reaper.SetExtState('smandrap_SearchTracks', k, tostring(v), true)
+    reaper.SetExtState(extstate_section, k, tostring(v), true)
   end
 end
 
