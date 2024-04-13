@@ -232,7 +232,6 @@ local function UpdateTrackList()
   end
 
   table_delete(filtered_tracks)
-  --filtered_tracks = {}
   local tracknames = {}
 
   for i = 1, #tracks do
@@ -241,13 +240,11 @@ local function UpdateTrackList()
     ::continue::
   end
 
+  local lowercase_search_string = string.lower(search_string)
+  -- Word matching
   local words = {}
-  for word in search_string:gmatch("%S+") do table.insert(words, string.lower(word)) end
-  --[[   reaper.ClearConsole()
-  for j = 1, #words do
-      reaper.ShowConsoleMsg(j..' '..words[j]..' ')
-  end
-  reaper.ShowConsoleMsg("\n") ]]
+  for word in lowercase_search_string:gmatch("%S+") do table.insert(words, word) end
+
   local word_cnt = #words
 
   for i = 1, #tracknames do
@@ -260,14 +257,11 @@ local function UpdateTrackList()
     if match_cnt == word_cnt then table.insert(filtered_tracks, tracks[i]) end
   end
 
-
-  -- If word matching fails, proceed to fuzzy search
   if #filtered_tracks > 0 then return end
-  --reaper.ShowConsoleMsg("fzy")
-  local searchresult = fzy.filter(string.lower(search_string), tracknames)
+  -- If word matching fails, proceed to fuzzy search
 
-  -- longer the search string, less precision required
-  local targetscore = 0.00001 + 1 / string.len(search_string)
+  local searchresult = fzy.filter(lowercase_search_string, tracknames)
+  local targetscore = 0.00001 + 1 / string.len(search_string) -- longer the search string, less precision required
 
   for i = 1, #searchresult do
     local score = searchresult[i][3]
