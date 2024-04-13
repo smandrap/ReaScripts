@@ -1,9 +1,10 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e2
+-- @version 1.8.3e3
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
+--   # Fix font size not being saved on exit
 --   + Add font scaling
 -- @provides
 --   modules/fzy.lua
