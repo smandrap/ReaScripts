@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e1
+-- @version 1.8.3e2
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
@@ -116,12 +116,12 @@ local first_frame = true
 
 local open_settings = false
 
-local font_size = tonumber(reaper.GetExtState(extstate_section, 'font_size')) or settings.font_size
-local new_fontsize = font_size
-local tooltip_font_size = font_size - 3
+local new_font_size
+local tooltip_font_size
+local colorbox_size
 
-local font = nil         -- created in init()
-local tooltip_font = nil -- created in init()
+local font
+local tooltip_font
 
 local default_wflags = reaper.ImGui_WindowFlags_NoCollapse()
 local notitle_wflags = default_wflags | reaper.ImGui_WindowFlags_NoTitleBar()
@@ -134,14 +134,10 @@ local node_flags_leaf = node_flags_base
     | reaper.ImGui_TreeNodeFlags_Leaf()
     | reaper.ImGui_TreeNodeFlags_NoTreePushOnOpen()
 
-
-local colorbox_size = font_size * 0.6
 local colorbox_flags = reaper.ImGui_ColorEditFlags_NoAlpha()
     | reaper.ImGui_ColorEditFlags_NoTooltip()
 
 local was_dragging = false
-
-local enter_tracklist_focus = false
 
 local help_text = script_name .. ' v' .. settings.version .. '\n\n' ..
     [[- Cmd/Ctrl+F : Focus search field
@@ -222,7 +218,7 @@ local function IncreaseTrackChannelCnt(track)
   local tr_ch_cnt = reaper.GetMediaTrackInfo_Value(track, 'I_NCHAN')
 
   if tr_ch_cnt > 4 then return end
-  tr_ch_cnt = reaper.SetMediaTrackInfo_Value(track, 'I_NCHAN', 4)
+  reaper.SetMediaTrackInfo_Value(track, 'I_NCHAN', 4)
 end
 
 local function UpdateTrackList()
@@ -490,9 +486,9 @@ local function DrawSettingsMenu()
       reaper.ImGui_Text(ctx, 'Font Size:')
       reaper.ImGui_SameLine(ctx)
       reaper.ImGui_SetNextItemWidth(ctx, 50)
-      local fontsize_changed = false
-      _, new_fontsize = reaper.ImGui_InputInt(ctx, "##FontSize", new_fontsize, 0)
-      new_fontsize = new_fontsize < 10 and 10 or new_fontsize > 20 and 20 or new_fontsize
+
+      _, new_font_size = reaper.ImGui_InputInt(ctx, "##FontSize", new_font_size, 0)
+      new_font_size = new_font_size < 10 and 10 or new_font_size > 20 and 20 or new_font_size
       reaper.ImGui_EndMenu(ctx)
     end
 
@@ -730,41 +726,23 @@ local function DrawWindow()
   local changed = DrawSearchFilter()
   if changed then UpdateTrackList() end
 
-  --[[
-  if reaper.ImGui_BeginChild(ctx, 'tracklist') then
-    if enter_tracklist_focus then           -- CFILLION FUNCTION
-      reaper.ImGui_SetKeyboardFocusHere(ctx)
-      enter_tracklist_focus = false
-    end
-  end
-  --]]
-
   BeginTrackTree()
-
-  --[[
-  reaper.ImGui_EndChild( ctx )
-  if reaper.ImGui_IsItemFocused(ctx) then
-    enter_tracklist_focus = true
-  end
-  --]]
 end
 
 local function UpdateFontSizes()
-  font_size = new_fontsize
-  tooltip_font_size = font_size - 3
-  font = reaper.ImGui_CreateFont('sans-serif', font_size)
+  settings.font_size = new_font_size
+  tooltip_font_size = settings.font_size - 3
+  font = reaper.ImGui_CreateFont('sans-serif', settings.font_size)
   tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
 
-  settings.font_size = font_size
-
-  colorbox_size = font_size * 0.6
+  colorbox_size = settings.font_size * 0.6
 
   reaper.ImGui_Attach(ctx, font)
   reaper.ImGui_Attach(ctx, tooltip_font)
 end
 
 local function BeginGui()
-  if new_fontsize ~= font_size then UpdateFontSizes() end
+  if new_font_size ~= settings.font_size then UpdateFontSizes() end
 
   reaper.ImGui_PushFont(ctx, font)
   reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_WindowRounding(), 5)
@@ -798,20 +776,24 @@ local function main()
   if first_frame then first_frame = false end
 end
 
-local function init()
-  ReadSettingsFromExtState()
+local function PrepRandomShit()
+  new_font_size = settings.font_size
+  tooltip_font_size = settings.font_size - 3
+  colorbox_size = settings.font_size * 0.6
 
-  font = reaper.ImGui_CreateFont('sans-serif', font_size)
+  font = reaper.ImGui_CreateFont('sans-serif', settings.font_size)
   tooltip_font = reaper.ImGui_CreateFont('sans-serif', tooltip_font_size)
-
-  new_fontsize = font_size
 
   reaper.ImGui_Attach(ctx, font)
   reaper.ImGui_Attach(ctx, tooltip_font)
   reaper.ImGui_SetConfigVar(ctx, reaper.ImGui_ConfigVar_MouseDoubleClickTime(), 0.2)
 
   if not js_api then settings.use_routing_cursor = false end
+end
 
+local function init()
+  ReadSettingsFromExtState()
+  PrepRandomShit()
   UpdateAllData()
 end
 
@@ -822,4 +804,4 @@ end
 
 reaper.atexit(exit)
 init()
-reaper.defer(main)
+main()
