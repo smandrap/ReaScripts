@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e
+-- @version 1.8.3e1
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
