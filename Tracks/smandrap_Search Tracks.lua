@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e
+-- @version 1.8.3e1
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
@@ -53,7 +53,6 @@ if not reaper.ImGui_GetVersion then
   return
 end
 
-
 local js_api = false
 if reaper.APIExists('JS_ReaScriptAPI_Version') then js_api = true end
 local routing_cursor = js_api and reaper.JS_Mouse_LoadCursor(186) -- REAPER routing cursor
@@ -64,6 +63,8 @@ package.path = package.path ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
 local fzy = require("modules.fzy")
+
+local extstate_section = 'smandrap_SearchTracks'
 
 ----------------------
 -- DEFAULT SETTINGS
@@ -115,7 +116,7 @@ local first_frame = true
 
 local open_settings = false
 
-local font_size = tonumber(reaper.GetExtState('smandrap_SearchTracks', 'font_size')) or settings.font_size
+local font_size = tonumber(reaper.GetExtState(extstate_section, 'font_size')) or settings.font_size
 local new_fontsize = font_size
 local tooltip_font_size = font_size - 3
 
@@ -231,7 +232,6 @@ local function UpdateTrackList()
   end
 
   table_delete(filtered_tracks)
-  --filtered_tracks = {}
   local tracknames = {}
 
   for i = 1, #tracks do
@@ -240,13 +240,11 @@ local function UpdateTrackList()
     ::continue::
   end
 
+  local lowercase_search_string = string.lower(search_string)
+  -- Word matching
   local words = {}
-  for word in search_string:gmatch("%S+") do table.insert(words, string.lower(word)) end
-  --[[   reaper.ClearConsole()
-  for j = 1, #words do
-      reaper.ShowConsoleMsg(j..' '..words[j]..' ')
-  end
-  reaper.ShowConsoleMsg("\n") ]]
+  for word in lowercase_search_string:gmatch("%S+") do table.insert(words, word) end
+
   local word_cnt = #words
 
   for i = 1, #tracknames do
@@ -259,14 +257,11 @@ local function UpdateTrackList()
     if match_cnt == word_cnt then table.insert(filtered_tracks, tracks[i]) end
   end
 
-
-  -- If word matching fails, proceed to fuzzy search
   if #filtered_tracks > 0 then return end
-  --reaper.ShowConsoleMsg("fzy")
-  local searchresult = fzy.filter(string.lower(search_string), tracknames)
+  -- If word matching fails, proceed to fuzzy search
 
-  -- longer the search string, less precision required
-  local targetscore = 0.00001 + 1 / string.len(search_string)
+  local searchresult = fzy.filter(lowercase_search_string, tracknames)
+  local targetscore = 0.00001 + 1 / string.len(search_string) -- longer the search string, less precision required
 
   for i = 1, #searchresult do
     local score = searchresult[i][3]
@@ -390,10 +385,10 @@ end
 
 
 local function ReadSettingsFromExtState()
-  if not reaper.HasExtState('smandrap_SearchTracks', 'version') then return end
+  if not reaper.HasExtState(extstate_section, 'version') then return end
 
   for k, v in pairs(settings) do
-    local extstate = reaper.GetExtState('smandrap_SearchTracks', k)
+    local extstate = reaper.GetExtState(extstate_section, k)
     if tonumber(extstate) then
       settings[k] = tonumber(extstate)
     else
@@ -404,7 +399,7 @@ end
 
 local function WriteSettingsToExtState()
   for k, v in pairs(settings) do
-    reaper.SetExtState('smandrap_SearchTracks', k, tostring(v), true)
+    reaper.SetExtState(extstate_section, k, tostring(v), true)
   end
 end
 
