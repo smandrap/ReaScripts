@@ -58,6 +58,7 @@ local function DoDuplicateStuff()
     end
 
     if not envelopes then 
+      reaper.Main_OnCommand(41148, 0) -- Show All Envelopes on track
       for j = 0, reaper.CountSelectedTracks(0) - 1 do
         local track = reaper.GetSelectedTrack(0, j)
         DeleteAllEnvelopes(track) 
