@@ -1,8 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0.1
+-- @version 1.0.2
 -- @changelog
---    # More reapack fighting 2
+--    # Set duplicated tracks as selected after duplication
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -31,6 +31,8 @@ local instruments = true
 local sends = true
 local receives = true
 local groupAssign = true
+
+local duplicated_tracks = {}
 
 local insertLastSel = false
 
@@ -98,7 +100,17 @@ local function DoDuplicateStuff()
     if not sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
     if not receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
     if not groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
+
+    for j = 1, #sel_tracks do
+      duplicated_tracks[#duplicated_tracks + 1] = sel_tracks[j]
+    end
   end
+
+  -- Select all duplicated tracks
+  for i = 1, #duplicated_tracks do
+    reaper.SetTrackSelected(duplicated_tracks[i], true)
+  end
+
   reaper.PreventUIRefresh(1)
   reaper.Undo_EndBlock("Duplicate Tracks " .. dupenum .. " times", 0)
 end
