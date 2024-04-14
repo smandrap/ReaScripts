@@ -1,9 +1,10 @@
--- @description DESC
+-- @description Duplicate Tracks
 -- @author smandrap
 -- @version 1.0
+-- @changelog
 -- @donation https://paypal.me/smandrap
 -- @about
---   ABOUT
+--   Pro Tools style Duplicate Tracks window
 
 local reaper = reaper
 local script_name = "Duplicate Tracks"
@@ -13,6 +14,24 @@ if not reaper.ImGui_GetVersion() then
   if ok == 1 then reaper.ReaPack_BrowsePackages("ReaImGui API") end
   return
 end
+
+-- APP
+
+reaper.set_action_options(3)
+
+local _ = nil
+local dupenum = 1
+
+local activeLane = true
+local otherLanes = true
+local envelopes = true
+local fx = true
+local instruments = true
+local sends = true
+local receives = true
+local groupAssign = true
+
+local insertLastSel = false
 
 local function DeleteActiveLanes()
   local track = reaper.GetTrack(0, 0)
@@ -34,24 +53,6 @@ local function DeleteActiveLanes()
   end
 end
 
--- APP
-
-reaper.set_action_options(3)
-
-local _ = nil
-local dupenum = 1
-
-local activeLane = true
-local otherLanes = true
-local envelopes = true
-local fx = true
-local instruments = true
-local sends = true
-local receives = true
-local groupAssign = true
-
-local insertLastSel = false
-
 -- Sexan/ArkaData function
 local function DeleteAllEnvelopes(track)
   for i = reaper.CountTrackEnvelopes(track), 1, -1 do
@@ -71,23 +72,27 @@ local function DoDuplicateStuff()
 
     local sel_tracks = {}
     for j = 0, reaper.CountSelectedTracks(0) - 1 do
-      sel_tracks[#sel_tracks+1] = reaper.GetSelectedTrack(0, j)
+      sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
     end
 
+    -- TODO: ACTIVE LANES (bug in API)
+    --[[ if not activeLane then
+      DeleteActiveLanes()
+    end ]]
+
+    -- NON-ACTIVE LANES
     --Track lanes: Delete lanes (including media items) that are not playing
     if not otherLanes then reaper.Main_OnCommand(42691, 0) end
 
-    -- TODO: Active Lane
-    if not activeLane then
-      reaper.Main_OnCommand(42796, 0)
-    end
-
-    if not envelopes then 
+    -- ENVELOPES
+    if not envelopes then
       reaper.Main_OnCommand(41148, 0) -- Show All Envelopes on track
       for j = 1, #sel_tracks do
-        DeleteAllEnvelopes(sel_tracks[j]) 
+        DeleteAllEnvelopes(sel_tracks[j])
       end
     end
+
+
     if not fx then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_CLRFXCHAIN3"), 0) end
     if not sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
     if not receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
