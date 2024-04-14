@@ -1,10 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0.3
+-- @version 1.0.4
 -- @changelog
---    + Alt+click checkbox sets/unsets all checkboxes
---    # Move Receives checkbox alongside Sends checkbox
---    # Add SWS dependency check
+--    + add Active lanes checkbox (if track has no lanes, then deletes all items)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -46,6 +44,7 @@ local duplicated_tracks = {}
 
 local insertLastSel = false
 
+-- This is better but API has bug
 local function DeleteActiveLanes()
   local track = reaper.GetTrack(0, 0)
   if not reaper.ValidatePtr(track, "MediaTrack*") then return end
@@ -64,6 +63,34 @@ local function DeleteActiveLanes()
   for i = 0, numlanes - 1 do
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, 0)
   end
+end
+
+local function DeleteActiveLanes(track)
+  local numlanes = reaper.GetMediaTrackInfo_Value(track, 'I_NUMFIXEDLANES')
+  local itm_cnt = reaper.CountTrackMediaItems(track)
+  local itm_toDelete = {}
+
+  local playingLanes = {}
+
+  for i = 0, numlanes - 1 do
+    local laneplays = reaper.GetMediaTrackInfo_Value(track, 'C_LANEPLAYS:' .. i)
+    playingLanes[i] = laneplays > 0 and true or false
+  end
+
+  for i = 0, itm_cnt - 1 do
+    local itm = reaper.GetTrackMediaItem(track, i)
+    local itm_lane = reaper.GetMediaItemInfo_Value(itm, 'I_FIXEDLANE')
+
+    if playingLanes[itm_lane] == true then
+      itm_toDelete[#itm_toDelete + 1] = itm
+    end
+  end
+
+  for i = 1, #itm_toDelete do
+    reaper.DeleteTrackMediaItem(track, itm_toDelete[i])
+  end
+
+  reaper.Main_OnCommand(42689, 0) -- Track lanes: Delete lanes with no media items
 end
 
 -- Sexan/ArkaData function
@@ -88,13 +115,15 @@ local function DoDuplicateStuff()
       sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
     end
 
-    -- TODO: ACTIVE LANES (bug in API)
-    --[[ if not activeLane then
-      DeleteActiveLanes()
-    end ]]
+    -- ACTIVE LANES
+    if not dupeElements.activeLane then
+      for j = 1, #sel_tracks do
+        DeleteActiveLanes(sel_tracks[j])
+      end
+    end
 
     -- NON-ACTIVE LANES
-    --Track lanes: Delete lanes (including media items) that are not playing
+    -- Track lanes: Delete lanes (including media items) that are not playing
     if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
 
     -- ENVELOPES
@@ -149,7 +178,7 @@ local function Checkbox(label, val)
 end
 
 local function DrawCheckboxes()
-  --dupeElements.activeLane = Checkbox('Active Lane', dupeElements.activeLane)
+  dupeElements.activeLane = Checkbox('Active Lanes', dupeElements.activeLane)
   dupeElements.otherLanes = Checkbox('Non-Active Lanes', dupeElements.otherLanes)
   dupeElements.envelopes = Checkbox('Envelopes', dupeElements.envelopes)
   dupeElements.fx = Checkbox('FX', dupeElements.fx)
