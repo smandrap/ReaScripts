@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="4b18b78ab4002e3d9663f4d2f7e134513559d6cd">
+<index version="1" name="smandrap ReaScripts" commit="cb23847f31c394109e49a4172eb35747d44de7ae">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -117,13 +117,13 @@
     </reapack>
   </category>
   <category name="Tracks">
-    <reapack name="smandrap_Duplicate Tracks.lua" type="script" desc="DESC">
+    <reapack name="smandrap_Duplicate Tracks.lua" type="script" desc="Duplicate Tracks">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 ABOUT\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Pro Tools style Duplicate Tracks window\par}
 }
 ]]></description>
         <link rel="donation">https://paypal.me/smandrap</link>
