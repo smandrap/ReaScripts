@@ -14,6 +14,26 @@ if not reaper.ImGui_GetVersion() then
   return
 end
 
+local function DeleteActiveLanes()
+  local track = reaper.GetTrack(0, 0)
+  if not reaper.ValidatePtr(track, "MediaTrack*") then return end
+
+  local numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
+
+  for i = 0, numlanes - 1 do
+    local laneplays = reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i)
+
+    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, laneplays == 0 and 2 or 0)
+  end
+
+  reaper.Main_OnCommand(42691, 0) --Track lanes: Delete lanes (including media items) that are not playing
+
+  numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
+  for i = 0, numlanes - 1 do
+    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, 0)
+  end
+end
+
 -- APP
 
 reaper.set_action_options(3)
@@ -49,6 +69,11 @@ local function DoDuplicateStuff()
   for i = 1, dupenum do
     reaper.Main_OnCommand(40062, 0) --Dupe
 
+    local sel_tracks = {}
+    for j = 0, reaper.CountSelectedTracks(0) - 1 do
+      sel_tracks[#sel_tracks+1] = reaper.GetSelectedTrack(0, j)
+    end
+
     --Track lanes: Delete lanes (including media items) that are not playing
     if not otherLanes then reaper.Main_OnCommand(42691, 0) end
 
@@ -59,9 +84,8 @@ local function DoDuplicateStuff()
 
     if not envelopes then 
       reaper.Main_OnCommand(41148, 0) -- Show All Envelopes on track
-      for j = 0, reaper.CountSelectedTracks(0) - 1 do
-        local track = reaper.GetSelectedTrack(0, j)
-        DeleteAllEnvelopes(track) 
+      for j = 1, #sel_tracks do
+        DeleteAllEnvelopes(sel_tracks[j]) 
       end
     end
     if not fx then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_CLRFXCHAIN3"), 0) end
@@ -73,25 +97,7 @@ local function DoDuplicateStuff()
   reaper.Undo_EndBlock("Duplicate Tracks " .. dupenum .. " times", 0)
 end
 
-local function DeleteActiveLanes()
-  local track = reaper.GetTrack(0, 0)
-  if not reaper.ValidatePtr(track, "MediaTrack*") then return end
 
-  local numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
-
-  for i = 0, numlanes - 1 do
-    local laneplays = reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i)
-
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, laneplays == 0 and 2 or 0)
-  end
-
-  reaper.Main_OnCommand(42691, 0) --Track lanes: Delete lanes (including media items) that are not playing
-
-  numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
-  for i = 0, numlanes - 1 do
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, 0)
-  end
-end
 
 -- GUI
 
