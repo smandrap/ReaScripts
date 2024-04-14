@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="bbb2ea0959b5c9ce2402e8095bc75583f50fe533">
+<index version="1" name="smandrap ReaScripts" commit="b49af85d119c8b8d2d0c89dc31a269323d410734">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -144,6 +144,10 @@
 # Move Receives checkbox alongside Sends checkbox
 # Add SWS dependency check]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/bbb2ea0959b5c9ce2402e8095bc75583f50fe533/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.4" author="smandrap" time="2024-04-14T23:17:57Z">
+        <changelog><![CDATA[+ add Active lanes checkbox (if track has no lanes, then deletes all items)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/b49af85d119c8b8d2d0c89dc31a269323d410734/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
