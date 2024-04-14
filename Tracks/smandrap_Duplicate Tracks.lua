@@ -1,6 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0
+-- @version 1.0.1
+-- @changelog
+--    # More reapack fighting 2
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
