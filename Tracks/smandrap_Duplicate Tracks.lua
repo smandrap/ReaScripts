@@ -1,7 +1,6 @@
 -- @description Duplicate Tracks
 -- @author smandrap
 -- @version 1.0
--- @changelog
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
