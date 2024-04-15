@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89">
+<index version="1" name="smandrap ReaScripts" commit="0c8ee3a5043d73cc9e6b10021868a714e2e56b6d">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -165,184 +165,6 @@
         <source main="main">https://github.com/smandrap/ReaScripts/raw/465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
-    <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search with routing capabilities\par}
-}
-]]></description>
-        <link rel="donation">https://paypal.me/smandrap</link>
-      </metadata>
-      <version name="1.0" author="smandrap" time="2023-10-15T15:04:55Z">
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/2599aa3d23c5c1cb170b05c4b5cbe2a1ba8ca37f/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.1" author="smandrap" time="2023-10-17T11:17:12Z">
-        <changelog><![CDATA[+ Add basic send tooltip (maybe will improve)
-+ Dim font color on tcp hidden tracks
-+ Add settings menu (right click search filter, config stored in REAPER/Data folder)
-+ Add option to display track color indicator (deafault: on)
-+ Add option to keep script open after selection (default: off)
-+ Add option to uncollapse actioned track if it's a folder (default: off)
-+ Add options to unhide tracks in TCP/MCP after selection (default: TCP on, MCP off)
-+ Add option to show track number (default: off)
-+ Add help menu
-# Internal refactor (fetch track data on project update)
-# Avoid creating sends by dragging on arrange view
-# Fix close button if no matches or no tracks in project
-# Change first use window size
-# Increase font size by 1 px]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/7120ca141f56470326eede180d32eb6195ac56b2/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.1.1" author="smandrap" time="2023-10-17T16:38:44Z">
-        <changelog><![CDATA[+ Add basic send tooltip (maybe will improve)
-+ Dim font color on tcp hidden tracks
-+ Add settings menu (right click search filter, config stored in REAPER/Data folder)
-+ Add option to display track color indicator (deafault: on)
-+ Add option to keep script open after selection (default: off)
-+ Add option to uncollapse actioned track if it's a folder (default: off)
-+ Add options to unhide tracks in TCP/MCP after selection (default: TCP on, MCP off)
-+ Add option to show track number (default: off)
-+ Add help menu
-# Internal refactor (fetch track data on project update)
-# Avoid creating sends by dragging on arrange view
-# Fix close button if no matches or no tracks in project
-# Change first use window size
-# Increase font size by 1 px]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/246c58e74314361249ffb16ae5ad1afa00bc0a2e/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.2" author="smandrap" time="2023-10-18T09:37:11Z">
-        <changelog><![CDATA[+ Support receive creation (Cmd/Ctrl during drag and drop to switch source/destination)
-# Improve tooltip for drag drop routing]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/28d1a0c2dc9c1aab9c3c25d0f71c0575e51fe74a/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.3" author="smandrap" time="2023-10-18T10:50:52Z">
-        <changelog><![CDATA[+ Support sidechain send creation (Drag/Drop on FX Gui, send created on ch 3-4)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/f4d40795de105c354b689981c1fd7a0ff37490c5/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.4" author="smandrap" time="2023-10-19T08:43:54Z">
-        <changelog><![CDATA[+ Add option to hide script titlebar
-# Fix crash on startup (oops)
-# Sligthly round searchbar and color box
-# Fix searchbar resize logic]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/c57de0ceaf877b3fec5cba10250de3e2d1431258/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.4.1" author="smandrap" time="2023-10-19T09:09:08Z">
-        <changelog><![CDATA[# Default to show script titlebar]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/d88b85f669892f87ed038759d69fa9be456e1001/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.4.2" author="smandrap" time="2023-10-19T09:51:16Z">
-        <changelog><![CDATA[# Fix incorrect Tree node id push]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/7e125b1cedaaf7d19e153dfa00697e765217911d/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.5" author="smandrap" time="2023-10-19T18:28:48Z">
-        <changelog><![CDATA[+ Add option to show all parents of actioned track (default: on)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/c054400ae480009fb3b6d3eb00d9dec6512c92de/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.6" author="smandrap" time="2023-10-20T08:31:19Z">
-        <changelog><![CDATA[+ Use Reaper's ROUTINGDRAG cursor while drag/drop routing (requires JS_Api)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/b4ec741a9f27e0e484f261e3dc1b4e03f2b91948/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.6.1" author="smandrap" time="2023-10-20T08:44:36Z">
-        <changelog><![CDATA[+ Make routing cursor optional (default: on if JS_Api is installed)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/c0e5d8bca0db50e0afc091d8ef65ff31b584ce4d/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.6.2" author="smandrap" time="2023-10-20T14:28:06Z">
-        <changelog><![CDATA[# Fix routing cursor option disabled if JS_API is installed after running script for the first time
-# Fix routing cursor not returning to normal after action]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/7f5a5b3766c456a629713ccdded3a86cd1111e93/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.6.3" author="smandrap" time="2023-10-23T13:59:59Z">
-        <changelog><![CDATA[# Fix ImGui depencency check (thanks cfillion)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/d0d87068cc0971908731e50900202d6c42ce1b7a/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.7" author="smandrap" time="2023-12-15T12:28:51Z">
-        <changelog><![CDATA[+ Support adding track to selection with shift+double click or Shift + Enter
-+ Support Cmd/Ctrl + 1-9 to select among first 9 search results
-+ Support Shift + Cmd/Ctrl + 1-9 to select among first 9 search results
-# Fix project state change check]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/2e6c97830b45a7e41f3fe4c5520b8d53651ef356/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.7.1" author="smandrap" time="2023-12-15T16:20:24Z">
-        <changelog><![CDATA[+ Add (very bad) UI feedback when holding Cmd
-+ Add option to dim track color name for tracks hidden in tcp (GUI submenu, default: on)
-# Fix hidden in tcp track tinting
-# Prevent performing selection with Cmd/ctrl + 1-9 while routing]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/21bf3edc60a3fd36a51115e7d4c7cc1f69441bfd/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.7.2" author="smandrap" time="2024-03-04T14:22:06Z">
-        <changelog><![CDATA[+ Add rudimentary support for Pre-Post Actions, defined insde the script.]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/50020ca9e09456960a29193046778c0649fede55/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.7.3" author="smandrap" time="2024-03-04T14:44:27Z">
-        <changelog><![CDATA[+ Add rudimentary support for pre-post actions (default: disabled)
-# Display pre-post actions count in settings (that's exquisite UI work here lol)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/0a40aa7aac8511296a301746db1d79d66fae2276/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.8" author="smandrap" time="2024-03-15T14:08:02Z">
-        <changelog><![CDATA[+ Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
-# Add "All selected" tooltip to describe where you're routing from/to]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/e24e4035685b39a5fc4fe81a9e2ab33c823df377/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.8.1" author="smandrap" time="2024-03-15T14:18:01Z">
-        <changelog><![CDATA[+ Add support for Send/Receive to/from all selected tracks (Shift while drag routing)
-# Add "All selected" tooltip to describe where you're routing from/to
-# Add support for mcp routing]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/f53ba172478dec1c687ed57aa2f6b1cae65b1c35/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.8.2" author="smandrap" time="2024-03-30T12:33:47Z">
-        <changelog><![CDATA[# Scroll to track in MCP on action]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/9b71e1dbdf00fde365325ee5ba54e6eb58c85068/Tracks/smandrap_Search%20Tracks.lua</source>
-      </version>
-      <version name="1.8.2a" author="smandrap" time="2024-04-11T11:05:15Z">
-        <changelog><![CDATA[+ Try fuzzy search (fzy-lua)]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/d330e881da466e6fbd664136ed13aeedeb9bddc4/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/d330e881da466e6fbd664136ed13aeedeb9bddc4/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3a" author="smandrap" time="2024-04-12T08:41:08Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/8683c81669c74b85e99fdaa383009b53002cbe98/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/8683c81669c74b85e99fdaa383009b53002cbe98/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3b" author="smandrap" time="2024-04-12T09:08:58Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/b188acef274ca6f8c6a6c47aba5932f8b402b67e/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/b188acef274ca6f8c6a6c47aba5932f8b402b67e/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3d" author="smandrap" time="2024-04-12T15:29:28Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/6c3df002560624bc6ecd687cd6ebf07ab86e5c92/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/6c3df002560624bc6ecd687cd6ebf07ab86e5c92/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3e" author="smandrap" time="2024-04-12T17:03:33Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/f7470319ef7ce967ccb003fc9cb59968cdd56fb2/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/f7470319ef7ce967ccb003fc9cb59968cdd56fb2/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3e1" author="smandrap" time="2024-04-13T09:04:50Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/5c554c6607f3b48b46d92994d522d063cdc7ba47/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/5c554c6607f3b48b46d92994d522d063cdc7ba47/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3e2" author="smandrap" time="2024-04-13T10:10:40Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/2fc5fdd0e2fbb3efaf1c81c15bf4c8b1f29d1cab/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/2fc5fdd0e2fbb3efaf1c81c15bf4c8b1f29d1cab/Tracks/modules/fzy.lua</source>
-      </version>
-      <version name="1.8.3e3" author="smandrap" time="2024-04-13T10:21:21Z">
-        <changelog><![CDATA[# Use word matching, fall back to fuzzy search if nothing found
-# Fix font size not being saved on exit
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/d982ddea72fd21632a88ac9ad58e8b8be4993d1d/Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/d982ddea72fd21632a88ac9ad58e8b8be4993d1d/Tracks/modules/fzy.lua</source>
-      </version>
-    </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
@@ -356,6 +178,26 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2024-02-15T11:53:56Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/c2f3e4b28d6ece1cd8a0bbf38d114712df20c0c2/Tracks/smandrap_Select%20all%20visible%20tracks%20in%20Mixer.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Tracks/Search Tracks">
+    <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search with routing capabilities\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.8.3e8" author="smandrap" time="2024-04-15T23:02:06Z">
+        <changelog><![CDATA[+ Greatly improve search
++ Add font scaling]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/0c8ee3a5043d73cc9e6b10021868a714e2e56b6d/Tracks/Search%20Tracks/smandrap_Search%20Tracks.lua</source>
+        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/0c8ee3a5043d73cc9e6b10021868a714e2e56b6d/Tracks/Search%20Tracks/modules/fzy.lua</source>
       </version>
     </reapack>
   </category>
