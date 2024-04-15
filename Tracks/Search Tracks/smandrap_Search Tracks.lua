@@ -1,13 +1,12 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e4
+-- @version 1.8.3e8
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   # Use word matching, fall back to fuzzy search if nothing found
---   # Fix font size not being saved on exit
+--   + Greatly improve search
 --   + Add font scaling
 -- @provides
---   modules/fzy.lua
+--   modules/*.lua
 -- @about
 --  Cubase style track search with routing capabilities
 
