@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="37c3253f7e00cc2d18b2cd7ab672b6f939d12024">
+<index version="1" name="smandrap ReaScripts" commit="465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -159,6 +159,10 @@
 + Remember last used settings
 + Add ? tooltip (i may fill it with more stuff)]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/37c3253f7e00cc2d18b2cd7ab672b6f939d12024/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2024-04-15T16:45:59Z">
+        <changelog><![CDATA[+ Add option to duplicate/not duplicate Instruments]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
