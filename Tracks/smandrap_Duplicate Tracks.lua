@@ -1,10 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0.6
+-- @version 1.1
 -- @changelog
---    + Enable keyboard navigation
---    + Remember last used settings
---    + Add ? tooltip (i may fill it with more stuff)
+--    + Add option to duplicate/not duplicate Instruments
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -108,6 +106,53 @@ local function DeleteAllEnvelopes(track)
   end
 end
 
+local function DeleteFXinContainer(track, cont_idx)
+  local _, fx_cnt = reaper.TrackFX_GetNamedConfigParm(track, cont_idx, 'container_count')
+  for i = fx_cnt - 1, 0, -1 do
+    local _, fx_id = reaper.TrackFX_GetNamedConfigParm(track, cont_idx, 'container_item.' .. i)
+    fx_id = tonumber(fx_id)
+    local _, fx_type = reaper.TrackFX_GetNamedConfigParm(track, fx_id, 'fx_type')
+    local is_container = fx_type == "Container"
+
+    if is_container then --Call recursively
+      DeleteFXinContainer(track, fx_id)
+    else
+      local is_instrument = fx_type:sub(-1) == 'i'
+
+      if is_instrument and not dupeElements.instruments then
+        reaper.TrackFX_Delete(track, fx_id)
+      elseif not is_instrument and not dupeElements.fx then
+        reaper.TrackFX_Delete(track, fx_id)
+      end
+    end
+
+    local _, new_fx_cnt = reaper.TrackFX_GetNamedConfigParm(track, cont_idx, 'container_count')
+    if tonumber(new_fx_cnt) == 0 then
+      reaper.TrackFX_Delete(track, cont_idx)
+    end
+  end
+end
+
+local function DeleteFX(track)
+  local fx_cnt = reaper.TrackFX_GetCount(track)
+  for i = fx_cnt - 1, 0, -1 do
+    local _, fx_type = reaper.TrackFX_GetNamedConfigParm(track, i, 'fx_type')
+    local is_container = fx_type == "Container"
+    local is_instrument = fx_type:sub(-1) == 'i'
+
+
+    if is_container then
+      DeleteFXinContainer(track, i)
+    else
+      if is_instrument and not dupeElements.instruments then
+        reaper.TrackFX_Delete(track, i)
+      elseif not is_instrument and not dupeElements.fx then
+        reaper.TrackFX_Delete(track, i)
+      end
+    end
+  end
+end
+
 local function DoDuplicateStuff()
   reaper.Undo_BeginBlock()
   reaper.PreventUIRefresh(-1)
@@ -138,7 +183,12 @@ local function DoDuplicateStuff()
       end
     end
 
-    if not dupeElements.fx then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_CLRFXCHAIN3"), 0) end
+    if not dupeElements.fx or not dupeElements.instruments then
+      for j = 1, #sel_tracks do
+        DeleteFX(sel_tracks[j])
+      end
+    end
+
     if not dupeElements.sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
     if not dupeElements.receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
     if not dupeElements.groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
@@ -230,10 +280,13 @@ local function DrawCheckboxes()
   dupeElements.activeLane = Checkbox('Active Lanes', dupeElements.activeLane)
   dupeElements.otherLanes = Checkbox('Non-Active Lanes', dupeElements.otherLanes)
   dupeElements.envelopes = Checkbox('Envelopes', dupeElements.envelopes)
-  dupeElements.fx = Checkbox('FX', dupeElements.fx)
-  --dupeElements.instruments = Checkbox('Instruments', dupeElements.instruments)
-  dupeElements.sends = Checkbox('Sends', dupeElements.sends)
+
+  dupeElements.instruments = Checkbox('Instruments', dupeElements.instruments)
   reaper.ImGui_SameLine(ctx)
+  dupeElements.fx = Checkbox('FX', dupeElements.fx)
+
+  dupeElements.sends = Checkbox('Sends', dupeElements.sends)
+  reaper.ImGui_SameLine(ctx, nil, 36)
   dupeElements.receives = Checkbox('Receives', dupeElements.receives)
   dupeElements.groupAssign = Checkbox('Group Assignments', dupeElements.groupAssign)
 end
