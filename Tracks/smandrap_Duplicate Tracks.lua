@@ -1,7 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0.5
+-- @version 1.0.6
 -- @changelog
+--    + Enable keyboard navigation
 --    + Remember last used settings
 --    + Add ? tooltip (i may fill it with more stuff)
 -- @donation https://paypal.me/smandrap
@@ -187,16 +188,26 @@ end
 init()
 
 -- GUI
-
-local ctx = reaper.ImGui_CreateContext(script_name)
+local config_flags = reaper.ImGui_ConfigFlags_NavEnableKeyboard()
+local ctx = reaper.ImGui_CreateContext(script_name, config_flags)
 local visible, open
 local window_flags = reaper.ImGui_WindowFlags_NoCollapse() |
     reaper.ImGui_WindowFlags_NoResize()   |
     reaper.ImGui_WindowFlags_AlwaysAutoResize()
-local btn_w = 80
-local first_frame = true
+
 local font = reaper.ImGui_CreateFont('sans-serif', 12)
 reaper.ImGui_Attach(ctx, font)
+
+local first_frame = true
+
+local btn_w = 80
+
+local help_tooltip = [[Alt+Click : Set All
+Tab/Shift+Tab : Next/Previous field
+Spacebar: Toggle focused thingy
+Enter : Duplicate Tracks
+Escape : Close
+]]
 
 local function Checkbox(label, val)
   local _, rv = reaper.ImGui_Checkbox(ctx, label, val)
@@ -205,6 +216,11 @@ local function Checkbox(label, val)
     for k, v in pairs(dupeElements) do
       dupeElements[k] = rv
     end
+  end
+
+  -- Prevent Enter key to switch the checkbox
+  if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Enter()) and reaper.ImGui_IsItemFocused(ctx) then
+    rv = not rv
   end
 
   return rv
@@ -229,6 +245,7 @@ local function DrawOkCancelButtons()
 
   reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w * 2 - 15)
 
+
   reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Button(), 0x5D5D5DAA)
   if reaper.ImGui_Button(ctx, "Cancel", btn_w) then open = false end
   reaper.ImGui_PopStyleColor(ctx)
@@ -244,7 +261,7 @@ end
 local function DrawHelpTooltip()
   if reaper.ImGui_IsItemHovered(ctx) then
     reaper.ImGui_BeginTooltip(ctx)
-    reaper.ImGui_Text(ctx, "Hold Alt to set all")
+    reaper.ImGui_Text(ctx, help_tooltip)
     reaper.ImGui_EndTooltip(ctx)
   end
 end
