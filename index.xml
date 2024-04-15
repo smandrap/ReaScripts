@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="cb23847f31c394109e49a4172eb35747d44de7ae">
+<index version="1" name="smandrap ReaScripts" commit="465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -130,6 +130,39 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2024-04-14T16:44:23Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/4c82f835657b9abde069e5eb3087f1432417852e/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.1" author="smandrap" time="2024-04-14T17:41:36Z">
+        <changelog><![CDATA[# More reapack fighting 2]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/406ad23f631b36010ae9729a313dfb9174949b3c/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.2" author="smandrap" time="2024-04-14T21:02:24Z">
+        <changelog><![CDATA[# Set duplicated tracks as selected after duplication]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/92132d7c9577402444b45ca469434fbe0704a207/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.3" author="smandrap" time="2024-04-14T22:22:09Z">
+        <changelog><![CDATA[+ Alt+click checkbox sets/unsets all checkboxes
+# Move Receives checkbox alongside Sends checkbox
+# Add SWS dependency check]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/bbb2ea0959b5c9ce2402e8095bc75583f50fe533/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.4" author="smandrap" time="2024-04-14T23:17:57Z">
+        <changelog><![CDATA[+ add Active lanes checkbox (if track has no lanes, then deletes all items)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/b49af85d119c8b8d2d0c89dc31a269323d410734/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.5" author="smandrap" time="2024-04-15T10:32:14Z">
+        <changelog><![CDATA[+ Remember last used settings
++ Add ? tooltip (i may fill it with more stuff)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/a1c72320e2b1618249074e7dfcddc62e73e8a21d/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.0.6" author="smandrap" time="2024-04-15T10:58:35Z">
+        <changelog><![CDATA[+ Enable keyboard navigation
++ Remember last used settings
++ Add ? tooltip (i may fill it with more stuff)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/37c3253f7e00cc2d18b2cd7ab672b6f939d12024/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2024-04-15T16:45:59Z">
+        <changelog><![CDATA[+ Add option to duplicate/not duplicate Instruments]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
