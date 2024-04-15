@@ -1,8 +1,9 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.0.4
+-- @version 1.0.5
 -- @changelog
---    + add Active lanes checkbox (if track has no lanes, then deletes all items)
+--    + Remember last used settings
+--    + Add ? tooltip (i may fill it with more stuff)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -25,6 +26,8 @@ end
 -- APP
 
 reaper.set_action_options(3)
+
+local extstate_section = 'smandrap_Duplicate Tracks'
 
 local _ = nil
 local dupenum = 1
@@ -115,16 +118,16 @@ local function DoDuplicateStuff()
       sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
     end
 
+    -- NON-ACTIVE LANES
+    -- Track lanes: Delete lanes (including media items) that are not playing
+    if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
+
     -- ACTIVE LANES
     if not dupeElements.activeLane then
       for j = 1, #sel_tracks do
         DeleteActiveLanes(sel_tracks[j])
       end
     end
-
-    -- NON-ACTIVE LANES
-    -- Track lanes: Delete lanes (including media items) that are not playing
-    if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
 
     -- ENVELOPES
     if not dupeElements.envelopes then
@@ -152,6 +155,36 @@ local function DoDuplicateStuff()
   reaper.PreventUIRefresh(1)
   reaper.Undo_EndBlock("Duplicate Tracks " .. dupenum .. " times", 0)
 end
+
+local function ReadSettingsFromExtState()
+  if not reaper.HasExtState(extstate_section, 'fx') then return end
+
+  for k, v in pairs(dupeElements) do
+    local extstate = reaper.GetExtState(extstate_section, k)
+    if tonumber(extstate) then
+      dupeElements[k] = tonumber(extstate)
+    else
+      dupeElements[k] = extstate == "true" and true or false
+    end
+  end
+end
+
+local function WriteSettingsToExtState()
+  for k, v in pairs(dupeElements) do
+    reaper.SetExtState(extstate_section, k, tostring(v), true)
+  end
+end
+
+local function init()
+  ReadSettingsFromExtState()
+end
+
+local function main()
+  DoDuplicateStuff()
+  WriteSettingsToExtState()
+end
+
+init()
 
 -- GUI
 
@@ -203,8 +236,16 @@ local function DrawOkCancelButtons()
 
   reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w - 10)
   if reaper.ImGui_Button(ctx, "OK", btn_w) then
-    DoDuplicateStuff()
+    main()
     open = false
+  end
+end
+
+local function DrawHelpTooltip()
+  if reaper.ImGui_IsItemHovered(ctx) then
+    reaper.ImGui_BeginTooltip(ctx)
+    reaper.ImGui_Text(ctx, "Hold Alt to set all")
+    reaper.ImGui_EndTooltip(ctx)
   end
 end
 
@@ -225,6 +266,9 @@ local function DrawWindow()
   reaper.ImGui_Dummy(ctx, 0, 10)
 
   reaper.ImGui_Text(ctx, "Data to duplicate:")
+  reaper.ImGui_SameLine(ctx)
+  reaper.ImGui_TextColored(ctx, 0x5D5D5DAA, '[?]')
+  DrawHelpTooltip()
   reaper.ImGui_Dummy(ctx, 0, 2)
 
   reaper.ImGui_Indent(ctx)
@@ -246,7 +290,7 @@ local function guiloop()
 
   if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Escape()) then open = false end
   if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Enter()) then
-    DoDuplicateStuff()
+    main()
     open = false
   end
   if visible then
