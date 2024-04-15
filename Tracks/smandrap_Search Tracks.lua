@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e3
+-- @version 1.8.3e4
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Use word matching, fall back to fuzzy search if nothing found
@@ -44,6 +44,9 @@ POST_ACTIONS = {
 ------------------------------------------
 -------  END USER AREA --------------------
 -------------------------------------------
+
+dofile(reaper.GetResourcePath() ..
+  '/Scripts/ReaTeam Extensions/API/imgui.lua') '0.8'
 
 
 local script_name = "Search Tracks"
@@ -578,6 +581,7 @@ local function SetupDragDrop(track)
   -- End of DragnDrop so create send
   if was_dragging and not reaper.ImGui_IsMouseDown(ctx, 0) then
     if js_api and settings.use_routing_cursor then
+---@diagnostic disable-next-line: param-type-mismatch
       reaper.JS_Mouse_SetCursor(normal_cursor)
     end
 
@@ -610,6 +614,7 @@ local function SetupDragDrop(track)
         -- SIDECHAIN
         if info:match('fx_') then
           IncreaseTrackChannelCnt(dest_track)
+---@diagnostic disable-next-line: param-type-mismatch
           reaper.SetTrackSendInfo_Value(dragged_track, 0, send_idx, 'I_DSTCHAN', 2)
         end
       end
@@ -668,7 +673,7 @@ local function SetupTrackTree()
     local depth_delta = math.max(track.folderdepth, -depth)
     local is_folder = depth_delta > 0
 
-    if (parent_open or depth <= open_depth) then
+    if (is_parent_open or depth <= open_depth) then
       -- Close child folders first
       for current_level = depth, open_depth - 1 do
         reaper.ImGui_TreePop(ctx)
