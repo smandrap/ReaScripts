@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="0c8ee3a5043d73cc9e6b10021868a714e2e56b6d">
+<index version="1" name="smandrap ReaScripts" commit="14a1d76cba78fb5c07fcabbe5ac2250dc1464d81">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -165,6 +165,24 @@
         <source main="main">https://github.com/smandrap/ReaScripts/raw/465a1bc9dab9c6ecd80ffd8ae2323174fbaa3c89/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
+    <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search with routing capabilities\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.8.3e9" author="smandrap" time="2024-04-16T09:15:57Z">
+        <changelog><![CDATA[+ Greatly improve search
++ Add font scaling]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/14a1d76cba78fb5c07fcabbe5ac2250dc1464d81/Tracks/smandrap_Search%20Tracks.lua</source>
+        <source file="smandrap_Search Tracks/modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/14a1d76cba78fb5c07fcabbe5ac2250dc1464d81/Tracks/smandrap_Search%20Tracks/modules/fzy.lua</source>
+      </version>
+    </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
@@ -178,26 +196,6 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2024-02-15T11:53:56Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/c2f3e4b28d6ece1cd8a0bbf38d114712df20c0c2/Tracks/smandrap_Select%20all%20visible%20tracks%20in%20Mixer.lua</source>
-      </version>
-    </reapack>
-  </category>
-  <category name="Tracks/Search Tracks">
-    <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style track search with routing capabilities\par}
-}
-]]></description>
-        <link rel="donation">https://paypal.me/smandrap</link>
-      </metadata>
-      <version name="1.8.3e8" author="smandrap" time="2024-04-15T23:02:06Z">
-        <changelog><![CDATA[+ Greatly improve search
-+ Add font scaling]]></changelog>
-        <source main="main">https://github.com/smandrap/ReaScripts/raw/0c8ee3a5043d73cc9e6b10021868a714e2e56b6d/Tracks/Search%20Tracks/smandrap_Search%20Tracks.lua</source>
-        <source file="modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/0c8ee3a5043d73cc9e6b10021868a714e2e56b6d/Tracks/Search%20Tracks/modules/fzy.lua</source>
       </version>
     </reapack>
   </category>
