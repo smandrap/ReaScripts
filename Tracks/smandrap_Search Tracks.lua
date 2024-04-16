@@ -1,12 +1,12 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e8
+-- @version 1.8.3e9
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   + Greatly improve search
 --   + Add font scaling
 -- @provides
---   modules/*.lua
+--   smandrap_Search Tracks/modules/*.lua
 -- @about
 --  Cubase style track search with routing capabilities
 
@@ -65,7 +65,7 @@ package.path = package.path ..
     ';' ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
-local fzy = require("modules.fzy")
+local fzy = require("smandrap_Search Tracks.modules.fzy")
 
 local extstate_section = 'smandrap_SearchTracks'
 
