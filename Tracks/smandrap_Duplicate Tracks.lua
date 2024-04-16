@@ -1,8 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.1
+-- @version 1.2
 -- @changelog
---    + Add option to duplicate/not duplicate Instruments
+--    + Add shortcuts for toggling options (cmd/ctrl + first letter of option)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -257,6 +257,9 @@ Tab/Shift+Tab : Next/Previous field
 Spacebar: Toggle focused thingy
 Enter : Duplicate Tracks
 Escape : Close
+
+Cmd/Ctrl + first letter of option: Toggle option
+(Example: Cmd + F -> Toggle FX)
 ]]
 
 local function Checkbox(label, val)
@@ -276,7 +279,9 @@ local function Checkbox(label, val)
   return rv
 end
 
+
 local function DrawCheckboxes()
+
   dupeElements.activeLane = Checkbox('Active Lanes', dupeElements.activeLane)
   dupeElements.otherLanes = Checkbox('Non-Active Lanes', dupeElements.otherLanes)
   dupeElements.envelopes = Checkbox('Envelopes', dupeElements.envelopes)
@@ -284,7 +289,7 @@ local function DrawCheckboxes()
   dupeElements.instruments = Checkbox('Instruments', dupeElements.instruments)
   reaper.ImGui_SameLine(ctx)
   dupeElements.fx = Checkbox('FX', dupeElements.fx)
-
+  
   dupeElements.sends = Checkbox('Sends', dupeElements.sends)
   reaper.ImGui_SameLine(ctx, nil, 36)
   dupeElements.receives = Checkbox('Receives', dupeElements.receives)
@@ -319,6 +324,19 @@ local function DrawHelpTooltip()
   end
 end
 
+local function HandleShortcuts()
+  if reaper.ImGui_IsKeyDown(ctx, reaper.ImGui_Mod_Shortcut()) then
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_A()) then dupeElements.activeLane = not dupeElements.activeLane end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_N()) then dupeElements.otherLanes = not dupeElements.otherLanes end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_E()) then dupeElements.envelopes = not dupeElements.envelopes end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_I()) then dupeElements.instruments = not dupeElements.instruments end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_F()) then dupeElements.fx = not dupeElements.fx end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_S()) then dupeElements.sends = not dupeElements.sends end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_R()) then dupeElements.receives = not dupeElements.receives end
+    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_G()) then dupeElements.groupAssign = not dupeElements.groupAssign end
+  end
+end
+
 local function DrawWindow()
   reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 5)
 
@@ -346,6 +364,8 @@ local function DrawWindow()
   reaper.ImGui_Unindent(ctx)
 
   DrawOkCancelButtons()
+
+  HandleShortcuts()
 
   reaper.ImGui_PopStyleVar(ctx) -- Frame rounding
 end
