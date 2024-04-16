@@ -281,17 +281,23 @@ local function UpdateTrackList()
   for i = 1, #tracknames do
     local strip_trackname = tracknames[i]:gsub("%W+", "")
     local strip_trackname_len = strip_trackname:len()
-    local iterations = math.abs(strip_trackname_len - strip_searchstring_len)
+    local iterations = math.abs(strip_trackname_len - strip_searchstring_len) + 1
 
-    for j = 0, iterations do
-      local endchar_idx = j + strip_searchstring_len
-      if endchar_idx > strip_trackname_len then break end
-      local levcost = lev(strip_searchstring, strip_trackname:sub(j, endchar_idx))
-      if levcost < 3 then
-        table.insert(filtered_tracks, tracks[i])
-        break
+    local levmatch = false
+
+    for j = 1, iterations do
+      local endchar_idx = j + strip_searchstring_len - 1
+      if not levmatch and endchar_idx < strip_trackname_len then
+        local substring = strip_trackname:sub(j, endchar_idx)
+        local levcost = lev(strip_searchstring, substring)
+
+        if strip_trackname:match('unstable') then reaper.ShowConsoleMsg(levcost) end
+
+        if levcost < 3 then levmatch = true end
       end
     end
+
+    if levmatch == true then table.insert(filtered_tracks, tracks[i]) end
   end
 end
 
