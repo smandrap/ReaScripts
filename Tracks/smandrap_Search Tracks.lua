@@ -66,7 +66,9 @@ package.path = package.path ..
     ';' ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
+---@diagnostic disable-next-line: different-requires
 local fzy = require("smandrap_Search Tracks.modules.fzy")
+local lev = require("smandrap_Search Tracks.modules.levenshtein")
 
 local extstate_section = 'smandrap_SearchTracks'
 
@@ -258,7 +260,7 @@ local function UpdateTrackList()
   end
 
   if #filtered_tracks > 0 then return end
-  -- If word matching fails, proceed to fuzzy search
+  -- If lev fails, proceed to fuzzy search
 
   local searchresult = fzy.filter(lowercase_search_string, tracknames)
   local targetscore = 0.00001 + 1 / string.len(search_string) -- longer the search string, less precision required
@@ -268,6 +270,27 @@ local function UpdateTrackList()
     if searchresult[i][2][1] == 1 then score = score * 2 end
     if score > targetscore then
       table.insert(filtered_tracks, tracks[searchresult[i][1]])
+    end
+  end
+
+  if #filtered_tracks > 0 then return end
+  -- If word matching fails, proceed to lev
+  local strip_searchstring = lowercase_search_string:gsub("%W+", "")
+  local strip_searchstring_len = strip_searchstring:len()
+
+  for i = 1, #tracknames do
+    local strip_trackname = tracknames[i]:gsub("%W+", "")
+    local strip_trackname_len = strip_trackname:len()
+    local iterations = math.abs(strip_trackname_len - strip_searchstring_len)
+
+    for j = 0, iterations do
+      local endchar_idx = j + strip_searchstring_len
+      if endchar_idx > strip_trackname_len then break end
+      local levcost = lev(strip_searchstring, strip_trackname:sub(j, endchar_idx))
+      if levcost < 3 then
+        table.insert(filtered_tracks, tracks[i])
+        break
+      end
     end
   end
 end
