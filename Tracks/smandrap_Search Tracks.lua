@@ -1,10 +1,11 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9
+-- @version 1.9.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Greatly improve search: use partial word matching first, if nothing is found fallback to fuzzy search.
---   + Add font scaling
+--   # Fix version number
+--   # (maybe) Fix crash at startup
+--   # Fix myself
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -75,7 +76,7 @@ local extstate_section = 'smandrap_SearchTracks'
 
 
 local settings = {
-  version = '1.8.2',
+  version = '1.9.1',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -387,11 +388,13 @@ local function ReadSettingsFromExtState()
   if not reaper.HasExtState(extstate_section, 'version') then return end
 
   for k, v in pairs(settings) do
-    local extstate = reaper.GetExtState(extstate_section, k)
-    if tonumber(extstate) then
-      settings[k] = tonumber(extstate)
-    else
-      settings[k] = extstate == "true" and true or false
+    if reaper.HasExtState(extstate_section, k) then
+      local extstate = reaper.GetExtState(extstate_section, k)
+      if tonumber(extstate) then
+        settings[k] = tonumber(extstate)
+      else
+        settings[k] = extstate == "true" and true or false
+      end
     end
   end
 end
@@ -580,7 +583,7 @@ local function SetupDragDrop(track)
   -- End of DragnDrop so create send
   if was_dragging and not reaper.ImGui_IsMouseDown(ctx, 0) then
     if js_api and settings.use_routing_cursor then
----@diagnostic disable-next-line: param-type-mismatch
+      ---@diagnostic disable-next-line: param-type-mismatch
       reaper.JS_Mouse_SetCursor(normal_cursor)
     end
 
@@ -613,7 +616,7 @@ local function SetupDragDrop(track)
         -- SIDECHAIN
         if info:match('fx_') then
           IncreaseTrackChannelCnt(dest_track)
----@diagnostic disable-next-line: param-type-mismatch
+          ---@diagnostic disable-next-line: param-type-mismatch
           reaper.SetTrackSendInfo_Value(dragged_track, 0, send_idx, 'I_DSTCHAN', 2)
         end
       end
