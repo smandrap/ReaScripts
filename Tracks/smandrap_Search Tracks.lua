@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.8.3e9
+-- @version 1.9
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Greatly improve search
+--   + Greatly improve search: use partial word matching first, if nothing is found fallback to fuzzy search.
 --   + Add font scaling
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
