@@ -1,8 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.2
+-- @version 1.3
 -- @changelog
---    + Add shortcuts for toggling options (cmd/ctrl + first letter of option)
+--    # Prevent non-number input in Number of duplicates input field
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -161,7 +161,7 @@ local function DoDuplicateStuff()
 
     local sel_tracks = {}
     for j = 0, reaper.CountSelectedTracks(0) - 1 do
-      sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
+      sel_tracks[#sel_tracks + 1] = track
     end
 
     -- NON-ACTIVE LANES
@@ -262,6 +262,17 @@ Cmd/Ctrl + first letter of option: Toggle option
 (Example: Cmd + F -> Toggle FX)
 ]]
 
+local inputInt_callback = reaper.ImGui_CreateFunctionFromEEL([[
+  ( EventChar >= '0' && EventChar <= '9' ) ? EventChar = EventChar : EventChar = 0;
+  Buf == '0' ? Buf = '1';
+]])
+
+local function InputInt(label, var)
+  var = tostring(var)
+  _, var = reaper.ImGui_InputText(ctx, label, var, reaper.ImGui_InputTextFlags_CallbackCharFilter(), inputInt_callback)
+  return tonumber(var) or 0
+end
+
 local function Checkbox(label, val)
   local _, rv = reaper.ImGui_Checkbox(ctx, label, val)
 
@@ -278,6 +289,8 @@ local function Checkbox(label, val)
 
   return rv
 end
+
+
 
 
 local function DrawCheckboxes()
@@ -346,7 +359,7 @@ local function DrawWindow()
   reaper.ImGui_SameLine(ctx)
   reaper.ImGui_PushItemWidth(ctx, 100)
   if first_frame then reaper.ImGui_SetKeyboardFocusHere(ctx) end
-  _, dupenum = reaper.ImGui_InputInt(ctx, '##dupenum', dupenum, 0)
+  dupenum = InputInt('##dupenum', dupenum)
   dupenum = dupenum < 1 and 1 or dupenum
 
   reaper.ImGui_Dummy(ctx, 0, 10)
