@@ -1,8 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.4.2
+-- @version 1.5
 -- @changelog
---    # Refactor some stuff
+--    + Support labeling duped tracks (postfix .dup#)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -41,6 +41,7 @@ dupeElements.instruments = true
 dupeElements.sends = true
 dupeElements.receives = true
 dupeElements.groupAssign = true
+dupeElements.renameDupes = true
 
 local duplicated_tracks = {}
 
@@ -187,12 +188,19 @@ local function DoDuplicateStuff()
         end
 
         if not dupeElements.fx or not dupeElements.instruments then DeleteFX(sel_tracks[j]) end
+
+        if not dupeElements.sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
+        if not dupeElements.receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
+        if not dupeElements.groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
       end
 
-      if not dupeElements.sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
-      if not dupeElements.receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
-      if not dupeElements.groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
+      if dupeElements.renameDupes then
+        local _, name = reaper.GetSetMediaTrackInfo_String(sel_tracks[j], 'P_NAME', '', false)
+        name = is_first_dupe and name .. '.dup' .. i or name:gsub("%.dup%d+$", ".dup" .. i)
+        reaper.GetSetMediaTrackInfo_String(sel_tracks[j], 'P_NAME', name, true)
+      end
     end
+
 
     for j = 1, #sel_tracks do
       duplicated_tracks[#duplicated_tracks + 1] = sel_tracks[j]
@@ -297,6 +305,7 @@ end
 
 
 local function DrawCheckboxes()
+  reaper.ImGui_Indent(ctx)
   dupeElements.activeLane = Checkbox('Active Lanes', dupeElements.activeLane)
   dupeElements.otherLanes = Checkbox('Non-Active Lanes', dupeElements.otherLanes)
   dupeElements.envelopes = Checkbox('Envelopes', dupeElements.envelopes)
@@ -309,6 +318,10 @@ local function DrawCheckboxes()
   reaper.ImGui_SameLine(ctx, nil, 36)
   dupeElements.receives = Checkbox('Receives', dupeElements.receives)
   dupeElements.groupAssign = Checkbox('Group Assignments', dupeElements.groupAssign)
+  reaper.ImGui_Unindent(ctx)
+
+  reaper.ImGui_Dummy(ctx, 0, 10)
+  dupeElements.renameDupes = Checkbox('Add Label to Track Name', dupeElements.renameDupes)
 end
 
 local function DrawOkCancelButtons()
@@ -374,9 +387,7 @@ local function DrawWindow()
   DrawHelpTooltip()
   reaper.ImGui_Dummy(ctx, 0, 2)
 
-  reaper.ImGui_Indent(ctx)
   DrawCheckboxes()
-  reaper.ImGui_Unindent(ctx)
 
   DrawOkCancelButtons()
 
