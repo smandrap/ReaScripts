@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="2b57a2e5cd4927412d05e26f6b70fb16aa16dd26">
+<index version="1" name="smandrap ReaScripts" commit="0589d66ef38b8df8137c75fc1cefdbe125a74ef6">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -199,6 +199,14 @@
 # Preserve empty lanes on duplication (experimental)
 # Disable Fixed lanes on dupes when both active and non-active lanes are excluded from duplication]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/2b57a2e5cd4927412d05e26f6b70fb16aa16dd26/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.4.2" author="smandrap" time="2024-04-24T15:32:29Z">
+        <changelog><![CDATA[# Refactor some stuff]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d4a7927d046a2dc8e443b0b647769decf6719afe/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.5" author="smandrap" time="2024-04-24T16:03:24Z">
+        <changelog><![CDATA[+ Support labeling duped tracks (postfix .dup#)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d58f3d306d2ccbd4eaeb34501483929ab83cbb46/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
