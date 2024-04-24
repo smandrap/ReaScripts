@@ -1,8 +1,10 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.3
+-- @version 1.4
 -- @changelog
---    # Prevent non-number input in Number of duplicates input field
+--    # Fix active lanes always getting duped (sorry for that)
+--    # Preserve empty lanes on duplication (experimental)
+--    # Disable Fixed lanes on dupes when both active and non-active lanes are excluded from duplication
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -46,26 +48,6 @@ local duplicated_tracks = {}
 
 local insertLastSel = false
 
--- This is better but API has bug
-local function DeleteActiveLanes()
-  local track = reaper.GetTrack(0, 0)
-  if not reaper.ValidatePtr(track, "MediaTrack*") then return end
-
-  local numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
-
-  for i = 0, numlanes - 1 do
-    local laneplays = reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i)
-
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, laneplays == 0 and 2 or 0)
-  end
-
-  reaper.Main_OnCommand(42691, 0) --Track lanes: Delete lanes (including media items) that are not playing
-
-  numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
-  for i = 0, numlanes - 1 do
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, 0)
-  end
-end
 
 local function DeleteActiveLanes(track)
   local numlanes = reaper.GetMediaTrackInfo_Value(track, 'I_NUMFIXEDLANES')
@@ -93,6 +75,28 @@ local function DeleteActiveLanes(track)
   end
 
   reaper.Main_OnCommand(42689, 0) -- Track lanes: Delete lanes with no media items
+end
+
+
+-- This is better but API has bug
+local function DeleteActiveLanes(track)
+  --local track = reaper.GetTrack(0, 0)
+  if not reaper.ValidatePtr(track, "MediaTrack*") then return end
+
+  local numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
+
+  for i = 0, numlanes - 1 do
+    local laneplays = reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i)
+
+    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, laneplays == 0 and 2 or 0)
+  end
+
+  reaper.Main_OnCommand(42691, 0) --Track lanes: Delete lanes (including media items) that are not playing
+
+  numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
+  for i = 0, numlanes - 1 do
+    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, 0)
+  end
 end
 
 -- Sexan/ArkaData function
@@ -161,7 +165,7 @@ local function DoDuplicateStuff()
 
     local sel_tracks = {}
     for j = 0, reaper.CountSelectedTracks(0) - 1 do
-      sel_tracks[#sel_tracks + 1] = track
+      sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
     end
 
     -- NON-ACTIVE LANES
@@ -173,6 +177,10 @@ local function DoDuplicateStuff()
       for j = 1, #sel_tracks do
         DeleteActiveLanes(sel_tracks[j])
       end
+    end
+
+    if not dupeElements.otherLanes and not dupeElements.activeLane then
+      reaper.Main_OnCommand(40752, 0) -- Disable lanes
     end
 
     -- ENVELOPES
