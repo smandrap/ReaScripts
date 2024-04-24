@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="2b80642b15a181cf30dcd619bbb829f74c74fdb1">
+<index version="1" name="smandrap ReaScripts" commit="d79af1e5b56ffb4e9258e7c6dc0fef3d7daa7a96">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -188,6 +188,12 @@
         <changelog><![CDATA[# Prevent non-number input in Number of duplicates input field]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/1aa13091a4db5548d9a72285e424de7a4d81935b/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
+      <version name="1.4" author="smandrap" time="2024-04-24T14:52:51Z">
+        <changelog><![CDATA[# Fix active lanes always getting duped (sorry for that)
+# Preserve empty lanes on duplication (experimental)
+# Disable Fixed lanes on dupes when both active and non-active lanes are excluded from duplication]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/ecba94ca8c075dd0b320f162f6d90c5ad1ae86e6/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
       <metadata>
@@ -341,6 +347,10 @@
       <version name="1.1" author="smandrap" time="2023-09-20T09:13:19Z">
         <changelog><![CDATA[+ Add dependency check]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/11c1f1bdd0970fdfaa03c0e6ca2024d53d081ee7/Various/smandrap_Smart%20Rec-Arm.lua</source>
+      </version>
+      <version name="1.2" author="smandrap" time="2024-04-24T13:56:37Z">
+        <changelog><![CDATA[+ Warn if tracks are recording and using the action would unarm the currently recording tracks (yes, i'm THAT dumb)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d441b4a9adf29d112ca11a406292591699023744/Various/smandrap_Smart%20Rec-Arm.lua</source>
       </version>
     </reapack>
   </category>
