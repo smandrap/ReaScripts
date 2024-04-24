@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="bb8efefb1e6361f76739f80e61684c6b84f64219">
+<index version="1" name="smandrap ReaScripts" commit="2b80642b15a181cf30dcd619bbb829f74c74fdb1">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -117,6 +117,22 @@
     </reapack>
   </category>
   <category name="Tracks">
+    <reapack name="smandrap_Auto-Solo Selected Tracks (background).lua" type="script" desc="Auto-Solo selected Tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Cubase style Auto-solo. Automatically solo exclusive selected tracks, clear on exit\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-04-24T09:06:05Z">
+        <changelog><![CDATA[+ first commit]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/014b459ed236a6dda6b28a324b399daead1a4b77/Tracks/smandrap_Auto-Solo%20Selected%20Tracks%20(background).lua</source>
+      </version>
+    </reapack>
     <reapack name="smandrap_Duplicate Tracks.lua" type="script" desc="Duplicate Tracks">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
