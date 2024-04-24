@@ -1,14 +1,19 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.5
+-- @version 1.5.1
 -- @changelog
---    + Support labeling duped tracks (postfix .dup#)
+--    # Add minimum required REAPER version (7.03) check
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
 
 local reaper = reaper
 local script_name = "Duplicate Tracks"
+
+local reaper_version = tonumber(string.sub(reaper.GetAppVersion(), 0, 4))
+if reaper_version < 7.03 then
+  reaper.MB('REAPER v7.03 or later is required to run this script.\n Update from website.', 'Wrong REAPER Version', 0)
+end
 
 if not reaper.ImGui_GetVersion() then
   local ok = reaper.MB('Install now?\n\n(REAPER restart is required after install)', 'ReaImGui Missing', 1)
