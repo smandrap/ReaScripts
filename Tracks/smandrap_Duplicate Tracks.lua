@@ -1,6 +1,6 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.4
+-- @version 1.4.1
 -- @changelog
 --    # Fix active lanes always getting duped (sorry for that)
 --    # Preserve empty lanes on duplication (experimental)
