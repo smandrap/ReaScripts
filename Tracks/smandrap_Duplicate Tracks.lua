@@ -1,10 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.4.1
+-- @version 1.4.2
 -- @changelog
---    # Fix active lanes always getting duped (sorry for that)
---    # Preserve empty lanes on duplication (experimental)
---    # Disable Fixed lanes on dupes when both active and non-active lanes are excluded from duplication
+--    # Refactor some stuff
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -160,50 +158,47 @@ end
 local function DoDuplicateStuff()
   reaper.Undo_BeginBlock()
   reaper.PreventUIRefresh(-1)
+
+  local is_first_dupe = true
+
   for i = 1, dupenum do
     reaper.Main_OnCommand(40062, 0) --Dupe
 
     local sel_tracks = {}
-    for j = 0, reaper.CountSelectedTracks(0) - 1 do
-      sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j)
-    end
+    for j = 1, reaper.CountSelectedTracks(0) do
+      sel_tracks[#sel_tracks + 1] = reaper.GetSelectedTrack(0, j - 1)
 
-    -- NON-ACTIVE LANES
-    -- Track lanes: Delete lanes (including media items) that are not playing
-    if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
+      if is_first_dupe then
+        -- NON-ACTIVE LANES
+        -- Track lanes: Delete lanes (including media items) that are not playing
+        if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
 
-    -- ACTIVE LANES
-    if not dupeElements.activeLane then
-      for j = 1, #sel_tracks do
-        DeleteActiveLanes(sel_tracks[j])
+        -- ACTIVE LANES
+        if not dupeElements.activeLane then DeleteActiveLanes(sel_tracks[j]) end
+
+        if not dupeElements.otherLanes and not dupeElements.activeLane then
+          reaper.Main_OnCommand(40752, 0) -- Disable lanes
+        end
+
+        -- ENVELOPES
+        if not dupeElements.envelopes then
+          reaper.Main_OnCommand(41148, 0) -- Show All Envelopes on track
+          DeleteAllEnvelopes(sel_tracks[j])
+        end
+
+        if not dupeElements.fx or not dupeElements.instruments then DeleteFX(sel_tracks[j]) end
       end
-    end
 
-    if not dupeElements.otherLanes and not dupeElements.activeLane then
-      reaper.Main_OnCommand(40752, 0) -- Disable lanes
+      if not dupeElements.sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
+      if not dupeElements.receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
+      if not dupeElements.groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
     end
-
-    -- ENVELOPES
-    if not dupeElements.envelopes then
-      reaper.Main_OnCommand(41148, 0) -- Show All Envelopes on track
-      for j = 1, #sel_tracks do
-        DeleteAllEnvelopes(sel_tracks[j])
-      end
-    end
-
-    if not dupeElements.fx or not dupeElements.instruments then
-      for j = 1, #sel_tracks do
-        DeleteFX(sel_tracks[j])
-      end
-    end
-
-    if not dupeElements.sends then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS6"), 0) end
-    if not dupeElements.receives then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_SENDS5"), 0) end
-    if not dupeElements.groupAssign then reaper.Main_OnCommand(reaper.NamedCommandLookup("_S&M_REMOVE_TR_GRP"), 0) end
 
     for j = 1, #sel_tracks do
       duplicated_tracks[#duplicated_tracks + 1] = sel_tracks[j]
     end
+
+    is_first_dupe = false
   end
 
   -- Select all duplicated tracks
@@ -302,7 +297,6 @@ end
 
 
 local function DrawCheckboxes()
-
   dupeElements.activeLane = Checkbox('Active Lanes', dupeElements.activeLane)
   dupeElements.otherLanes = Checkbox('Non-Active Lanes', dupeElements.otherLanes)
   dupeElements.envelopes = Checkbox('Envelopes', dupeElements.envelopes)
@@ -310,7 +304,7 @@ local function DrawCheckboxes()
   dupeElements.instruments = Checkbox('Instruments', dupeElements.instruments)
   reaper.ImGui_SameLine(ctx)
   dupeElements.fx = Checkbox('FX', dupeElements.fx)
-  
+
   dupeElements.sends = Checkbox('Sends', dupeElements.sends)
   reaper.ImGui_SameLine(ctx, nil, 36)
   dupeElements.receives = Checkbox('Receives', dupeElements.receives)
