@@ -1,4 +1,4 @@
--- @description Auto-Solo seleted Tracks
+-- @description Auto-Solo selected Tracks
 -- @author smandrap
 -- @version 1.0
 -- @changelog
