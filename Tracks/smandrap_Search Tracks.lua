@@ -1,6 +1,6 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.3
+-- @version 1.9.4
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Rename Unhide parents options
