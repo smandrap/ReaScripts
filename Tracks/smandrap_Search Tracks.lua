@@ -1,9 +1,10 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.2
+-- @version 1.9.3
 -- @donation https://paypal.me/smandrap
 -- @changelog
 --   # Rename Unhide parents options
+--   # OCD INTENSIFIES on options
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -429,17 +430,17 @@ local function DrawSettingsMenu()
   if reaper.ImGui_BeginPopup(ctx, 'settings', reaper.ImGui_SelectableFlags_DontClosePopups()) then
     reaper.ImGui_MenuItem(ctx, 'Show:', nil, nil, false)
     _, settings.show_track_number = reaper.ImGui_MenuItem(ctx, 'Track Number', nil, settings.show_track_number)
-    _, settings.show_color_box = reaper.ImGui_MenuItem(ctx, 'Track color', nil, settings.show_color_box)
+    _, settings.show_color_box = reaper.ImGui_MenuItem(ctx, 'Track Color', nil, settings.show_color_box)
 
     reaper.ImGui_Separator(ctx)
     reaper.ImGui_MenuItem(ctx, 'Unhide in:', nil, nil, false)
     _, settings.show_in_tcp = reaper.ImGui_MenuItem(ctx, 'TCP', nil, settings.show_in_tcp)
     _, settings.show_in_mcp = reaper.ImGui_MenuItem(ctx, 'MCP', nil, settings.show_in_mcp)
-    _, settings.unhide_parents = reaper.ImGui_MenuItem(ctx, 'Unhide parents', nil, settings.unhide_parents)
+    _, settings.unhide_parents = reaper.ImGui_MenuItem(ctx, 'Unhide Parents', nil, settings.unhide_parents)
 
     reaper.ImGui_Separator(ctx)
 
-    _, settings.uncollapse_selection = reaper.ImGui_MenuItem(ctx, 'Uncollapse folder', nil, settings
+    _, settings.uncollapse_selection = reaper.ImGui_MenuItem(ctx, 'Uncollapse Folder', nil, settings
       .uncollapse_selection)
 
     reaper.ImGui_Separator(ctx)
@@ -453,20 +454,20 @@ local function DrawSettingsMenu()
         reaper.ImGui_EndTooltip(ctx)
       end
     end
-    _, settings.do_pre_actions = reaper.ImGui_MenuItem(ctx, 'Pre-actions (' .. #PRE_ACTIONS .. ')', nil,
+    _, settings.do_pre_actions = reaper.ImGui_MenuItem(ctx, 'Pre-Actions (' .. #PRE_ACTIONS .. ')', nil,
       settings.do_pre_actions)
-    _, settings.do_post_actions = reaper.ImGui_MenuItem(ctx, 'Post-actions (' .. #POST_ACTIONS .. ')', nil,
+    _, settings.do_post_actions = reaper.ImGui_MenuItem(ctx, 'Post-Actions (' .. #POST_ACTIONS .. ')', nil,
       settings.do_post_actions)
 
 
     reaper.ImGui_Separator(ctx)
-    _, settings.close_on_action = reaper.ImGui_MenuItem(ctx, 'Quit after selection', nil, settings.close_on_action)
+    _, settings.close_on_action = reaper.ImGui_MenuItem(ctx, 'Quit after Selection', nil, settings.close_on_action)
 
     reaper.ImGui_Separator(ctx)
 
     if reaper.ImGui_BeginMenu(ctx, 'GUI') then
       _, settings.hide_titlebar = reaper.ImGui_MenuItem(ctx, 'Hide Titlebar', nil, settings.hide_titlebar)
-      _, settings.dim_hidden_tracks = reaper.ImGui_MenuItem(ctx, 'Dim Hidden track names', nil,
+      _, settings.dim_hidden_tracks = reaper.ImGui_MenuItem(ctx, 'Dim Hidden Track Names', nil,
         settings.dim_hidden_tracks)
       _, settings.use_routing_cursor = reaper.ImGui_MenuItem(ctx, 'Use Routing Cursor', nil, settings.use_routing_cursor,
         js_api)
