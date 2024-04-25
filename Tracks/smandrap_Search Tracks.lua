@@ -1,11 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.1
+-- @version 1.9.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   # Fix version number
---   # (maybe) Fix crash at startup
---   # Fix myself
+--   # Rename Unhide parents options
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -437,7 +435,7 @@ local function DrawSettingsMenu()
     reaper.ImGui_MenuItem(ctx, 'Unhide in:', nil, nil, false)
     _, settings.show_in_tcp = reaper.ImGui_MenuItem(ctx, 'TCP', nil, settings.show_in_tcp)
     _, settings.show_in_mcp = reaper.ImGui_MenuItem(ctx, 'MCP', nil, settings.show_in_mcp)
-    _, settings.unhide_parents = reaper.ImGui_MenuItem(ctx, 'Also affect parents', nil, settings.unhide_parents)
+    _, settings.unhide_parents = reaper.ImGui_MenuItem(ctx, 'Unhide parents', nil, settings.unhide_parents)
 
     reaper.ImGui_Separator(ctx)
 
