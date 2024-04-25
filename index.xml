@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="9793df1de51ff4102b9ac292c2e316e810b19247">
+<index version="1" name="smandrap ReaScripts" commit="69dd77b2e82b0d2534b3eaa4b1f87e255ee166b8">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -242,6 +242,11 @@
 # Fix myself]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/52e0e83d5d65cc8138683a5db92ec3eba1564baa/Tracks/smandrap_Search%20Tracks.lua</source>
         <source file="smandrap_Search Tracks/modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/52e0e83d5d65cc8138683a5db92ec3eba1564baa/Tracks/smandrap_Search%20Tracks/modules/fzy.lua</source>
+      </version>
+      <version name="1.9.2" author="smandrap" time="2024-04-25T15:08:08Z">
+        <changelog><![CDATA[# Rename Unhide parents options]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/69dd77b2e82b0d2534b3eaa4b1f87e255ee166b8/Tracks/smandrap_Search%20Tracks.lua</source>
+        <source file="smandrap_Search Tracks/modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/69dd77b2e82b0d2534b3eaa4b1f87e255ee166b8/Tracks/smandrap_Search%20Tracks/modules/fzy.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
