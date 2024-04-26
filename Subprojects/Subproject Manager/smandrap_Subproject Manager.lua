@@ -21,7 +21,7 @@ end
 
 local _ = nil
 local os_sep = package.config:sub(1, 1)
-local rec_path = reaper.GetProjectPath()
+local rec_path = reaper.GetProjectPath():gsub("(.+)"..os_sep..".+$", "%1"..os_sep)
 
 local can_perform = true
 
@@ -111,18 +111,24 @@ local function DrawSubprojNameInput()
   reaper.ImGui_PushItemWidth(ctx, 200)
   if first_frame then reaper.ImGui_SetKeyboardFocusHere(ctx) end
   local ok = false
+
   ok, subproject_name = reaper.ImGui_InputText(ctx, '##txtin_subprojName', subproject_name)
-  if ok then
-    subproject_complete_fn = subproject_name:gsub("(.+)%.[rR][pP][pP]", '%1') .. subproject_ext
-    file_exists = reaper.file_exists(subproject_path..os_sep..subproject_complete_fn)
-  end
+  ok = reaper.ImGui_IsItemDeactivatedAfterEdit(ctx)
+
   reaper.ImGui_SameLine(ctx, nil, 0)
   reaper.ImGui_Text(ctx, '.RPP')
   if subproject_name == '' then
     reaper.ImGui_SameLine(ctx)
     reaper.ImGui_TextColored(ctx, 0xFF0000FF, 'Invalid Name')
     can_perform = false
-  elseif file_exists then -- TODO: move this shit after path selection
+  end
+
+  -- TODO: move this shit somewhere else, but also refactor
+  if ok == true then
+    subproject_complete_fn = subproject_name:gsub("(.+)%.[rR][pP][pP]", '%1') .. subproject_ext
+    file_exists = reaper.file_exists(subproject_path .. os_sep .. subproject_complete_fn)
+  end
+  if file_exists then   -- TODO: move this shit after path selection
     reaper.ImGui_SameLine(ctx)
     reaper.ImGui_TextColored(ctx, 0xFF0000FF, 'File already exists')
     can_perform = false
