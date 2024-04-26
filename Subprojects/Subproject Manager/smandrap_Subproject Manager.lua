@@ -91,10 +91,7 @@ local function DrawOkCancelButtons()
   end
 end
 
-local function DrawWindow()
-  reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 5)
-  
-  -- Make this a function
+local function DrawPathSelector()
   reaper.ImGui_Text(ctx, 'Path :')
   reaper.ImGui_PushItemWidth(ctx, 400)
   _, subproject_path = reaper.ImGui_InputText(ctx, '##txtin_subprojFn', subproject_path)
@@ -103,22 +100,28 @@ local function DrawWindow()
     local ok, temp_path = reaper.JS_Dialog_BrowseForFolder('Select Location', subproject_path)
     if ok == 1 then subproject_path = temp_path end
   end
+end
+
+local function DrawTemplateFileSelector()
+  reaper.ImGui_Text(ctx, 'Template File :')
+  reaper.ImGui_PushItemWidth(ctx, 400)
+  _, template_path = reaper.ImGui_InputText(ctx, '##txtin_templateFn', template_path)
+  reaper.ImGui_SameLine(ctx, nil, 2)
+  if reaper.ImGui_Button(ctx, '...##btn_templatepathselect') then
+    local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '','.rpp', false)
+    if ok then template_path = temp_path end
+  end
+end
+
+local function DrawWindow()
+  DrawPathSelector()
 
   reaper.ImGui_Dummy(ctx, 0, 10)
   _, use_template = reaper.ImGui_Checkbox(ctx, 'Create from Project Template', use_template)
-  if use_template then
-    reaper.ImGui_Text(ctx, 'Template File :')
-    reaper.ImGui_PushItemWidth(ctx, 400)
-    _, template_path = reaper.ImGui_InputText(ctx, '##txtin_templateFn', template_path)
-    reaper.ImGui_SameLine(ctx, nil, 2)
-    if reaper.ImGui_Button(ctx, '...##btn_templatepathselect') then
-      local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '','.rpp', false)
-      if ok then template_path = temp_path end
-    end
-  end
+
+  if use_template then DrawTemplateFileSelector() end
 
   DrawOkCancelButtons()
-  reaper.ImGui_PopStyleVar(ctx)
 end
 
 local function guiloop()
@@ -127,7 +130,9 @@ local function guiloop()
   visible, open = reaper.ImGui_Begin(ctx, script_name, true, window_flags)
 
   if visible then
+    reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 5)
     DrawWindow()
+    reaper.ImGui_PopStyleVar(ctx)
     reaper.ImGui_End(ctx)
   end
   reaper.ImGui_PopFont(ctx)
