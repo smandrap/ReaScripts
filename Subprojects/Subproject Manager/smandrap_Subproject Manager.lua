@@ -19,12 +19,16 @@ end
 
 -- APP
 
+local os_sep = package.config:sub(1, 1)
+local rec_path = reaper.GetProjectPath()
+
+local subproject_path = ''
+local template_path = ''
+
 local function InsertSubprojecFromTemplate()
   --local fileok, fn = reaper.GetUserFileNameForRead('ciao', 'Test', 'Test')
 
-  local sep = package.config:sub(1, 1)
-
-  local template_folder = table.concat({ reaper.GetResourcePath(), sep, 'ProjectTemplates' })
+  local template_folder = table.concat({ reaper.GetResourcePath(), os_sep, 'ProjectTemplates' })
   local ok, template = reaper.JS_Dialog_BrowseForOpenFiles('Template', template_folder, '', '.RPP', false)
   if not ok then return end
 
@@ -34,10 +38,11 @@ local function InsertSubprojecFromTemplate()
   local buf = f:read('*all')
   f:close()
 
-  local rec_path = reaper.GetProjectPath()
-  local new_file_path = table.concat({ rec_path, sep, 'new_subproject.rpp' })
+  
+  local new_file_path = table.concat({ rec_path, os_sep, 'new_subproject.rpp' })
 
   f = io.open(new_file_path, 'w+')
+  if f == nil then return end
   f:write(buf)
   f:close()
 
@@ -55,8 +60,9 @@ local window_flags = reaper.ImGui_WindowFlags_None()
 local font = reaper.ImGui_CreateFont('sans-serif', 12)
 reaper.ImGui_Attach(ctx, font)
 
-
 local function DrawWindow()
+  
+
   if reaper.ImGui_Button(ctx, 'DOIT') then
     InsertSubprojecFromTemplate()
   end
