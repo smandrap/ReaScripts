@@ -23,8 +23,19 @@ local _ = nil
 local os_sep = package.config:sub(1, 1)
 local rec_path = reaper.GetProjectPath()
 
+local can_perform = true
+
 local subproject_path = rec_path
 local subproject_name = 'New subproject'
+local subproject_ext = '.RPP'
+
+local subproject_complete_fn = table.concat({ subproject_name, subproject_ext })
+
+local parent_project_name = reaper.GetProjectName(0)
+local append_parent_name = false
+local parent_name_position = 0 -- 0 Prefix, 1 PostFix
+
+local displayed_filename = subproject_complete_fn
 
 local use_template = false
 
@@ -43,7 +54,7 @@ local function InsertSubprojecFromTemplate()
   local buf = f:read('*all')
   f:close()
 
-  
+
   local new_file_path = table.concat({ rec_path, os_sep, 'new_subproject.rpp' })
 
   f = io.open(new_file_path, 'w+')
@@ -87,7 +98,7 @@ local function DrawOkCancelButtons()
   reaper.ImGui_SameLine(ctx)
 
   reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w - 10)
-  if reaper.ImGui_Button(ctx, "OK", btn_w) then
+  if reaper.ImGui_Button(ctx, "OK", btn_w) and can_perform then
     main()
     open = false
   end
@@ -96,9 +107,22 @@ end
 -- TODO: Sanitize input and add .RPP extension
 local function DrawSubprojNameInput()
   reaper.ImGui_Text(ctx, 'SubProject Name :')
-  reaper.ImGui_PushItemWidth(ctx, 400)
+  reaper.ImGui_PushItemWidth(ctx, 200)
   if first_frame then reaper.ImGui_SetKeyboardFocusHere(ctx) end
-  _, subproject_name = reaper.ImGui_InputText(ctx, '##txtin_subprojName', subproject_name)
+  local ok = false
+  ok, subproject_name = reaper.ImGui_InputText(ctx, '##txtin_subprojName', subproject_name)
+  if ok then
+    subproject_complete_fn = subproject_name:gsub("(.+)%.[rR][pP][pP]", '%1') .. subproject_ext
+  end
+  reaper.ImGui_SameLine(ctx, nil, 0)
+  reaper.ImGui_Text(ctx, '.RPP')
+  if subproject_name == '' then
+    reaper.ImGui_SameLine(ctx)
+    reaper.ImGui_TextColored(ctx, 0xFF0000FF, 'Invalid Name')
+    can_perform = false
+  else
+    can_perform = true
+  end
 end
 
 local function DrawPathSelector()
@@ -118,13 +142,26 @@ local function DrawTemplateFileSelector()
   _, template_path = reaper.ImGui_InputText(ctx, '##txtin_templateFn', template_path)
   reaper.ImGui_SameLine(ctx, nil, 2)
   if reaper.ImGui_Button(ctx, '...##btn_templatepathselect') then
-    local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '','.rpp', false)
+    local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '', '.rpp', false)
     if ok then template_path = temp_path end
   end
 end
 
+local function DrawParentProjectNameShit()
+  _, append_parent_name = reaper.ImGui_Checkbox(ctx, '##append_parentname', append_parent_name)
+  reaper.ImGui_SameLine(ctx, nil, 2)
+  reaper.ImGui_PushItemWidth(ctx, 65)
+  _, parent_name_position = reaper.ImGui_Combo(ctx, '##prepostfix_combo', parent_name_position, 'Prefix\0Postfix\0')
+  reaper.ImGui_SameLine(ctx)
+  --reaper.ImGui_AlignTextToFramePadding(ctx)
+  reaper.ImGui_Text(ctx, 'parent project name')
+end
+
 local function DrawWindow()
   DrawSubprojNameInput()
+  DrawParentProjectNameShit()
+
+  reaper.ImGui_Dummy(ctx, 0, 5)
   DrawPathSelector()
 
   reaper.ImGui_Dummy(ctx, 0, 10)
