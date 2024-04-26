@@ -34,6 +34,7 @@ local subproject_complete_fn = table.concat({ subproject_name, subproject_ext })
 local parent_project_name = reaper.GetProjectName(0)
 local append_parent_name = false
 local parent_name_position = 0 -- 0 Prefix, 1 PostFix
+local file_exists = false
 
 local displayed_filename = subproject_complete_fn
 
@@ -113,12 +114,17 @@ local function DrawSubprojNameInput()
   ok, subproject_name = reaper.ImGui_InputText(ctx, '##txtin_subprojName', subproject_name)
   if ok then
     subproject_complete_fn = subproject_name:gsub("(.+)%.[rR][pP][pP]", '%1') .. subproject_ext
+    file_exists = reaper.file_exists(subproject_path..os_sep..subproject_complete_fn)
   end
   reaper.ImGui_SameLine(ctx, nil, 0)
   reaper.ImGui_Text(ctx, '.RPP')
   if subproject_name == '' then
     reaper.ImGui_SameLine(ctx)
     reaper.ImGui_TextColored(ctx, 0xFF0000FF, 'Invalid Name')
+    can_perform = false
+  elseif file_exists then -- TODO: move this shit after path selection
+    reaper.ImGui_SameLine(ctx)
+    reaper.ImGui_TextColored(ctx, 0xFF0000FF, 'File already exists')
     can_perform = false
   else
     can_perform = true
