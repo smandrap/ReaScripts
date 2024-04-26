@@ -1,9 +1,9 @@
--- @description DESC
+-- @description Insert Subproject
 -- @author smandrap
 -- @version 1.0
 -- @donation https://paypal.me/smandrap
 -- @about
---   ABOUT
+--   Noice interface for subproject insertion
 
 dofile(reaper.GetResourcePath() ..
   '/Scripts/ReaTeam Extensions/API/imgui.lua') '0.9'
@@ -24,6 +24,7 @@ local os_sep = package.config:sub(1, 1)
 local rec_path = reaper.GetProjectPath()
 
 local subproject_path = rec_path
+local subproject_name = 'New subproject'
 
 local use_template = false
 
@@ -67,6 +68,7 @@ local visible, open
 local window_flags = reaper.ImGui_WindowFlags_None() | reaper.ImGui_WindowFlags_AlwaysAutoResize()
 local font = reaper.ImGui_CreateFont('sans-serif', 12)
 
+local first_frame = true
 local btn_w = 80
 
 reaper.ImGui_Attach(ctx, font)
@@ -89,6 +91,14 @@ local function DrawOkCancelButtons()
     main()
     open = false
   end
+end
+
+-- TODO: Sanitize input and add .RPP extension
+local function DrawSubprojNameInput()
+  reaper.ImGui_Text(ctx, 'SubProject Name :')
+  reaper.ImGui_PushItemWidth(ctx, 400)
+  if first_frame then reaper.ImGui_SetKeyboardFocusHere(ctx) end
+  _, subproject_name = reaper.ImGui_InputText(ctx, '##txtin_subprojName', subproject_name)
 end
 
 local function DrawPathSelector()
@@ -114,6 +124,7 @@ local function DrawTemplateFileSelector()
 end
 
 local function DrawWindow()
+  DrawSubprojNameInput()
   DrawPathSelector()
 
   reaper.ImGui_Dummy(ctx, 0, 10)
@@ -140,6 +151,8 @@ local function guiloop()
   if open then
     reaper.defer(guiloop)
   end
+
+  first_frame = false
 end
 
 reaper.defer(guiloop)
