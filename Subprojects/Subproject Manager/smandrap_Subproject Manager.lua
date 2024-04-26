@@ -92,10 +92,13 @@ local function DrawOkCancelButtons()
 end
 
 local function DrawWindow()
+  reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_FrameRounding(), 5)
+  
+  -- Make this a function
   reaper.ImGui_Text(ctx, 'Path :')
   reaper.ImGui_PushItemWidth(ctx, 400)
   _, subproject_path = reaper.ImGui_InputText(ctx, '##txtin_subprojFn', subproject_path)
-  reaper.ImGui_SameLine(ctx, nil, 0)
+  reaper.ImGui_SameLine(ctx, nil, 2)
   if reaper.ImGui_Button(ctx, '...##btn_pathselect') then
     local ok, temp_path = reaper.JS_Dialog_BrowseForFolder('Select Location', subproject_path)
     if ok == 1 then subproject_path = temp_path end
@@ -104,9 +107,10 @@ local function DrawWindow()
   reaper.ImGui_Dummy(ctx, 0, 10)
   _, use_template = reaper.ImGui_Checkbox(ctx, 'Create from Project Template', use_template)
   if use_template then
+    reaper.ImGui_Text(ctx, 'Template File :')
     reaper.ImGui_PushItemWidth(ctx, 400)
     _, template_path = reaper.ImGui_InputText(ctx, '##txtin_templateFn', template_path)
-    reaper.ImGui_SameLine(ctx, nil, 0)
+    reaper.ImGui_SameLine(ctx, nil, 2)
     if reaper.ImGui_Button(ctx, '...##btn_templatepathselect') then
       local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '','.rpp', false)
       if ok then template_path = temp_path end
@@ -114,6 +118,7 @@ local function DrawWindow()
   end
 
   DrawOkCancelButtons()
+  reaper.ImGui_PopStyleVar(ctx)
 end
 
 local function guiloop()
