@@ -5,6 +5,10 @@
 -- @about
 --   Noice interface for subproject insertion
 
+-- TODO: Import all media from template
+-- TODO: Create subproject folder if it doesn't exist
+-- TODO: Use SetPCMSource on newly created item instead of InsertMedia()
+
 local reaper = reaper
 local script_name = "Insert Subproject"
 
@@ -22,11 +26,18 @@ end
 local _ = nil
 local os = reaper.GetOS():match("Win") and 0 or 1
 local os_sep = package.config:sub(1, 1)
+
+local reserved_fn_win = {
+  'CON', 'PRN', 'AUX', 'NUL',
+  'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 
+  'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9', 
+}
+
 local rec_path = reaper.GetProjectPath():gsub("(.+)" .. os_sep .. ".+$", "%1" .. os_sep)
 
-local can_perform = true
+local can_perform = false
 
-local subproject_path = rec_path
+local subproject_path = rec_path..'SubProjects'
 local subproject_name = 'New subproject'
 local subproject_ext = '.RPP'
 
@@ -50,17 +61,17 @@ local displayed_template_path = ''
 local function InsertSubprojecFromTemplate()
   --local fileok, fn = reaper.GetUserFileNameForRead('ciao', 'Test', 'Test')
 
-  local ok, template = reaper.JS_Dialog_BrowseForOpenFiles('Template', template_folder, '', '.RPP', false)
+--[[   local ok, template = reaper.JS_Dialog_BrowseForOpenFiles('Template', template_folder, '', '.RPP', false)
   if not ok then return end
-
-  local f = io.open(template, 'r')
+ ]]
+  local f = io.open(template_path, 'r')
   if f == nil then return end
 
   local buf = f:read('*all')
   f:close()
 
 
-  local new_file_path = table.concat({ rec_path, os_sep, 'new_subproject.rpp' })
+  local new_file_path = table.concat({ subproject_path, os_sep, subproject_complete_fn })
 
   f = io.open(new_file_path, 'w+')
   if f == nil then return end
@@ -73,7 +84,7 @@ local function InsertSubprojecFromTemplate()
 end
 
 local function main()
-  --InsertSubprojecFromTemplate()
+  InsertSubprojecFromTemplate()
 end
 
 
@@ -119,7 +130,7 @@ local inputCallback_filterPath = ImGui.CreateFunctionFromEEL([[
   );
   filtered ? EventChar = 0;
 ]])
-ImGui.Function_SetValue_String(inputCallback_filterPath, '#disallowed', os == 0 and [[<>:/\|?*]] or [[/:]])
+ImGui.Function_SetValue_String(inputCallback_filterPath, '#disallowed', os == 0 and [[<>:/\|?*]] or [[/\:]])
 ImGui.Attach(ctx, inputCallback_filterPath)
 
 
@@ -148,16 +159,23 @@ local function DrawSubprojNameInput()
     ImGui.TextColored(ctx, 0xFF0000FF, ('Invalid character : %c'):format(filtered))
   end
 
+  can_perform = false
   if subproject_name == '' then
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, 'Invalid Name')
-    can_perform = false
-  end
-
-  if os == 1 and subproject_name:sub(1, 1) == '.' then
+  elseif os == 1 and subproject_name:sub(1, 1) == '.' then
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, "Names can't start with .")
-    can_perform = false
+  elseif os == 0 then
+    for i = 1, #reserved_fn_win do
+      if subproject_name == reserved_fn_win[i] then
+        ImGui.SameLine(ctx)
+        ImGui.TextColored(ctx, 0xFF0000FF, "Illegal WinOS name")
+        break
+      end
+    end
+  else
+    can_perform = true
   end
 
   -- TODO: move this shit somewhere else, but also refactor
