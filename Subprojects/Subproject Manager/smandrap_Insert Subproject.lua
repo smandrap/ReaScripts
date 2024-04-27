@@ -261,6 +261,8 @@ local function guiloop()
   end
   ImGui.PopFont(ctx)
 
+  if ImGui.IsKeyPressed(ctx, ImGui.Key_Escape) then open = false end
+
   if open then
     reaper.defer(guiloop)
   end
