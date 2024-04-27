@@ -164,7 +164,9 @@ end
 local function DrawPathSelector()
   ImGui.Text(ctx, 'Path :')
   ImGui.PushItemWidth(ctx, 400)
-  _, subproject_path = ImGui.InputText(ctx, '##txtin_subprojFn', subproject_path)
+  --_, subproject_path = ImGui.InputText(ctx, '##txtin_subprojFn', subproject_path)
+  ImGui.InputText(ctx, '##txtin_subprojFn', subproject_path, ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
+  if ImGui.IsItemHovered(ctx) then ImGui.SetMouseCursor(ctx, ImGui.MouseCursor_NotAllowed) end
   ImGui.SameLine(ctx, nil, 2)
   if ImGui.Button(ctx, '...##btn_pathselect') then
     local ok, temp_path = reaper.JS_Dialog_BrowseForFolder('Select Location', subproject_path)
@@ -175,7 +177,9 @@ end
 local function DrawTemplateFileSelector()
   ImGui.Text(ctx, 'Template File :')
   ImGui.PushItemWidth(ctx, 400)
-  _, template_path = ImGui.InputText(ctx, '##txtin_templateFn', template_path)
+  --_, template_path = ImGui.InputText(ctx, '##txtin_templateFn', template_path)
+  ImGui.InputText(ctx, '##txtin_templateFn', template_path, ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
+  if ImGui.IsItemHovered(ctx) then ImGui.SetMouseCursor(ctx, ImGui.MouseCursor_NotAllowed) end
   ImGui.SameLine(ctx, nil, 2)
   if ImGui.Button(ctx, '...##btn_templatepathselect') then
     local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '', '.rpp', false)
