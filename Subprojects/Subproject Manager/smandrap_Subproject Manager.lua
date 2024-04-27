@@ -109,26 +109,24 @@ local function DrawOkCancelButtons()
   end
 end
 
-local inputCallback_filename_win = ImGui.CreateFunctionFromEEL([[
-  (EventChar == '<') ||
-  (EventChar == '>') ||
-  (EventChar == ':') ||
-  (EventChar == '/') ||
-  (EventChar == '\\')||
-  (EventChar == '|') ||
-  (EventChar == '?') ||
-  (EventChar == '*')  ? EventChar = 0;
-]])
 
-local inputCallback_filename_unix = ImGui.CreateFunctionFromEEL([[
-  (EventChar == '/') ? EventChar = 0;
+local inputCallback_filterPath = ImGui.CreateFunctionFromEEL([[
+  filtered = 0; i = strlen(#disallowed);
+  while(
+    i -= 1;
+    str_getchar(#disallowed, i) == EventChar ? filtered = EventChar;
+    !filtered && i;
+  );
+  filtered ? EventChar = 0;
 ]])
+ImGui.Function_SetValue_String(inputCallback_filterPath, '#disallowed', os == 0 and [[<>:/\|?*]] or [[/]])
+ImGui.Attach(ctx, inputCallback_filterPath)
+
 
 local function InputTextFileName(label, var)
   local ok = false
-  ok, var = ImGui.InputText(ctx, label, var, ImGui.InputTextFlags_CallbackCharFilter,
-    os == 0 and inputCallback_filename_win or inputCallback_filename_unix)
-  return ok, var
+  ok, var = ImGui.InputText(ctx, label, var, ImGui.InputTextFlags_CallbackCharFilter, inputCallback_filterPath)
+  return ok, var, ImGui.Function_GetValue(inputCallback_filterPath, 'filtered')
 end
 
 -- TODO: Sanitize input and add .RPP extension
@@ -137,8 +135,9 @@ local function DrawSubprojNameInput()
   ImGui.PushItemWidth(ctx, 200)
   if first_frame then ImGui.SetKeyboardFocusHere(ctx) end
   local ok = false
+  local filtered = 0
 
-  ok, subproject_name = InputTextFileName('##txtin_subprojName', subproject_name)
+  ok, subproject_name, filtered = InputTextFileName('##txtin_subprojName', subproject_name)
   ok = ImGui.IsItemDeactivatedAfterEdit(ctx)
 
   ImGui.SameLine(ctx, nil, 0)
@@ -147,6 +146,11 @@ local function DrawSubprojNameInput()
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, 'Invalid Name')
     can_perform = false
+  end
+
+  if filtered ~= 0 then
+    ImGui.SameLine(ctx)
+    ImGui.TextColored(ctx, 0xFF0000FF, ('Invalid character : %c'):format(filtered))
   end
 
 
@@ -169,24 +173,25 @@ local function CreateDisplayedPathString(str, maxwidth)
   local width = ImGui.CalcTextSize(ctx, str)
 
   while width > maxwidth do
-    str = str:gsub("^"..os_sep.."[^"..os_sep.."]+", "", 1)
+    str = str:gsub("^" .. os_sep .. "[^" .. os_sep .. "]+", "", 1)
     width = ImGui.CalcTextSize(ctx, str)
   end
-  
-  return "..."..str
+
+  return "..." .. str
 end
 
 local function DrawPathSelector()
   ImGui.Text(ctx, 'Path :')
   ImGui.PushItemWidth(ctx, 400)
   --_, subproject_path = ImGui.InputText(ctx, '##txtin_subprojFn', subproject_path)
-  ImGui.InputText(ctx, '##txtin_subprojFn', displayed_subproject_path, ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
+  ImGui.InputText(ctx, '##txtin_subprojFn', displayed_subproject_path,
+    ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
   if ImGui.IsItemHovered(ctx) then ImGui.SetMouseCursor(ctx, ImGui.MouseCursor_NotAllowed) end
   ImGui.SameLine(ctx, nil, 2)
   if ImGui.Button(ctx, '...##btn_pathselect') then
     local ok, temp_path = reaper.JS_Dialog_BrowseForFolder('Select Location', subproject_path)
-    if ok == 1 then 
-      subproject_path = temp_path 
+    if ok == 1 then
+      subproject_path = temp_path
       displayed_subproject_path = CreateDisplayedPathString(subproject_path)
     end
   end
@@ -198,11 +203,13 @@ local function DrawTemplateFileSelector()
 
   ImGui.PushItemWidth(ctx, 400)
   --_, template_path = ImGui.InputText(ctx, '##txtin_templateFn', template_path)
-  ImGui.InputText(ctx, '##txtin_templateFn', displayed_template_path, ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
+  ImGui.InputText(ctx, '##txtin_templateFn', displayed_template_path,
+    ImGui.InputTextFlags_ReadOnly | ImGui.InputTextFlags_AutoSelectAll)
   if ImGui.IsItemHovered(ctx) then ImGui.SetMouseCursor(ctx, ImGui.MouseCursor_NotAllowed) end
   ImGui.SameLine(ctx, nil, 2)
   if ImGui.Button(ctx, '...##btn_templatepathselect') then
-    local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '', 'REAPER Project\0*.rpp;*.rpp-bak\0\0', false)
+    local ok, temp_path = reaper.JS_Dialog_BrowseForOpenFiles('Select Template', template_folder, '',
+      'REAPER Project\0*.rpp;*.rpp-bak\0\0', false)
     if ok == 1 then
       template_path = temp_path
       displayed_template_path = CreateDisplayedPathString(template_path)
