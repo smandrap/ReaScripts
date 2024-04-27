@@ -114,10 +114,17 @@ local function DrawOkCancelButtons()
   ImGui.SameLine(ctx)
 
   ImGui.SetCursorPosX(ctx, ImGui.GetWindowWidth(ctx) - btn_w - 10)
+  if not can_perform then 
+    ImGui.PushStyleColor(ctx, ImGui.Col_Button, 0x5D5D5DAA) 
+    ImGui.PushStyleColor(ctx, ImGui.Col_ButtonHovered, 0x5D5D5DAA)
+    ImGui.PushStyleColor(ctx, ImGui.Col_ButtonActive, 0x5D5D5DAA)
+    ImGui.PushStyleColor(ctx, ImGui.Col_Text, 0x5D5D5DFF)
+  end
   if ImGui.Button(ctx, "OK", btn_w) and can_perform then
     main()
     open = false
   end
+  if not can_perform then ImGui.PopStyleColor(ctx, 4) end
 end
 
 
@@ -149,7 +156,7 @@ local function DrawSubprojNameInput()
   local filtered = 0
 
   ok, subproject_name, filtered = InputTextFileName('##txtin_subprojName', subproject_name)
-  ok = ImGui.IsItemDeactivatedAfterEdit(ctx)
+  --ok = ImGui.IsItemDeactivatedAfterEdit(ctx)
 
   ImGui.SameLine(ctx, nil, 0)
   ImGui.Text(ctx, '.RPP')
@@ -187,8 +194,6 @@ local function DrawSubprojNameInput()
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, 'File already exists')
     can_perform = false
-  else
-    can_perform = true
   end
 end
 
