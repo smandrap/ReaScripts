@@ -73,7 +73,7 @@ local function InsertSubprojecFromTemplate()
 end
 
 local function main()
-  InsertSubprojecFromTemplate()
+  --InsertSubprojecFromTemplate()
 end
 
 
@@ -119,7 +119,7 @@ local inputCallback_filterPath = ImGui.CreateFunctionFromEEL([[
   );
   filtered ? EventChar = 0;
 ]])
-ImGui.Function_SetValue_String(inputCallback_filterPath, '#disallowed', os == 0 and [[<>:/\|?*]] or [[/]])
+ImGui.Function_SetValue_String(inputCallback_filterPath, '#disallowed', os == 0 and [[<>:/\|?*]] or [[/:]])
 ImGui.Attach(ctx, inputCallback_filterPath)
 
 
@@ -142,17 +142,23 @@ local function DrawSubprojNameInput()
 
   ImGui.SameLine(ctx, nil, 0)
   ImGui.Text(ctx, '.RPP')
-  if subproject_name == '' then
-    ImGui.SameLine(ctx)
-    ImGui.TextColored(ctx, 0xFF0000FF, 'Invalid Name')
-    can_perform = false
-  end
 
   if filtered ~= 0 then
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, ('Invalid character : %c'):format(filtered))
   end
 
+  if subproject_name == '' then
+    ImGui.SameLine(ctx)
+    ImGui.TextColored(ctx, 0xFF0000FF, 'Invalid Name')
+    can_perform = false
+  end
+
+  if os == 1 and subproject_name:sub(1, 1) == '.' then
+    ImGui.SameLine(ctx)
+    ImGui.TextColored(ctx, 0xFF0000FF, "Names can't start with .")
+    can_perform = false
+  end
 
   -- TODO: move this shit somewhere else, but also refactor
   if ok == true then
