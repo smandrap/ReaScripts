@@ -163,21 +163,21 @@ local function DrawSubprojNameInput()
 
   if filtered ~= 0 then
     ImGui.SameLine(ctx)
-    ImGui.TextColored(ctx, 0xFF0000FF, ('Invalid character : %c'):format(filtered))
+    ImGui.TextColored(ctx, 0xFF0000FF, ('[Invalid character : %c]'):format(filtered))
   end
 
   can_perform = false
   if subproject_name == '' then
     ImGui.SameLine(ctx)
-    ImGui.TextColored(ctx, 0xFF0000FF, 'Invalid Name')
+    ImGui.TextColored(ctx, 0xFF0000FF, '[Invalid Name]')
   elseif os == 1 and subproject_name:sub(1, 1) == '.' then
     ImGui.SameLine(ctx)
-    ImGui.TextColored(ctx, 0xFF0000FF, "Names can't start with .")
+    ImGui.TextColored(ctx, 0xFF0000FF, "[Names can't start with .]")
   elseif os == 0 then
     for i = 1, #reserved_fn_win do
       if subproject_name == reserved_fn_win[i] then
         ImGui.SameLine(ctx)
-        ImGui.TextColored(ctx, 0xFF0000FF, "Illegal WinOS name")
+        ImGui.TextColored(ctx, 0xFF0000FF, "[Illegal WinOS name]")
         break
       end
     end
