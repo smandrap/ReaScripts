@@ -5,11 +5,11 @@
 -- @about
 --   Noice interface for subproject insertion
 
-package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
-local ImGui = require 'imgui' '0.9'
-
 local reaper = reaper
 local script_name = "Insert Subproject"
+
+package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
+local ImGui = require 'imgui' '0.9'
 
 if not ImGui.GetVersion() then
   local ok = reaper.MB('Install now?', 'ReaImGui Missing', 1)
@@ -20,8 +20,9 @@ end
 -- APP
 
 local _ = nil
+local os = reaper.GetOS():match("Win") and 0 or 1
 local os_sep = package.config:sub(1, 1)
-local rec_path = reaper.GetProjectPath():gsub("(.+)"..os_sep..".+$", "%1"..os_sep)
+local rec_path = reaper.GetProjectPath():gsub("(.+)" .. os_sep .. ".+$", "%1" .. os_sep)
 
 local can_perform = true
 
@@ -105,6 +106,28 @@ local function DrawOkCancelButtons()
   end
 end
 
+local inputCallback_filename_win = ImGui.CreateFunctionFromEEL([[
+  (EventChar == '<') ||
+  (EventChar == '>') ||
+  (EventChar == ':') ||
+  (EventChar == '/') ||
+  (EventChar == '\\')||
+  (EventChar == '|') ||
+  (EventChar == '?') ||
+  (EventChar == '*')  ? EventChar = 0;
+]])
+
+local inputCallback_filename_unix = ImGui.CreateFunctionFromEEL([[
+  (EventChar == '/') ? EventChar = 0;
+]])
+
+local function InputTextFileName(label, var)
+  local ok = false
+  ok, var = ImGui.InputText(ctx, label, var, ImGui.InputTextFlags_CallbackCharFilter,
+    os == 0 and inputCallback_filename_win or inputCallback_filename_unix)
+  return ok, var
+end
+
 -- TODO: Sanitize input and add .RPP extension
 local function DrawSubprojNameInput()
   ImGui.Text(ctx, 'SubProject Name :')
@@ -112,7 +135,7 @@ local function DrawSubprojNameInput()
   if first_frame then ImGui.SetKeyboardFocusHere(ctx) end
   local ok = false
 
-  ok, subproject_name = ImGui.InputText(ctx, '##txtin_subprojName', subproject_name)
+  ok, subproject_name = InputTextFileName('##txtin_subprojName', subproject_name)
   ok = ImGui.IsItemDeactivatedAfterEdit(ctx)
 
   ImGui.SameLine(ctx, nil, 0)
@@ -123,13 +146,13 @@ local function DrawSubprojNameInput()
     can_perform = false
   end
 
-  
+
   -- TODO: move this shit somewhere else, but also refactor
   if ok == true then
     subproject_complete_fn = subproject_name:gsub("(.+)%.[rR][pP][pP]", '%1') .. subproject_ext
     file_exists = reaper.file_exists(subproject_path .. os_sep .. subproject_complete_fn)
   end
-  if file_exists then   -- TODO: move this shit after path selection
+  if file_exists then -- TODO: move this shit after path selection
     ImGui.SameLine(ctx)
     ImGui.TextColored(ctx, 0xFF0000FF, 'File already exists')
     can_perform = false
