@@ -1,9 +1,8 @@
 --TODO: GUI
 --TODO: implement stevie insert/delete bars
 --TODO: Replace bars
---TODO: account for project measure offset in the calculation
 --TODO: Refactor ReinterpretBars function into smaller functions
-
+--TODO: prevent startbar input < projmeasoffs
 
 --FIXME: Restore state of "ignore project tempo" on items that precedently had it set
 --FIXME: measures are zero based, account for this
@@ -14,12 +13,13 @@
 
 local reaper = reaper
 
-local start_bar = 1
+local start_bar = -3
 local length_in_bars = 3
 local target_timesig_num = 3
 local target_timesig_denom = 4
 
 local function ReinterpretBars()
+  start_bar = start_bar + math.abs(reaper.SNM_GetIntConfigVar('projmeasoffs', 0)) - 1
   local end_bar = start_bar + length_in_bars
 
   -- Cache measure information
@@ -95,7 +95,7 @@ local function ReinterpretBars()
 
   -- Restore whatever is needed at end, but only if some stuff were altered
   if add_final_tempomarker then
-    local last_tmrk = tempos[#tempos]
+    local last_tmrk = tempos[end_bar - 1] -- index [end_bar - 1] is the last tempo_marker in table
     reaper.SetTempoTimeSigMarker(0, -1, -1, end_bar, 0, last_tmrk.tempo, last_tmrk.timesig_num,
       last_tmrk.timesig_denom, false)
   end
