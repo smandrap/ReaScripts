@@ -14,35 +14,52 @@
 local r = reaper
 
 local start_bar = 1
-local length_in_bars = 3
+local length_in_bars = 4
 local target_timesig_num = 3
 local target_timesig_denom = 4
 
-local function ReinterpretBars()
-  -- OVERRIDE TIMEBASES
+local sel_items = {}
+local midi_items = {}
+
+local function OverrideTimebases()
+  local timebase_itemmarkers = r.SNM_GetIntConfigVar('itemtimelock', -1)
   local timebase_tempoenv = r.SNM_GetIntConfigVar('tempoenvtimelock', -1)
-  local timebase_itemmarkers = r.SNM_GetIntConfigVar('tempoenvtimelock', -1)
-  r.SNM_SetIntConfigVar('tempoenvtimelock', 0)
   r.SNM_SetIntConfigVar('itemtimelock', 0)
+  r.SNM_SetIntConfigVar('tempoenvtimelock', 0)
 
-  local sel_items = {}
-  local midi_items = {}
+  return timebase_itemmarkers, timebase_tempoenv
+end
 
+local function RestoreTimebases(item, tempoenv)
+  r.SNM_SetIntConfigVar('tempoenvtimelock', item)
+  r.SNM_SetIntConfigVar('itemtimelock', tempoenv)
+end
+
+local function PrepMediaItems()
   --FIXME: override audio items timebase to time?
   for i = 1, r.CountMediaItems(0) do
     local item = r.GetMediaItem(0, i - 1)
     if r.IsMediaItemSelected(item) then sel_items[#sel_items + 1] = item end
     if r.TakeIsMIDI(r.GetActiveTake(item)) then midi_items[#midi_items + 1] = item end
   end
-
-
-  r.Main_OnCommand(40289, 0) --unselect all items
-
+  r.Main_OnCommand(40289, 0)   --unselect all items
   for i = 1, #midi_items do
     r.SetMediaItemSelected(midi_items[i], true)
   end
+  r.Main_OnCommand(43094, 0)   -- Set midi item timebase to time, ignore project tempo
+end
 
-  r.Main_OnCommand(43096, 0) -- Set midi item timebase to beats, ignore project tempo
+local function RestoreMediaItems()
+  r.Main_OnCommand(40289, 0) --unselect all items
+  for i = 1, #sel_items do
+    r.SetMediaItemSelected(sel_items[i], true)
+  end
+end
+
+local function ReinterpretBars()
+  local timebase_itemmarkers, timebase_tempoenv = OverrideTimebases()
+
+  PrepMediaItems()
 
   -- BEGIN
   start_bar = start_bar + math.abs(r.SNM_GetIntConfigVar('projmeasoffs', 0)) - 1
@@ -106,14 +123,9 @@ local function ReinterpretBars()
   end
 
   -- RESTORE TIMEBASE AND SELECTIONS
-  r.Main_OnCommand(40289, 0) --unselect all items
+  RestoreMediaItems()
 
-  for i = 1, #sel_items do
-    r.SetMediaItemSelected(sel_items[i], true)
-  end
-
-  r.SNM_SetIntConfigVar('tempoenvtimelock', timebase_tempoenv)
-  r.SNM_SetIntConfigVar('itemtimelock', timebase_itemmarkers)
+  RestoreTimebases(timebase_itemmarkers, timebase_tempoenv)
 
   r.UpdateTimeline()
 end
