@@ -71,7 +71,8 @@ local function ReinterpretBars()
 
     if timesig_num ~= target_timesig_num then
       add_final_tempomarker = true
-      local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) / (timesig_num / timesig_denom)
+      -- local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) / (timesig_num / timesig_denom)
+      local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) * (timesig_denom / timesig_num)
 
       --FIXME: preserve linear tempo changes
       --local _, _, _, _, _, _, _, is_linear = reaper.GetTempoTimeSigMarker(0, j)
@@ -87,7 +88,8 @@ local function ReinterpretBars()
       local _, tpos, measpos, beatpos, bpm, ts_num, ts_denom, lin = reaper.GetTempoTimeSigMarker(0, j)
       local is_in_current_measure = (measpos == i) and (tpos > sec_start) and (tpos < sec_end)
       if is_in_current_measure then
-        local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
+        -- local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
+        local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) * (ts_denom / ts_num)
         reaper.SetTempoTimeSigMarker(0, j, tpos, -1, -1, scaled_tempo, -1, -1, lin)
       end
     end
