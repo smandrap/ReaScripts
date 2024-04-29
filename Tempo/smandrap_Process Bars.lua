@@ -8,7 +8,7 @@
 --FIXME: measures are zero based, account for this
 --FIXME: override audio items timebase to time?
 --FIXME: break if tpos > sec_end (doesn't belong to the current measure)
---FIXME: preserve linear tempo changes at start of measures
+--FIXME: preserve linear tempo changes at end of measures
 
 
 local reaper = reaper
@@ -75,10 +75,11 @@ local function ReinterpretBars()
       local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) * (timesig_denom / timesig_num)
 
       --FIXME: preserve linear tempo changes
-      --local _, _, _, _, _, _, _, is_linear = reaper.GetTempoTimeSigMarker(0, j)
+      local found, _, _, _, _, _, _, is_linear = reaper.GetTempoTimeSigMarker(0,
+        reaper.FindTempoTimeSigMarker(0, sec_start))
 
       reaper.SetTempoTimeSigMarker(0, -1, -1, i, 0, target_tempo, i == start_bar and target_timesig_num or 0,
-        i == start_bar and target_timesig_denom or 0, false)
+        i == start_bar and target_timesig_denom or 0, found and is_linear or false)
     end
 
 
