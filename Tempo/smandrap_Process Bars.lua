@@ -63,7 +63,7 @@ local function ReinterpretBars()
   local tempochange_cnt = r.CountTempoTimeSigMarkers(0)
 
   -- If time is not reinterpreted (bars are already of the target time signature) there's no need to add tempo markers
-  local add_final_tempomarker = false
+  local is_range_reinterpreted = false
 
   for i = start_bar, end_bar - 1 do
     local _, qn_start, qn_end, timesig_num, timesig_denom, tempo = r.TimeMap_GetMeasureInfo(0, i)
@@ -71,7 +71,7 @@ local function ReinterpretBars()
     local sec_end = r.TimeMap_QNToTime(qn_end)
 
     if timesig_num ~= target_timesig_num then
-      add_final_tempomarker = true
+      is_range_reinterpreted = true
       -- local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) / (timesig_num / timesig_denom)
       local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) * (timesig_denom / timesig_num)
 
@@ -85,20 +85,22 @@ local function ReinterpretBars()
 
 
     -- Scale all tempo markers in this measure
-    for j = 0, tempochange_cnt do
-      --FIXME: break if tpos > sec_end (doesn't belong to the current measure)
-      local _, tpos, measpos, beatpos, bpm, ts_num, ts_denom, lin = r.GetTempoTimeSigMarker(0, j)
-      local is_in_current_measure = (measpos == i) and (tpos > sec_start) and (tpos < sec_end)
-      if is_in_current_measure then
-        -- local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
-        local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) * (ts_denom / ts_num)
-        r.SetTempoTimeSigMarker(0, j, tpos, -1, -1, scaled_tempo, USE_PREVIOUS_TIMESIG, USE_PREVIOUS_TIMESIG, lin)
+    if is_range_reinterpreted then
+      for j = 0, tempochange_cnt do
+        --FIXME: break if tpos > sec_end (doesn't belong to the current measure)
+        local _, tpos, measpos, beatpos, bpm, ts_num, ts_denom, lin = r.GetTempoTimeSigMarker(0, j)
+        local is_in_current_measure = (measpos == i) and (tpos > sec_start) and (tpos < sec_end)
+        if is_in_current_measure then
+          -- local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
+          local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) * (ts_denom / ts_num)
+          r.SetTempoTimeSigMarker(0, j, tpos, -1, -1, scaled_tempo, USE_PREVIOUS_TIMESIG, USE_PREVIOUS_TIMESIG, lin)
+        end
       end
     end
   end
 
   -- Restore whatever is needed at end, but only if some stuff were altered
-  if add_final_tempomarker then
+  if is_range_reinterpreted then
     local last_tmrk = tempos[end_bar - 1] -- index [end_bar - 1] is the last tempo_marker in table
     r.SetTempoTimeSigMarker(0, -1, -1, end_bar, 0, last_tmrk.tempo, last_tmrk.timesig_num, last_tmrk.timesig_denom, false)
   end
