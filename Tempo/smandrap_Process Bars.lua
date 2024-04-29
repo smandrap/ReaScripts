@@ -13,7 +13,7 @@
 
 local reaper = reaper
 
-local start_bar = -3
+local start_bar = 1
 local length_in_bars = 3
 local target_timesig_num = 3
 local target_timesig_denom = 4
@@ -66,11 +66,11 @@ local function ReinterpretBars()
 
   for i = start_bar, end_bar - 1 do
     local _, qn_start, qn_end, timesig_num, timesig_denom, tempo = reaper.TimeMap_GetMeasureInfo(0, i)
+    local sec_start = reaper.TimeMap_QNToTime(qn_start)
+    local sec_end = reaper.TimeMap_QNToTime(qn_end)
 
     if timesig_num ~= target_timesig_num then
       add_final_tempomarker = true
-      local sec_start = reaper.TimeMap_QNToTime(qn_start)
-      local sec_end = reaper.TimeMap_QNToTime(qn_start)
       local target_tempo = tempos[i].tempo * (target_timesig_num / target_timesig_denom) / (timesig_num / timesig_denom)
 
       --FIXME: preserve linear tempo changes
@@ -78,17 +78,17 @@ local function ReinterpretBars()
 
       reaper.SetTempoTimeSigMarker(0, -1, -1, i, 0, target_tempo, i == start_bar and target_timesig_num or 0,
         i == start_bar and target_timesig_denom or 0, false)
+    end
 
-      -- Scale all tempo markers in this measure
-      for j = 0, tempochange_cnt - 1 do
-        --FIXME: break if tpos > sec_end (doesn't belong to the current measure)
-        local _, tpos, measpos, beatpos, bpm, ts_num, ts_denom, lin = reaper.GetTempoTimeSigMarker(0, j)
-        local is_in_current_measure = (measpos == i) and (tpos > sec_start) and (tpos < sec_end)
 
-        if is_in_current_measure then
-          local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
-          reaper.SetTempoTimeSigMarker(0, j, tpos, -1, -1, scaled_tempo, -1, -1, lin)
-        end
+    -- Scale all tempo markers in this measure
+    for j = 0, tempochange_cnt do
+      --FIXME: break if tpos > sec_end (doesn't belong to the current measure)
+      local _, tpos, measpos, beatpos, bpm, ts_num, ts_denom, lin = reaper.GetTempoTimeSigMarker(0, j)
+      local is_in_current_measure = (measpos == i) and (tpos > sec_start) and (tpos < sec_end)
+      if is_in_current_measure then
+        local scaled_tempo = bpm * (target_timesig_num / target_timesig_denom) / (ts_num / ts_denom)
+        reaper.SetTempoTimeSigMarker(0, j, tpos, -1, -1, scaled_tempo, -1, -1, lin)
       end
     end
   end
