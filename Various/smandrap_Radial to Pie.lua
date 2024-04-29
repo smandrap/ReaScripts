@@ -1,3 +1,6 @@
+local DEFAULT_COLOR = 255
+local DEFAULT_RADIUS = 150
+
 local radial_path = '/Users/Federico/Library/Application Support/REAPER/Scripts/ReaTeam Scripts/Various/Lokasenna_Radial Menu - user settings.txt'
 local f = io.open(radial_path, 'r')
 if not f then return end
