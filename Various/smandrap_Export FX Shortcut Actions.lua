@@ -135,6 +135,10 @@ local settings = {
 }
 
 local btn_w = 80
+local wnd_h = 410
+local wnd_w = 300
+local list_w = wnd_w * 0.95
+local list_h = wnd_h * 0.5
 
 local ctx = ImGui.CreateContext(script_name)
 local visible, open
@@ -146,13 +150,13 @@ ImGui.Attach(ctx, font)
 
 local function DrawSearchFilter()
   local change = false
-  ImGui.PushItemWidth(ctx, ImGui.GetWindowWidth(ctx) * 0.95)
+  ImGui.PushItemWidth(ctx, list_w)
   change, filter = ImGui.InputText(ctx, '##DrawSearchFilter', filter)
   return change
 end
 
 local function DrawFXList()
-  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) * 0.95, ImGui.GetWindowHeight(ctx) * 0.5)
+  ImGui.BeginListBox(ctx, '##fxlist', list_w, list_h)
   for i = 1, #FX_LIST do
     if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
     local rv = false
@@ -223,7 +227,7 @@ local function DrawWindow()
 end
 
 local function PrepWindow()
-  ImGui.SetNextWindowSize(ctx, 300, 410, ImGui.Cond_Appearing)
+  ImGui.SetNextWindowSize(ctx, wnd_w, wnd_h, ImGui.Cond_Appearing)
   ImGui.PushFont(ctx, font)
   ImGui.PushStyleVar(ctx, ImGui.StyleVar_WindowRounding, 5)
 end
