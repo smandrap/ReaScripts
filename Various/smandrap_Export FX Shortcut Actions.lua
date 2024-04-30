@@ -80,6 +80,10 @@ local function GenerateScript(FX_NAME)
 
 end
 
+local function main()
+  
+end
+
 local function UpdateCanExport()
   for i = 1, #SEL_IDX do
     if SEL_IDX[i] == true then 
@@ -150,10 +154,17 @@ end
 
 local function DrawExportButton()
   reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w - 10)
+  if not can_export then 
+    ImGui.PushStyleColor(ctx, ImGui.Col_Button, 0x5D5D5DAA) 
+    ImGui.PushStyleColor(ctx, ImGui.Col_ButtonHovered, 0x5D5D5DAA)
+    ImGui.PushStyleColor(ctx, ImGui.Col_ButtonActive, 0x5D5D5DAA)
+    ImGui.PushStyleColor(ctx, ImGui.Col_Text, 0x5D5D5DFF)
+  end
   if reaper.ImGui_Button(ctx, "Export", btn_w) then
     main()
     open = false
   end
+  if not can_export then ImGui.PopStyleColor(ctx, 4) end
 end
 
 local function DrawWindow()
