@@ -34,29 +34,18 @@ end
 
 -- APP
 
-local FX_LIST = nil
-local FILTERED_FXLIST = nil
+local FX_LIST = {}
+local FILTERED_FXLIST = {}
 
 local SEL_IDX = {}
 
 local export_options = {
-
-
+  ALWAYS_INSTANTIATE = false,
+  SHOW = true,
+  FLOAT_WND = true,
 }
 
---[[ local export_str = ([[
-FX_NAME = %s
-ALWAYS_INSTANTIATE = %s
-SHOW = %s
-FLOAT_WND = %s
-
-for i = 0, reaper.CountSelectedTracks(0) - 1 do
-  local t = reaper.GetSelectedTrack(0, 0)
-  local fxidx = reaper.TrackFX_AddByName(t, FX_NAME, false, ALWAYS_INSTANTIATE and -1 or 1)
-  if SHOW then reaper.TrackFX_Show(t, fxidx, FLOAT_WND and 3 or 1) end
-end
-]]):format(FX_NAME, ALWAYS_INSTANTIATE, SHOW, FLOAT_WND) ]]
-
+local can_export = false
 local filter = ''
 
 local function GetFXList()
@@ -75,6 +64,32 @@ local function GetFXList()
   return fx_list
 end
 
+local function GenerateScript(FX_NAME)
+  local export_str = ([[
+  FX_NAME = %s
+  ALWAYS_INSTANTIATE = %s
+  SHOW = %s
+  FLOAT_WND = %s
+
+  for i = 0, reaper.CountSelectedTracks(0) - 1 do
+    local t = reaper.GetSelectedTrack(0, 0)
+    local fxidx = reaper.TrackFX_AddByName(t, FX_NAME, false, ALWAYS_INSTANTIATE and -1 or 1)
+    if SHOW then reaper.TrackFX_Show(t, fxidx, FLOAT_WND and 3 or 1) end
+  end
+  ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
+
+end
+
+local function UpdateCanExport()
+  for i = 1, #SEL_IDX do
+    if SEL_IDX[i] == true then 
+      can_export = true 
+      return
+    end
+  end
+  can_export = false
+end
+
 
 -- GUI
 
@@ -82,27 +97,30 @@ local settings = {
   font_size = 12,
 }
 
+local btn_w = 80
+
 local ctx = ImGui.CreateContext(script_name)
 local visible, open
 local window_flags =
-    ImGui.WindowFlags_None
--- | ImGui.WindowFlags_AlwaysAutoResize
-
+    ImGui.WindowFlags_None | ImGui.WindowFlags_NoResize
 
 local font = ImGui.CreateFont('sans-serif', settings.font_size)
 ImGui.Attach(ctx, font)
 
 local function DrawSearchFilter()
   local change = false
+  ImGui.PushItemWidth(ctx, ImGui.GetWindowWidth(ctx) * 0.95)
   change, filter = ImGui.InputText(ctx, '##DrawSearchFilter', filter)
   return change
 end
 
 local function DrawFXList()
-  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) - 40, ImGui.GetWindowHeight(ctx) * 0.66)
+  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) * 0.95, ImGui.GetWindowHeight(ctx) * 0.5)
   for i = 1, #FILTERED_FXLIST do
     if FILTERED_FXLIST[i] == nil then goto continue end
-    _, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
+    local rv = false
+    rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
+    if rv then UpdateCanExport() end
     ImGui.SameLine(ctx)
     ImGui.Text(ctx, FILTERED_FXLIST[i])
     ::continue::
@@ -111,7 +129,7 @@ local function DrawFXList()
 end
 
 local function UpdateList()
-  if filter == '' then 
+  if filter == '' then
     FILTERED_FXLIST = table_copy(FX_LIST)
     return
   end
@@ -121,14 +139,33 @@ local function UpdateList()
   end
 end
 
+local function DrawOptions()
+  ImGui.Dummy(ctx, 0, 20)
+  ImGui.SeparatorText(ctx, 'Options:')
+  _, export_options.ALWAYS_INSTANTIATE = ImGui.Checkbox(ctx, 'Always Instantiate##opt1',
+    export_options.ALWAYS_INSTANTIATE)
+  _, export_options.SHOW = ImGui.Checkbox(ctx, 'Show FX##opt2', export_options.SHOW)
+  _, export_options.FLOAT_WND = ImGui.Checkbox(ctx, 'Float Window##opt3', export_options.FLOAT_WND)
+end
+
+local function DrawExportButton()
+  reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w - 10)
+  if reaper.ImGui_Button(ctx, "Export", btn_w) then
+    main()
+    open = false
+  end
+end
+
 local function DrawWindow()
   local changed = DrawSearchFilter()
   if changed then UpdateList() end
   DrawFXList()
+  DrawOptions()
+  DrawExportButton()
 end
 
 local function PrepWindow()
-  ImGui.SetNextWindowSize(ctx, 300, 400, ImGui.Cond_FirstUseEver)
+  ImGui.SetNextWindowSize(ctx, 300, 400, ImGui.Cond_Appearing)
   ImGui.PushFont(ctx, font)
   ImGui.PushStyleVar(ctx, ImGui.StyleVar_WindowRounding, 5)
 end
@@ -139,7 +176,9 @@ local function guiloop()
   ImGui.PopStyleVar(ctx)
 
   if visible then
+    ImGui.PushStyleVar(ctx, ImGui.StyleVar_FrameRounding, 5)
     DrawWindow()
+    ImGui.PopStyleVar(ctx)
     ImGui.End(ctx)
   end
   ImGui.PopFont(ctx)
