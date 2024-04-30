@@ -8,10 +8,10 @@
 
 
 local r = reaper
-local script_name = "My cool script"
+local script_name = "FX Shortcut Export"
 
 package.path = r.ImGui_GetBuiltinPath() .. '/?.lua'
-local ImGui = require 'ImGui' '0.9'
+local ImGui = require 'imgui' '0.9'
 
 
 if not ImGui.GetVersion then
@@ -23,6 +23,7 @@ end
 -- APP
 
 local FX_LIST = nil
+local FILTERED_FXLIST = nil
 
 local function GetFXList()
   local rv = true
@@ -41,7 +42,6 @@ local function GetFXList()
 end
 
 
-
 -- GUI
 
 local settings = {
@@ -58,13 +58,22 @@ local window_flags =
 local font = ImGui.CreateFont('sans-serif', settings.font_size)
 ImGui.Attach(ctx, font)
 
-
-local function DrawFXList()
-  ImGui.ListBox()
+local function DrawSearchFilter()
   
 end
 
+local function DrawFXList()
+  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) - 40, ImGui.GetWindowHeight(ctx) - 60)
+    for i = 1, #FX_LIST do
+      ImGui.Checkbox(ctx, '##fx'..i, false)
+      ImGui.SameLine(ctx)
+      ImGui.Text(ctx, FX_LIST[i])
+    end
+  ImGui.EndListBox(ctx)
+end
+
 local function DrawWindow()
+  DrawSearchFiletr()
   DrawFXList()
 end
 
@@ -92,6 +101,7 @@ end
 
 local function init()
   FX_LIST = GetFXList()
+  FILTERED_FXLIST = FX_LIST
 end
 
 local function Exit()
