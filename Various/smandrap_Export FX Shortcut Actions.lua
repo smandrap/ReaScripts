@@ -8,8 +8,6 @@
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
 
-
-
 local r = reaper
 local script_name = "FX Shortcut Export"
 
@@ -33,17 +31,17 @@ local os_sep = package.config:sub(1, 1)
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
 
-local function table_copy(t)
-  local t2 = {}
-  for k, v in pairs(t) do
-    t2[k] = v
-  end
-  return t2
+-- Get radial menu
+local radial_fn = "Lokasenna_Radial Menu - user settings.txt"
+local radial_path = table.concat({ r.GetResourcePath(), 'Scripts', 'ReaTeam Scripts', 'Various' }, os_sep) .. os_sep
+local radial_found
+
+local radial_file = radial_path .. radial_fn
+if r.file_exists(radial_file) then
+    radial_found = true
+    reaper.ShowConsoleMsg('ok')
 end
 
-local function table_delete(t)
-  for i = 0, #t do t[i] = nil end
-end
 
 -- APP
 
