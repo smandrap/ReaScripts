@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="2948c1f9728a3ef0e22535e387ff2110675fdda8">
+<index version="1" name="smandrap ReaScripts" commit="799013fcdfea7c0eecd7c43016736d7b93dbc0d0">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -313,6 +313,11 @@
       </version>
       <version name="1.0.1" author="smandrap" time="2024-04-30T15:30:08Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/798196f6073a925703ce7569be3ea04cd21bcc44/Various/smandrap_Export%20FX%20Shortcut%20Actions.lua</source>
+      </version>
+      <version name="1.0.2" author="smandrap" time="2024-04-30T15:42:47Z">
+        <changelog><![CDATA[# Fix dependency check
+# (maybe) fix listbox shit]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/799013fcdfea7c0eecd7c43016736d7b93dbc0d0/Various/smandrap_Export%20FX%20Shortcut%20Actions.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Set record mode according to time selection (background).lua" type="script" desc="Set record mode according to time selection (background)">

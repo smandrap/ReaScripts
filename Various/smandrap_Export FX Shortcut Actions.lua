@@ -1,9 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.2
+-- @version 1.0.3
 -- @changelog
---  # Fix dependency check
---  # (maybe) fix listbox shit
+--  # Fix script generation on windows (fuck reserved chars)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -27,7 +26,10 @@ local ImGui = require 'imgui' '0.9'
 local getinfo = debug.getinfo(1, 'S');
 local script_path = getinfo.source:match [[^@?(.*[\/])[^\/]-$]];
 package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQUIRE
+
+--local os = r.GetOS():match('^Win') and 0 or 1
 local os_sep = package.config:sub(1, 1)
+
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
 
@@ -91,7 +93,7 @@ local function GenerateScript(FX_NAME)
   end
   ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
 
-  local fn = 'Insert FX: ' .. FX_NAME .. '.lua'
+  local fn = 'Insert FX - ' .. FX_NAME .. '.lua'
   local full_path = export_path .. fn
 
   local f = io.open(full_path, 'w+')
@@ -121,9 +123,9 @@ local function main()
     end
   end
   for i = 1, #paths - 1 do
-    r.AddRemoveReaScript(true, 0, paths[i], false)
+    r.AddRemoveReaScript(true, 0, paths[i] or '', false)
   end
-  local cmdid = r.AddRemoveReaScript(true, 0, paths[#paths], true)
+  local cmdid = r.AddRemoveReaScript(true, 0, paths[#paths] or '', false)
   r.PromptForAction(1, cmdid, 0)
   r.PromptForAction(-1, cmdid, 0)
 end
@@ -259,6 +261,7 @@ local function init()
   end
 
   r.RecursiveCreateDirectory(export_path, 1)
+
 end
 
 local function Exit()
@@ -268,3 +271,5 @@ end
 init()
 r.atexit(Exit)
 r.defer(guiloop)
+
+
