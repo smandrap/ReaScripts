@@ -13,6 +13,12 @@ local script_name = "FX Shortcut Export"
 package.path = r.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9'
 
+local getinfo = debug.getinfo(1, 'S');
+local script_path = getinfo.source:match [[^@?(.*[\/])[^\/]-$]];
+package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQUIRE
+local os_sep = package.config:sub(1, 1)
+local export_path = script_path..'Exported FX Shortcuts'..os_sep
+
 
 if not ImGui.GetVersion then
   local ok = r.MB('Install now?', 'ReaImGui Missing', 1)
@@ -66,7 +72,7 @@ end
 
 local function GenerateScript(FX_NAME)
   local export_str = ([[
-  FX_NAME = %s
+  FX_NAME = "%s"
   ALWAYS_INSTANTIATE = %s
   SHOW = %s
   FLOAT_WND = %s
@@ -78,10 +84,29 @@ local function GenerateScript(FX_NAME)
   end
   ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
 
+  local fn = 'Insert FX: '..FX_NAME..'.lua'
+  local full_path = export_path..fn
+
+  local f = io.open(full_path, 'w+')
+  if f == nil then return end
+  f:write(export_str)
+  f:close()
+
+
+  return full_path
 end
 
 local function main()
-  
+  local paths = {}
+  for i = 1, #SEL_IDX do
+    if SEL_IDX[i] == true then
+      paths[#paths+1] = GenerateScript(FX_LIST[i])
+    end
+  end
+  for i = 1, #paths - 1 do
+    r.AddRemoveReaScript(true, 0, paths[i], false)
+  end
+  r.AddRemoveReaScript(true, 0, paths[#paths], true)
 end
 
 local function UpdateCanExport()
@@ -206,6 +231,8 @@ local function init()
   for i = 1, #FX_LIST do
     SEL_IDX[i] = false
   end
+
+  r.RecursiveCreateDirectory(export_path, 1)
 end
 
 local function Exit()
