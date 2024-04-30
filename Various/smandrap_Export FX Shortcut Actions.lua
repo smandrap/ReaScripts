@@ -17,7 +17,7 @@ local getinfo = debug.getinfo(1, 'S');
 local script_path = getinfo.source:match [[^@?(.*[\/])[^\/]-$]];
 package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQUIRE
 local os_sep = package.config:sub(1, 1)
-local export_path = script_path..'Exported FX Shortcuts'..os_sep
+local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
 
 if not ImGui.GetVersion then
@@ -41,7 +41,7 @@ end
 -- APP
 
 local FX_LIST = {}
-local FILTERED_FXLIST = {}
+--local FILTERED_FXLIST = {}
 
 local SEL_IDX = {}
 
@@ -84,8 +84,8 @@ local function GenerateScript(FX_NAME)
   end
   ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
 
-  local fn = 'Insert FX: '..FX_NAME..'.lua'
-  local full_path = export_path..fn
+  local fn = 'Insert FX: ' .. FX_NAME .. '.lua'
+  local full_path = export_path .. fn
 
   local f = io.open(full_path, 'w+')
   if f == nil then return end
@@ -100,7 +100,7 @@ local function main()
   local paths = {}
   for i = 1, #SEL_IDX do
     if SEL_IDX[i] == true then
-      paths[#paths+1] = GenerateScript(FX_LIST[i])
+      paths[#paths + 1] = GenerateScript(FX_LIST[i])
     end
   end
   for i = 1, #paths - 1 do
@@ -111,8 +111,8 @@ end
 
 local function UpdateCanExport()
   for i = 1, #SEL_IDX do
-    if SEL_IDX[i] == true then 
-      can_export = true 
+    if SEL_IDX[i] == true then
+      can_export = true
       return
     end
   end
@@ -145,19 +145,19 @@ end
 
 local function DrawFXList()
   ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) * 0.95, ImGui.GetWindowHeight(ctx) * 0.5)
-  for i = 1, #FILTERED_FXLIST do
-    if FILTERED_FXLIST[i] == nil then goto continue end
+  for i = 1, #FX_LIST do
+    if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
     local rv = false
     rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
     if rv then UpdateCanExport() end
     ImGui.SameLine(ctx)
-    ImGui.Text(ctx, FILTERED_FXLIST[i])
+    ImGui.Text(ctx, FX_LIST[i])
     ::continue::
   end
   ImGui.EndListBox(ctx)
 end
 
-local function UpdateList()
+--[[ local function UpdateList()
   if filter == '' then
     FILTERED_FXLIST = table_copy(FX_LIST)
     return
@@ -166,7 +166,7 @@ local function UpdateList()
   for i = 1, #FX_LIST do
     if FX_LIST[i]:lower():match(filter:lower()) then table.insert(FILTERED_FXLIST, FX_LIST[i]) end
   end
-end
+end ]]
 
 local function DrawOptions()
   ImGui.Dummy(ctx, 0, 20)
@@ -179,8 +179,8 @@ end
 
 local function DrawExportButton()
   reaper.ImGui_SetCursorPosX(ctx, reaper.ImGui_GetWindowWidth(ctx) - btn_w - 10)
-  if not can_export then 
-    ImGui.PushStyleColor(ctx, ImGui.Col_Button, 0x5D5D5DAA) 
+  if not can_export then
+    ImGui.PushStyleColor(ctx, ImGui.Col_Button, 0x5D5D5DAA)
     ImGui.PushStyleColor(ctx, ImGui.Col_ButtonHovered, 0x5D5D5DAA)
     ImGui.PushStyleColor(ctx, ImGui.Col_ButtonActive, 0x5D5D5DAA)
     ImGui.PushStyleColor(ctx, ImGui.Col_Text, 0x5D5D5DFF)
@@ -194,7 +194,7 @@ end
 
 local function DrawWindow()
   local changed = DrawSearchFilter()
-  if changed then UpdateList() end
+  --if changed then UpdateList() end
   DrawFXList()
   DrawOptions()
   DrawExportButton()
@@ -226,7 +226,6 @@ end
 
 local function init()
   FX_LIST = GetFXList()
-  FILTERED_FXLIST = table_copy(FX_LIST)
 
   for i = 1, #FX_LIST do
     SEL_IDX[i] = false
