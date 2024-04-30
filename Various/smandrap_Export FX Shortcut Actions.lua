@@ -1,6 +1,6 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.1
+-- @version 1.0.2
 -- @changelog
 --  # Fix dependency check
 --  # (maybe) fix listbox shit
