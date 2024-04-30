@@ -37,6 +37,26 @@ end
 local FX_LIST = nil
 local FILTERED_FXLIST = nil
 
+local SEL_IDX = {}
+
+local export_options = {
+
+
+}
+
+--[[ local export_str = ([[
+FX_NAME = %s
+ALWAYS_INSTANTIATE = %s
+SHOW = %s
+FLOAT_WND = %s
+
+for i = 0, reaper.CountSelectedTracks(0) - 1 do
+  local t = reaper.GetSelectedTrack(0, 0)
+  local fxidx = reaper.TrackFX_AddByName(t, FX_NAME, false, ALWAYS_INSTANTIATE and -1 or 1)
+  if SHOW then reaper.TrackFX_Show(t, fxidx, FLOAT_WND and 3 or 1) end
+end
+]]):format(FX_NAME, ALWAYS_INSTANTIATE, SHOW, FLOAT_WND) ]]
+
 local filter = ''
 
 local function GetFXList()
@@ -79,10 +99,10 @@ local function DrawSearchFilter()
 end
 
 local function DrawFXList()
-  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) - 40, ImGui.GetWindowHeight(ctx) - 60)
+  ImGui.BeginListBox(ctx, '##fxlist', ImGui.GetWindowWidth(ctx) - 40, ImGui.GetWindowHeight(ctx) * 0.66)
   for i = 1, #FILTERED_FXLIST do
     if FILTERED_FXLIST[i] == nil then goto continue end
-    ImGui.Checkbox(ctx, '##fx' .. i, false)
+    _, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
     ImGui.SameLine(ctx)
     ImGui.Text(ctx, FILTERED_FXLIST[i])
     ::continue::
@@ -132,6 +152,10 @@ end
 local function init()
   FX_LIST = GetFXList()
   FILTERED_FXLIST = table_copy(FX_LIST)
+
+  for i = 1, #FX_LIST do
+    SEL_IDX[i] = false
+  end
 end
 
 local function Exit()
