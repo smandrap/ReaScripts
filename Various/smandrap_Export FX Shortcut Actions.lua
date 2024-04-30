@@ -3,7 +3,7 @@
 -- @version 1.0
 -- @donation https://paypal.me/smandrap
 -- @about
---   ABOUT
+--   Select FX and run Export to add actions to open/show said fx
 
 
 
