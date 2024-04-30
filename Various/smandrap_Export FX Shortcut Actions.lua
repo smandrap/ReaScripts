@@ -1,6 +1,6 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0
+-- @version 1.0.1
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -14,7 +14,7 @@ if not r.ImGui_GetVersion then
   local ok = r.MB('Install now?', 'ReaImGui Missing', 1)
   if ok == 1 then r.ReaPack_BrowsePackages("ReaImGui API") end
   return
-elseif select(2, r.ImGui_GetVersion()) > 0.9 then
+elseif select(2, r.ImGui_GetVersion()) < 0.9 then
   local ok = r.MB('Requires ReaImGui v0.9 or later.\n\nUpdate now?', 'ReaImGui Outdated', 1)
   if ok == 1 then r.ReaPack_BrowsePackages("ReaImGui API") end
   return
