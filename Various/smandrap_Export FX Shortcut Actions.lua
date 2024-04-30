@@ -51,8 +51,10 @@ local export_options = {
   FLOAT_WND = true,
 }
 
+local export_cnt = 0
 local can_export = false
 local filter = ''
+
 
 local function GetFXList()
   local rv = true
@@ -96,6 +98,16 @@ local function GenerateScript(FX_NAME)
   return full_path
 end
 
+local function UpdateCanExport()
+  export_cnt = 0
+  for i = 1, #SEL_IDX do
+    if SEL_IDX[i] == true then
+      export_cnt = export_cnt + 1
+    end
+  end
+  can_export = export_cnt > 0
+end
+
 local function main()
   local paths = {}
   for i = 1, #SEL_IDX do
@@ -106,17 +118,9 @@ local function main()
   for i = 1, #paths - 1 do
     r.AddRemoveReaScript(true, 0, paths[i], false)
   end
-  r.AddRemoveReaScript(true, 0, paths[#paths], true)
-end
-
-local function UpdateCanExport()
-  for i = 1, #SEL_IDX do
-    if SEL_IDX[i] == true then
-      can_export = true
-      return
-    end
-  end
-  can_export = false
+  local cmdid = r.AddRemoveReaScript(true, 0, paths[#paths], true)
+  r.PromptForAction(1, cmdid, 0)
+  r.PromptForAction(-1, cmdid, 0)
 end
 
 
@@ -185,11 +189,20 @@ local function DrawExportButton()
     ImGui.PushStyleColor(ctx, ImGui.Col_ButtonActive, 0x5D5D5DAA)
     ImGui.PushStyleColor(ctx, ImGui.Col_Text, 0x5D5D5DFF)
   end
-  if reaper.ImGui_Button(ctx, "Export", btn_w) then
+  if reaper.ImGui_Button(ctx, "Export", btn_w) and can_export then
     main()
     open = false
   end
   if not can_export then ImGui.PopStyleColor(ctx, 4) end
+end
+
+local function DrawExportCnt()
+  if export_cnt > 0 then
+    ImGui.AlignTextToFramePadding(ctx)
+    ImGui.Text(ctx, ('Exporting %d shortcut(s)'):format(export_cnt))
+  else
+    ImGui.Dummy(ctx, 0, 10)
+  end
 end
 
 local function DrawWindow()
@@ -197,11 +210,16 @@ local function DrawWindow()
   --if changed then UpdateList() end
   DrawFXList()
   DrawOptions()
+
+  ImGui.Dummy(ctx, 0, 10)
+
+  DrawExportCnt()
+  ImGui.SameLine(ctx)
   DrawExportButton()
 end
 
 local function PrepWindow()
-  ImGui.SetNextWindowSize(ctx, 300, 400, ImGui.Cond_Appearing)
+  ImGui.SetNextWindowSize(ctx, 300, 410, ImGui.Cond_Appearing)
   ImGui.PushFont(ctx, font)
   ImGui.PushStyleVar(ctx, ImGui.StyleVar_WindowRounding, 5)
 end

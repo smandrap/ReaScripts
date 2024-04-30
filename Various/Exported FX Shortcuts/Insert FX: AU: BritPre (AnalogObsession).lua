@@ -1,7 +1,7 @@
-  FX_NAME = "VST3: Decapitator (Soundtoys)"
-  ALWAYS_INSTANTIATE = true
-  SHOW = false
-  FLOAT_WND = false
+  FX_NAME = "AU: BritPre (AnalogObsession)"
+  ALWAYS_INSTANTIATE = false
+  SHOW = true
+  FLOAT_WND = true
 
   for i = 0, reaper.CountSelectedTracks(0) - 1 do
     local t = reaper.GetSelectedTrack(0, 0)
