@@ -1,0 +1,842 @@
+{
+ [1] = {
+  name = "View",
+  col = 255,
+  cmd = "menu view",
+ },
+ [2] = {
+  name = "Options",
+  col = 255,
+  cmd = "menu options",
+ },
+ [3] = {
+  name = "Items",
+  col = 255,
+  cmd = "menu items",
+ },
+ [4] = {
+  name = "Take",
+  col = 255,
+  cmd = "menu take",
+ },
+ [5] = {
+  name = "Recording",
+  col = 255,
+  cmd = "menu record",
+ },
+ [6] = {
+  name = "MIDI|Editor",
+  col = 255,
+  cmd = "menu midi",
+ },
+ [7] = {
+  name = "Envelopes",
+  col = 255,
+  cmd = "menu env",
+ },
+ [8] = {
+  name = "Grid",
+  col = 255,
+  cmd = "menu grid",
+ },
+ [9] = {
+  name = "Insert|Template",
+  col = 255,
+  cmd = "46000",
+ },
+ [10] = {
+  name = "Render",
+  col = 255,
+  cmd = "41717",
+ },
+ [11] = {
+  name = "Dupe",
+  col = 255,
+  cmd = "40062",
+ },
+ [12] = {
+  name = "Envelopes",
+  col = 255,
+  cmd = "menu track env",
+ },
+ [13] = {
+  name = "FiPM",
+  col = 255,
+  cmd = "40641",
+ },
+ [14] = {
+  name = "Select|All Items",
+  col = 255,
+  cmd = "40421",
+ },
+ [15] = {
+  name = "Record Arm",
+  col = 255,
+  cmd = "9",
+ },
+ [16] = {
+  name = "Automation|Modes",
+  col = 255,
+  cmd = "menu track auto",
+ },
+ [17] = {
+  name = "Show Only Sel",
+  col = 255,
+  cmd = "_f108e242db5d4c86b0b6c02152db3cf9",
+ },
+ [18] = {
+  name = "Make Receive|(ask name)",
+  col = 255,
+  cmd = "_RSd962733482cd63d3f9f2a626d34f6a7127095b29",
+ },
+ [19] = {
+  name = "Insert|Track|(Multi)|(child)",
+  col = 255,
+  cmd = "40001",
+ },
+ [20] = {
+  name = "Navigator",
+  col = 255,
+  cmd = "40268",
+ },
+ [21] = {
+  name = "Perform.|Meter",
+  col = 255,
+  cmd = "40240",
+ },
+ [22] = {
+  name = "Render Matrix",
+  col = 255,
+  cmd = "41888",
+ },
+ [23] = {
+  name = "Region|Manager",
+  col = 255,
+  cmd = "40326",
+ },
+ [24] = {
+  name = "Screensets",
+  col = 255,
+  cmd = "40422",
+ },
+ [25] = {
+  name = "Routing",
+  col = 255,
+  cmd = "40251",
+ },
+ [26] = {
+  name = "Track|Manager",
+  col = 255,
+  cmd = "40906",
+ },
+ [27] = {
+  name = "Big Clock",
+  col = 255,
+  cmd = "40378",
+ },
+ [28] = {
+  name = "Grid Size",
+  col = 255,
+  cmd = "menu grid size",
+ },
+ [29] = {
+  name = "Media|Explorer",
+  col = 255,
+  cmd = "50124",
+ },
+ [30] = {
+  name = "Video",
+  col = 255,
+  cmd = "50125",
+ },
+ [31] = {
+  name = "(Un)collapse|Folder",
+  col = 255,
+  cmd = "_SWS_COLLAPSE",
+ },
+ [32] = {
+  name = "Click",
+  col = 255,
+  cmd = "40364",
+ },
+ [33] = {
+  name = "Grid",
+  col = 255,
+  cmd = "40145",
+ },
+ [34] = {
+  name = "Snapping",
+  col = 255,
+  cmd = "1157",
+ },
+ [35] = {
+  name = "Ripple|Editing",
+  col = 255,
+  cmd = "1155",
+ },
+ [36] = {
+  name = "Solo In|Front",
+  col = 255,
+  cmd = "40745",
+ },
+ [37] = {
+  name = "Spectral|Peaks",
+  col = 255,
+  cmd = "42073",
+ },
+ [38] = {
+  name = "Pre-Fader|Metering",
+  col = 255,
+  cmd = "42076",
+ },
+ [39] = {
+  name = "Link|Loop|Points",
+  col = 255,
+  cmd = "40621",
+ },
+ [40] = {
+  name = "Dynamic|Split",
+  col = 255,
+  cmd = "40760",
+ },
+ [41] = {
+  name = "Glue|Items",
+  col = 255,
+  cmd = "41588",
+ },
+ [42] = {
+  name = "Item|Properties",
+  col = 255,
+  cmd = "40009",
+ },
+ [43] = {
+  name = "Normalize|Items",
+  col = 255,
+  cmd = "40108",
+ },
+ [44] = {
+  name = "Quantize|Positions",
+  col = 255,
+  cmd = "40316",
+ },
+ [45] = {
+  name = "Shuffle Items",
+  col = 255,
+  cmd = "_XENAKIOS_SHFORDSELITEMS2",
+ },
+ [46] = {
+  name = "Overlap Items",
+  col = 255,
+  cmd = "40507",
+ },
+ [47] = {
+  name = "Render as|new Take",
+  col = 255,
+  cmd = "40601",
+ },
+ [48] = {
+  name = "PADRE",
+  col = 255,
+  cmd = "_PADRE_ENVLFO",
+ },
+ [49] = {
+  name = "Crop To|Active Take",
+  col = 255,
+  cmd = "40131",
+ },
+ [50] = {
+  name = "Delete|Active Take",
+  col = 255,
+  cmd = "40129",
+ },
+ [51] = {
+  name = "Show Takes|In Lanes",
+  col = 255,
+  cmd = "40435",
+ },
+ [52] = {
+  name = "Set Color",
+  col = 255,
+  cmd = "41331",
+ },
+ [53] = {
+  name = "Envelopes",
+  col = 255,
+  cmd = "menu take env",
+ },
+ [54] = {
+  name = "Switch To|Prev. Take",
+  col = 255,
+  cmd = "40126",
+ },
+ [55] = {
+  name = "Explode Across|Tracks",
+  col = 255,
+  cmd = "40224",
+ },
+ [56] = {
+  name = "Switch To|Next Take",
+  col = 255,
+  cmd = "40125",
+ },
+ [57] = {
+  name = "Record|Mode",
+  col = 255,
+  cmd = "menu record mode",
+ },
+ [58] = {
+  name = "Recording|Pre-Roll",
+  col = 255,
+  cmd = "41038",
+ },
+ [59] = {
+  name = "Repeat",
+  col = 255,
+  cmd = "1068",
+ },
+ [60] = {
+  name = "Abort|Recording",
+  col = 255,
+  cmd = "40668",
+ },
+ [61] = {
+  name = "Arm All|Tracks",
+  col = 255,
+  cmd = "40490",
+ },
+ [62] = {
+  name = "Start|Recording...",
+  col = 255,
+  cmd = "menu record start",
+ },
+ [63] = {
+  name = "Quantize",
+  col = 255,
+  cmd = "midi 40009",
+ },
+ [64] = {
+  name = "Humanize",
+  col = 255,
+  cmd = "midi 40457",
+ },
+ [65] = {
+  name = "Transpose",
+  col = 255,
+  cmd = "midi 40759",
+ },
+ [66] = {
+  name = "View Mode",
+  col = 255,
+  cmd = "menu midi view",
+ },
+ [67] = {
+  name = "Note Length",
+  col = 255,
+  cmd = "menu midi length",
+ },
+ [68] = {
+  name = "Insert",
+  col = 255,
+  cmd = "menu midi insert",
+ },
+ [69] = {
+  name = "Filter",
+  col = 255,
+  cmd = "midi _RS7d3c_ed92e28f068ecddf380bb111a1a43fd03e85051c",
+ },
+ [70] = {
+  name = "Grid Type",
+  col = 255,
+  cmd = "menu midi type",
+ },
+ [71] = {
+  name = "Grid Size",
+  col = 255,
+  cmd = "menu midi size",
+ },
+ [72] = {
+  name = "Set Shape|(Sel. Points)",
+  col = 255,
+  cmd = "menu env sel shape",
+ },
+ [73] = {
+  name = "Set Shape|(Default)",
+  col = 255,
+  cmd = "menu env def",
+ },
+ [74] = {
+  name = "Reduce #|Of Points",
+  col = 255,
+  cmd = "40887",
+ },
+ [75] = {
+  name = "Delete Points |in TimeSel",
+  col = 255,
+  cmd = "40089",
+ },
+ [76] = {
+  name = "Toggle Env.|For Last|Param",
+  col = 255,
+  cmd = "41142",
+ },
+ [77] = {
+  name = "Move Sel.|Points Left|1 Grid",
+  col = 255,
+  cmd = "41178",
+ },
+ [78] = {
+  name = "Reset Sel.|Points to 0",
+  col = 255,
+  cmd = "40415",
+ },
+ [79] = {
+  name = "Move Sel.|Points Right|1 Grid",
+  col = 255,
+  cmd = "41179",
+ },
+ [80] = {
+  name = "Insert Auto|Item|(Properties)",
+  col = 255,
+  cmd = "42082",
+ },
+ [81] = {
+  name = "Env Lanes",
+  col = 255,
+  cmd = "menu env lanes",
+ },
+ [82] = {
+  name = "Latch",
+  col = 255,
+  cmd = "40404",
+ },
+ [83] = {
+  name = "Latch Preview",
+  col = 255,
+  cmd = "42023",
+ },
+ [84] = {
+  name = "Read",
+  col = 255,
+  cmd = "40401",
+ },
+ [85] = {
+  name = "Touch",
+  col = 255,
+  cmd = "40402",
+ },
+ [86] = {
+  name = "Trim/Read",
+  col = 255,
+  cmd = "40400",
+ },
+ [87] = {
+  name = "Write",
+  col = 255,
+  cmd = "40403",
+ },
+ [88] = {
+  name = "Volume",
+  col = 255,
+  cmd = "40406",
+ },
+ [89] = {
+  name = "Pan",
+  col = 255,
+  cmd = "40407",
+ },
+ [90] = {
+  name = "Show env.|panel",
+  col = 255,
+  cmd = "41975",
+ },
+ [91] = {
+  name = "Show/Hide",
+  col = 255,
+  cmd = "40890",
+ },
+ [92] = {
+  name = "Volume",
+  col = 255,
+  cmd = "40693",
+ },
+ [93] = {
+  name = "Pan",
+  col = 255,
+  cmd = "40694",
+ },
+ [94] = {
+  name = "Mute",
+  col = 255,
+  cmd = "40695",
+ },
+ [95] = {
+  name = "Pitch",
+  col = 255,
+  cmd = "41612",
+ },
+ [96] = {
+  name = "Show Env.|Dialog",
+  col = 255,
+  cmd = "41974",
+ },
+ [97] = {
+  name = "CC 64 On/Off",
+  col = 255,
+  cmd = "midi _kawa_MIDI2_Insert_CC64_On",
+ },
+ [98] = {
+  name = "Normal",
+  col = 255,
+  cmd = "40252",
+ },
+ [99] = {
+  name = "Sel. Item|Auto Punch",
+  col = 255,
+  cmd = "40253",
+ },
+ [100] = {
+  name = "Time Sel.|Auto Punch",
+  col = 255,
+  cmd = "40076",
+ },
+ [101] = {
+  name = "...After|2 Beats",
+  col = 255,
+  cmd = "40067",
+ },
+ [102] = {
+  name = "...At Edit|Cursor",
+  col = 255,
+  cmd = "40046",
+ },
+ [103] = {
+  name = "...At Next|Beat",
+  col = 255,
+  cmd = "40045",
+ },
+ [104] = {
+  name = "...At Next|Measure",
+  col = 255,
+  cmd = "40003",
+ },
+ [105] = {
+  name = "...At Next|Proj. Marker",
+  col = 255,
+  cmd = "40056",
+ },
+ [106] = {
+  name = "Piano Roll",
+  col = 255,
+  cmd = "midi 40042",
+ },
+ [107] = {
+  name = "Named Notes",
+  col = 255,
+  cmd = "midi 40043",
+ },
+ [108] = {
+  name = "Event List",
+  col = 255,
+  cmd = "midi 40056",
+ },
+ [109] = {
+  name = "Notation",
+  col = 255,
+  cmd = "midi 40954",
+ },
+ [110] = {
+  name = "2",
+  col = 255,
+  cmd = "midi 41016",
+ },
+ [111] = {
+  name = "1",
+  col = 255,
+  cmd = "midi 41015",
+ },
+ [112] = {
+  name = "1/2",
+  col = 255,
+  cmd = "midi 41014",
+ },
+ [113] = {
+  name = "1/4",
+  col = 255,
+  cmd = "midi 41013",
+ },
+ [114] = {
+  name = "1/8",
+  col = 255,
+  cmd = "midi 41012",
+ },
+ [115] = {
+  name = "1/16",
+  col = 255,
+  cmd = "midi 41011",
+ },
+ [116] = {
+  name = "1/32",
+  col = 255,
+  cmd = "midi 41010",
+ },
+ [117] = {
+  name = "1/64",
+  col = 255,
+  cmd = "midi 41009",
+ },
+ [118] = {
+  name = "Straight",
+  col = 255,
+  cmd = "midi 41003",
+ },
+ [119] = {
+  name = "Dotted",
+  col = 255,
+  cmd = "midi 41005",
+ },
+ [120] = {
+  name = "Swing",
+  col = 255,
+  cmd = "midi 41006",
+ },
+ [121] = {
+  name = "Triplet",
+  col = 255,
+  cmd = "midi 41004",
+ },
+ [122] = {
+  name = "1",
+  col = 255,
+  cmd = "midi 41710",
+ },
+ [123] = {
+  name = "1/2",
+  col = 255,
+  cmd = "midi 41709",
+ },
+ [124] = {
+  name = "1/4",
+  col = 255,
+  cmd = "midi 41708",
+ },
+ [125] = {
+  name = "1/8",
+  col = 255,
+  cmd = "midi 41707",
+ },
+ [126] = {
+  name = "1/16",
+  col = 255,
+  cmd = "midi 41706",
+ },
+ [127] = {
+  name = "1/32",
+  col = 255,
+  cmd = "midi 41705",
+ },
+ [128] = {
+  name = "1/64",
+  col = 255,
+  cmd = "midi 41704",
+ },
+ [129] = {
+  name = "Use|Grid",
+  col = 255,
+  cmd = "midi 41295",
+ },
+ [130] = {
+  name = "Bezier",
+  col = 255,
+  cmd = "40683",
+ },
+ [131] = {
+  name = "Fast End",
+  col = 255,
+  cmd = "40429",
+ },
+ [132] = {
+  name = "Fast Start",
+  col = 255,
+  cmd = "40428",
+ },
+ [133] = {
+  name = "Linear",
+  col = 255,
+  cmd = "40189",
+ },
+ [134] = {
+  name = "Slow Start/End",
+  col = 255,
+  cmd = "40424",
+ },
+ [135] = {
+  name = "Square",
+  col = 255,
+  cmd = "40190",
+ },
+ [136] = {
+  name = "Bezier",
+  col = 255,
+  cmd = "40681",
+ },
+ [137] = {
+  name = "Fast End",
+  col = 255,
+  cmd = "40431",
+ },
+ [138] = {
+  name = "Fast Start",
+  col = 255,
+  cmd = "40430",
+ },
+ [139] = {
+  name = "Linear",
+  col = 255,
+  cmd = "40187",
+ },
+ [140] = {
+  name = "Slow Start/End",
+  col = 255,
+  cmd = "40425",
+ },
+ [141] = {
+  name = "Square",
+  col = 255,
+  cmd = "40188",
+ },
+ [142] = {
+  name = "1/4",
+  col = 255,
+  cmd = "40779",
+ },
+ [143] = {
+  name = "1/8",
+  col = 255,
+  cmd = "40778",
+ },
+ [144] = {
+  name = "1/16",
+  col = 255,
+  cmd = "40776",
+ },
+ [145] = {
+  name = "1/32",
+  col = 255,
+  cmd = "40775",
+ },
+ [146] = {
+  name = "Triplet",
+  col = 255,
+  cmd = "_SWS_AWTOGGLETRIPLET",
+ },
+ [147] = {
+  name = "Frame",
+  col = 255,
+  cmd = "41885",
+ },
+ [148] = {
+  name = "1",
+  col = 255,
+  cmd = "40781",
+ },
+ [149] = {
+  name = "1/2",
+  col = 255,
+  cmd = "40780",
+ },
+ [150] = {
+  name = "Send 1",
+  col = 255,
+  cmd = "",
+ },
+ [151] = {
+  name = "Send 2",
+  col = 255,
+  cmd = "",
+ },
+ [152] = {
+  name = "Send 3",
+  col = 255,
+  cmd = "",
+ },
+ [153] = {
+  name = "Send 4",
+  col = 255,
+  cmd = "",
+ },
+ [154] = {
+  name = "Pan|(PreFX)",
+  col = 255,
+  cmd = "40407",
+ },
+ [155] = {
+  name = "Mute",
+  col = 255,
+  cmd = "40867",
+ },
+ [156] = {
+  name = "Volume|(PreFX)",
+  col = 255,
+  cmd = "40406",
+ },
+ [157] = {
+  name = "1/8",
+  col = 255,
+  cmd = "40778",
+ },
+ [158] = {
+  name = "1/16",
+  col = 255,
+  cmd = "40776",
+ },
+ [159] = {
+  name = "1/32",
+  col = 255,
+  cmd = "40775",
+ },
+ [160] = {
+  name = "1/64",
+  col = 255,
+  cmd = "40774",
+ },
+ [161] = {
+  name = "Triplets",
+  col = 255,
+  cmd = "_SWS_AWTOGGLETRIPLET",
+ },
+ [162] = {
+  name = "Dotted",
+  col = 255,
+  cmd = "_SWS_AWTOGGLEDOTTED",
+ },
+ [163] = {
+  name = "Frames",
+  col = 255,
+  cmd = "41885",
+ },
+ [164] = {
+  name = "Adaptive",
+  col = 255,
+  cmd = "_RS8156a582bcab3d91af2bb026e78690e99f4464da",
+ },
+ [165] = {
+  name = "Bar",
+  col = 255,
+  cmd = "40923",
+ },
+ [166] = {
+  name = "2/4",
+  col = 255,
+  cmd = "40780",
+ },
+ [167] = {
+  name = "1/4",
+  col = 255,
+  cmd = "40779",
+ },
+ guid = "{08DFF8A0-DAE2-1844-9EAE-8992F20D2CCF}",
+ col = 255,
+ name = "Imported from Radial Menu",
+ RADIUS = 150,
+ menu = true,
+}
