@@ -10,6 +10,16 @@
 local r = reaper
 local script_name = "FX Shortcut Export"
 
+if not r.ImGui_GetVersion then
+  local ok = r.MB('Install now?', 'ReaImGui Missing', 1)
+  if ok == 1 then r.ReaPack_BrowsePackages("ReaImGui API") end
+  return
+elseif select(2, r.ImGui_GetVersion()) > 0.9 then
+  local ok = r.MB('Requires ReaImGui v0.9 or later.\n\nUpdate now?', 'ReaImGui Outdated', 1)
+  if ok == 1 then r.ReaPack_BrowsePackages("ReaImGui API") end
+  return
+end
+
 package.path = r.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9'
 
@@ -19,12 +29,6 @@ package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQU
 local os_sep = package.config:sub(1, 1)
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
-
-if not ImGui.GetVersion then
-  local ok = r.MB('Install now?', 'ReaImGui Missing', 1)
-  if ok == 1 then r.ReaPack_BrowsePackages("ReaImGui API") end
-  return
-end
 
 local function table_copy(t)
   local t2 = {}
