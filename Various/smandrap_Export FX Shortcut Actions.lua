@@ -1,6 +1,9 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
 -- @version 1.0.1
+-- @changelog
+--  # Fix dependency check
+--  # (maybe) fix listbox shit
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
