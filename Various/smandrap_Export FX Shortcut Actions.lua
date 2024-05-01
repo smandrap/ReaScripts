@@ -1,16 +1,18 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.5
+-- @version 1.0.6
 -- @changelog
---  + Add currently selected FX for export table
---  # UI tweaks
---  # Don't close on export
+--  + Add FX format filter
+--  # Focus search filter on script launch
+--  # Add Search filter hint
+--  # Reduce UpdateList() calls
+--  # Internal changes
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
 
--- TODO: draw separate child window with fx that are being exported
--- TODO: add fx type filters (JS/clap etc)
+-- TODO: radial menu direct export
+-- TODO: pie menu direct export
 
 local r = reaper
 local script_name = "FX Shortcut Export"
@@ -32,11 +34,41 @@ local getinfo = debug.getinfo(1, 'S');
 local script_path = getinfo.source:match [[^@?(.*[\/])[^\/]-$]];
 package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQUIRE
 
---local os = r.GetOS():match('^Win') and 0 or 1
+local os = r.GetOS():match('^Win') and 0 or 1
 local os_sep = package.config:sub(1, 1)
 
+
+----------------------
+-- APP
+----------------------
+
+
+local FX_LIST = {}
+local FILTERED_IDX = {}
+
+local SEL_IDX = {}
+
+local export_options = {
+  ALWAYS_INSTANTIATE = false,
+  SHOW = true,
+  FLOAT_WND = true,
+}
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
+local export_cnt = 0
+local can_export = false
+
+local filter = ''
+local filter_lower = ''
+
+local type_filter = {
+  VST = true,
+  VST3 = true,
+  AU = true,
+  JSFX = true,
+  CLAP = true,
+  LV2 = true
+}
 
 -- Get radial menu
 local radial_fn = "Lokasenna_Radial Menu - user settings.txt"
@@ -48,25 +80,6 @@ if r.file_exists(radial_file) then
   radial_found = true
   --reaper.ShowConsoleMsg('ok')
 end
-
-
--- APP
-
-local FX_LIST = {}
---local FILTERED_FXLIST = {}
-
-local SEL_IDX = {}
-
-local export_options = {
-  ALWAYS_INSTANTIATE = false,
-  SHOW = true,
-  FLOAT_WND = true,
-}
-
-local export_cnt = 0
-local can_export = false
-local filter = ''
-
 
 local function GetFXList()
   local rv = true
@@ -135,18 +148,14 @@ local function main()
   r.PromptForAction(-1, cmdid, 0)
 end
 
-
+----------------------
 -- GUI
+----------------------
 
 local settings = {
   font_size = 12,
 }
 
-local btn_w = 80
-local wnd_h = 500
-local wnd_w = 300
-local list_w = wnd_w * 0.95
-local list_h = wnd_h * 0.5
 
 local ctx = ImGui.CreateContext(script_name)
 local visible, open
@@ -161,11 +170,48 @@ local table_flags =
 local font = ImGui.CreateFont('sans-serif', settings.font_size)
 ImGui.Attach(ctx, font)
 
+local first_frame = true
+
+local btn_w = 80
+local wnd_h = 500
+local wnd_w = 300
+local list_w = wnd_w * 0.95
+local list_h = wnd_h * 0.5
+
+local function UpdateList()
+  --[[  if filter == '' then
+    for i = 1, #FILTERED_IDX do FILTERED_IDX[i] = true end
+    return
+  end ]]
+
+  filter_lower = filter:lower()
+
+  for i = 1, #FX_LIST do
+    FILTERED_IDX[i] = false
+    local type_ok = true
+    local str = FX_LIST[i]
+
+    if (not type_filter.VST and str:match('^VSTi?:')) or
+        (not type_filter.VST3 and str:match('^VST3i?:')) or
+        (not type_filter.AU and str:match('^AUi?:')) or
+        (not type_filter.JS and str:match('^JSi?:')) or
+        (not type_filter.CLAP and str:match('^CLAPi?:')) or
+        (not type_filter.LV2 and str:match('^LV2i?:'))
+    then
+      type_ok = false
+    end
+
+    if type_ok and str:lower():match(filter_lower) then FILTERED_IDX[i] = true end
+  end
+end
+
 local function DrawSearchFilter()
   local change = false
-  ImGui.PushItemWidth(ctx, list_w)
-  change, filter = ImGui.InputText(ctx, '##DrawSearchFilter', filter)
-  return change
+  local w = ImGui.GetContentRegionAvail(ctx)
+  ImGui.PushItemWidth(ctx, w)
+  if first_frame then ImGui.SetKeyboardFocusHere(ctx) end
+  change, filter = ImGui.InputTextWithHint(ctx, '##SearchFilter', 'Search FX', filter)
+  if change then UpdateList() end
 end
 
 local function DrawFXListRow(i)
@@ -188,32 +234,16 @@ local function DrawFXListRow(i)
 end
 
 local function DrawFXList()
-  _ = ImGui.BeginChild(ctx, '##fxlist', list_w, list_h, child_flags)
-  _ = ImGui.BeginTable(ctx, '##tabletest', 1, table_flags, list_w, list_h)
+  _ = ImGui.BeginChild(ctx, '##fxlist', nil, list_h, child_flags)
+  _ = ImGui.BeginTable(ctx, '##fxtable', 1, table_flags, nil, list_h)
   for i = 1, #FX_LIST do
-    if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
-
-    DrawFXListRow(i)
-
-    ::continue::
+    if FILTERED_IDX[i] == true then DrawFXListRow(i) end
   end
   ImGui.EndTable(ctx)
   ImGui.EndChild(ctx)
 end
 
---[[ local function UpdateList()
-  if filter == '' then
-    FILTERED_FXLIST = table_copy(FX_LIST)
-    return
-  end
-  table_delete(FILTERED_FXLIST)
-  for i = 1, #FX_LIST do
-    if FX_LIST[i]:lower():match(filter:lower()) then table.insert(FILTERED_FXLIST, FX_LIST[i]) end
-  end
-end ]]
-
 local function DrawOptions()
-
   ImGui.SeparatorText(ctx, 'Options:')
   _, export_options.ALWAYS_INSTANTIATE = ImGui.Checkbox(ctx, 'Always Instantiate##opt1',
     export_options.ALWAYS_INSTANTIATE)
@@ -246,8 +276,8 @@ local function DrawExportCnt()
 end
 
 local function DrawExportedFXTable()
-  _ = ImGui.BeginChild(ctx, '##explist', list_w, list_h * 0.5, child_flags)
-  _ = ImGui.BeginTable(ctx, '##exptable', 1, table_flags, list_w, list_h * 0.5)
+  _ = ImGui.BeginChild(ctx, '##explist', nil, list_h * 0.5, child_flags)
+  _ = ImGui.BeginTable(ctx, '##exptable', 1, table_flags, nil, list_h * 0.5)
   for i = 1, #SEL_IDX do
     if not SEL_IDX[i] == true then goto continue end
 
@@ -257,11 +287,16 @@ local function DrawExportedFXTable()
 
     local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
     rv = ImGui.InvisibleButton(ctx, '##exprow' .. i, list_w, ImGui.GetFrameHeight(ctx))
-    if rv then SEL_IDX[i] = not SEL_IDX[i] end
-    if rv then UpdateCanExport() end
+    if rv then
+      SEL_IDX[i] = not SEL_IDX[i]
+      UpdateCanExport()
+    end
 
     ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
-    if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0xFF000055) end
+    if ImGui.IsItemHovered(ctx) then
+      --ImGui.SetMouseCursor(ctx, ImGui.MouseCursor_NotAllowed)
+      ImGui.TableSetBgColor(ctx, 1, 0xFF000055)
+    end
 
     ImGui.AlignTextToFramePadding(ctx)
     ImGui.Text(ctx, FX_LIST[i])
@@ -271,18 +306,45 @@ local function DrawExportedFXTable()
   ImGui.EndTable(ctx)
   ImGui.EndChild(ctx)
 end
+local function DrawTypeSelectors()
+  local rv = false
+  rv, type_filter.VST = ImGui.Checkbox(ctx, 'VST##typeVST', type_filter.VST)
+  if rv then UpdateList() end
+  ImGui.SameLine(ctx)
+
+  rv, type_filter.VST3 = ImGui.Checkbox(ctx, 'VST3##typeVST3', type_filter.VST3)
+  if rv then UpdateList() end
+  ImGui.SameLine(ctx)
+
+  if os > 0 then
+    rv, type_filter.AU = ImGui.Checkbox(ctx, 'AU##typeAU', type_filter.AU)
+    if rv then UpdateList() end
+    ImGui.SameLine(ctx)
+  end
+  rv, type_filter.JSFX = ImGui.Checkbox(ctx, 'JSFX##typeJS', type_filter.JSFX)
+  if rv then UpdateList() end
+  ImGui.SameLine(ctx)
+  
+  rv, type_filter.CLAP = ImGui.Checkbox(ctx, 'CLAP##typeCLAP', type_filter.CLAP)
+  if rv then UpdateList() end
+  ImGui.SameLine(ctx)
+  
+  rv, type_filter.LV2 = ImGui.Checkbox(ctx, 'LV2##typeLV2', type_filter.LV2)
+  if rv then UpdateList() end
+end
 
 local function DrawWindow()
-  local changed = DrawSearchFilter()
-  --if changed then UpdateList() end
+  DrawSearchFilter()
+  DrawTypeSelectors()
+
   DrawFXList()
   --ImGui.Dummy(ctx, 0, 20)
   ImGui.SeparatorText(ctx, 'Selected:')
   --ImGui.Dummy(ctx, 0, 10)
   DrawExportedFXTable()
-  
+
   DrawOptions()
-  
+
   ImGui.SeparatorText(ctx, '')
   DrawExportCnt()
   ImGui.SameLine(ctx)
@@ -311,6 +373,8 @@ local function guiloop()
   if open then
     r.defer(guiloop)
   end
+
+  first_frame = false
 end
 
 local function init()
@@ -318,6 +382,7 @@ local function init()
 
   for i = 1, #FX_LIST do
     SEL_IDX[i] = false
+    FILTERED_IDX[i] = true
   end
 
   r.RecursiveCreateDirectory(export_path, 1)
