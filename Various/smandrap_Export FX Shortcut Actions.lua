@@ -1,8 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.3
+-- @version 1.0.4
 -- @changelog
---  # Fix script generation on windows (fuck reserved chars)
+--  # UI tweaks
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -40,8 +40,8 @@ local radial_found
 
 local radial_file = radial_path .. radial_fn
 if r.file_exists(radial_file) then
-    radial_found = true
-    --reaper.ShowConsoleMsg('ok')
+  radial_found = true
+  --reaper.ShowConsoleMsg('ok')
 end
 
 
@@ -149,6 +149,9 @@ local window_flags =
     ImGui.WindowFlags_None | ImGui.WindowFlags_NoResize
 
 local child_flags = ImGui.ChildFlags_Border
+local table_flags =
+    ImGui.TableFlags_None
+--| ImGui.TableFlags_RowBg
 
 local font = ImGui.CreateFont('sans-serif', settings.font_size)
 ImGui.Attach(ctx, font)
@@ -162,19 +165,31 @@ end
 
 local function DrawFXList()
   _ = ImGui.BeginChild(ctx, '##fxlist', list_w, list_h, child_flags)
+  _ = ImGui.BeginTable(ctx, '##tabletest', 1, table_flags, list_w, list_h)
   for i = 1, #FX_LIST do
     if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
+    ImGui.TableNextRow(ctx)
+    ImGui.TableSetColumnIndex(ctx, 0)
+    
     local rv = false
-    rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
+
+    local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
+    rv = ImGui.InvisibleButton(ctx, '##row'..i, list_w, ImGui.GetFrameHeight(ctx))
+    if rv then SEL_IDX[i] = not SEL_IDX[i] end
     if rv then UpdateCanExport() end
+
+    ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
+    if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE22) end
+    if SEL_IDX[i] == true then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE44) end
+    
+    rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
     ImGui.SameLine(ctx)
     ImGui.Text(ctx, FX_LIST[i])
-    if ImGui.IsItemClicked(ctx) then 
-      SEL_IDX[i] = not SEL_IDX[i]
-      UpdateCanExport()
-    end
+
+
     ::continue::
   end
+  ImGui.EndTable(ctx)
   ImGui.EndChild(ctx)
 end
 
@@ -267,7 +282,6 @@ local function init()
   end
 
   r.RecursiveCreateDirectory(export_path, 1)
-
 end
 
 local function Exit()
@@ -277,5 +291,3 @@ end
 init()
 r.atexit(Exit)
 r.defer(guiloop)
-
-
