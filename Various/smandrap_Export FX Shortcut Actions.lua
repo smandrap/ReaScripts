@@ -8,6 +8,9 @@
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
 
+-- TODO: draw separate child window with fx that are being exported
+-- TODO: add fx type filters (JS/clap etc)
+
 local r = reaper
 local script_name = "FX Shortcut Export"
 
@@ -139,7 +142,7 @@ local settings = {
 }
 
 local btn_w = 80
-local wnd_h = 410
+local wnd_h = 500
 local wnd_w = 300
 local list_w = wnd_w * 0.95
 local list_h = wnd_h * 0.5
@@ -170,14 +173,14 @@ local function DrawFXListRow(i)
   local rv = false
 
   local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
-  rv = ImGui.InvisibleButton(ctx, '##row'..i, list_w, ImGui.GetFrameHeight(ctx))
+  rv = ImGui.InvisibleButton(ctx, '##row' .. i, list_w, ImGui.GetFrameHeight(ctx))
   if rv then SEL_IDX[i] = not SEL_IDX[i] end
   if rv then UpdateCanExport() end
 
   ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
   if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE22) end
   if SEL_IDX[i] == true then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE44) end
-  
+
   rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
   ImGui.SameLine(ctx)
   ImGui.Text(ctx, FX_LIST[i])
@@ -209,7 +212,7 @@ end
 end ]]
 
 local function DrawOptions()
-  ImGui.Dummy(ctx, 0, 20)
+
   ImGui.SeparatorText(ctx, 'Options:')
   _, export_options.ALWAYS_INSTANTIATE = ImGui.Checkbox(ctx, 'Always Instantiate##opt1',
     export_options.ALWAYS_INSTANTIATE)
@@ -241,13 +244,43 @@ local function DrawExportCnt()
   end
 end
 
+local function DrawExportedFXTable()
+  _ = ImGui.BeginChild(ctx, '##explist', list_w, list_h * 0.5, child_flags)
+  _ = ImGui.BeginTable(ctx, '##exptable', 1, table_flags, list_w, list_h * 0.5)
+  for i = 1, #SEL_IDX do
+    if not SEL_IDX[i] == true then goto continue end
+
+    ImGui.TableNextRow(ctx)
+    ImGui.TableSetColumnIndex(ctx, 0)
+    local rv = false
+
+    local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
+    rv = ImGui.InvisibleButton(ctx, '##exprow' .. i, list_w, ImGui.GetFrameHeight(ctx))
+    if rv then SEL_IDX[i] = not SEL_IDX[i] end
+    if rv then UpdateCanExport() end
+
+    ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
+    if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0xFF000055) end
+
+    ImGui.AlignTextToFramePadding(ctx)
+    ImGui.Text(ctx, FX_LIST[i])
+
+    ::continue::
+  end
+  ImGui.EndTable(ctx)
+  ImGui.EndChild(ctx)
+end
+
 local function DrawWindow()
   local changed = DrawSearchFilter()
   --if changed then UpdateList() end
   DrawFXList()
-  DrawOptions()
+  --ImGui.Dummy(ctx, 0, 20)
+  ImGui.SeparatorText(ctx, 'Selected:')
+  --ImGui.Dummy(ctx, 0, 10)
+  DrawExportedFXTable()
 
-  ImGui.Dummy(ctx, 0, 10)
+  DrawOptions()
 
   DrawExportCnt()
   ImGui.SameLine(ctx)
