@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="da44cfa7711b23dbf9a325a570fd46c3a69466db">
+<index version="1" name="smandrap ReaScripts" commit="96835812296b2d9a8dac866ae794ca0ec234b448">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -211,6 +211,11 @@
       <version name="1.5.1" author="smandrap" time="2024-04-24T16:29:07Z">
         <changelog><![CDATA[# Add minimum required REAPER version (7.03) check]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/ba8faba96c3ac84dfb5999f763e3293837d1cad0/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.5.2" author="smandrap" time="2024-05-01T16:43:30Z">
+        <changelog><![CDATA[# Fix always duplicating items on non fixed lanes tracks 
+# Fix more lane related bubus]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/96835812296b2d9a8dac866ae794ca0ec234b448/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
