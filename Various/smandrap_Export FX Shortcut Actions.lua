@@ -2,6 +2,7 @@
 -- @author smandrap
 -- @version 1.0.4
 -- @changelog
+--  + Add currently selected FX for export table
 --  # UI tweaks
 --  # Don't close on export
 -- @donation https://paypal.me/smandrap
@@ -150,7 +151,7 @@ local list_h = wnd_h * 0.5
 local ctx = ImGui.CreateContext(script_name)
 local visible, open
 local window_flags =
-    ImGui.WindowFlags_None | ImGui.WindowFlags_NoResize
+    ImGui.WindowFlags_None | ImGui.WindowFlags_AlwaysAutoResize
 
 local child_flags = ImGui.ChildFlags_Border
 local table_flags =
@@ -279,9 +280,10 @@ local function DrawWindow()
   ImGui.SeparatorText(ctx, 'Selected:')
   --ImGui.Dummy(ctx, 0, 10)
   DrawExportedFXTable()
-
+  
   DrawOptions()
-
+  
+  ImGui.SeparatorText(ctx, '')
   DrawExportCnt()
   ImGui.SameLine(ctx)
   DrawExportButton()
