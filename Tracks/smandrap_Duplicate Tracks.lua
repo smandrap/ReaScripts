@@ -1,8 +1,9 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.5.1
+-- @version 1.5.2
 -- @changelog
---    # Add minimum required REAPER version (7.03) check
+--    # Fix always duplicating items on non fixed lanes tracks 
+--    # Fix more lane related bubus
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -89,9 +90,17 @@ local function DeleteActiveLanes(track)
 
   local numlanes = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
 
+  if numlanes == 1 then
+    if reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:0") > 0 then
+      for i = reaper.CountTrackMediaItems(track) - 1, 0, -1 do
+        reaper.DeleteTrackMediaItem(track, reaper.GetTrackMediaItem(track, i))
+      end
+    end
+    return
+  end
+
   for i = 0, numlanes - 1 do
     local laneplays = reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i)
-
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. i, laneplays == 0 and 2 or 0)
   end
 
@@ -177,12 +186,23 @@ local function DoDuplicateStuff()
       if is_first_dupe then
         -- NON-ACTIVE LANES
         -- Track lanes: Delete lanes (including media items) that are not playing
-        if not dupeElements.otherLanes then reaper.Main_OnCommand(42691, 0) end
+        if not dupeElements.otherLanes then
+          reaper.Main_OnCommand(42691, 0)
+        end
 
         -- ACTIVE LANES
-        if not dupeElements.activeLane then DeleteActiveLanes(sel_tracks[j]) end
+        if not dupeElements.activeLane then
+          DeleteActiveLanes(sel_tracks[j])
+        end
 
         if not dupeElements.otherLanes and not dupeElements.activeLane then
+          reaper.Main_OnCommand(40752, 0) -- Disable lanes
+        end
+        
+
+        -- If only one lane is left and it's playing then disable lanes
+        if reaper.GetMediaTrackInfo_Value(sel_tracks[j], "I_NUMFIXEDLANES") == 1 and
+            reaper.GetMediaTrackInfo_Value(sel_tracks[j], "C_LANEPLAYS:0") > 0 then
           reaper.Main_OnCommand(40752, 0) -- Disable lanes
         end
 
