@@ -3,6 +3,7 @@
 -- @version 1.0.4
 -- @changelog
 --  # UI tweaks
+--  # Don't close on export
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -163,29 +164,32 @@ local function DrawSearchFilter()
   return change
 end
 
+local function DrawFXListRow(i)
+  ImGui.TableNextRow(ctx)
+  ImGui.TableSetColumnIndex(ctx, 0)
+  local rv = false
+
+  local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
+  rv = ImGui.InvisibleButton(ctx, '##row'..i, list_w, ImGui.GetFrameHeight(ctx))
+  if rv then SEL_IDX[i] = not SEL_IDX[i] end
+  if rv then UpdateCanExport() end
+
+  ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
+  if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE22) end
+  if SEL_IDX[i] == true then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE44) end
+  
+  rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
+  ImGui.SameLine(ctx)
+  ImGui.Text(ctx, FX_LIST[i])
+end
+
 local function DrawFXList()
   _ = ImGui.BeginChild(ctx, '##fxlist', list_w, list_h, child_flags)
   _ = ImGui.BeginTable(ctx, '##tabletest', 1, table_flags, list_w, list_h)
   for i = 1, #FX_LIST do
     if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
-    ImGui.TableNextRow(ctx)
-    ImGui.TableSetColumnIndex(ctx, 0)
-    
-    local rv = false
 
-    local xcurpos, ycurpos = ImGui.GetCursorPos(ctx)
-    rv = ImGui.InvisibleButton(ctx, '##row'..i, list_w, ImGui.GetFrameHeight(ctx))
-    if rv then SEL_IDX[i] = not SEL_IDX[i] end
-    if rv then UpdateCanExport() end
-
-    ImGui.SetCursorPos(ctx, xcurpos, ycurpos)
-    if ImGui.IsItemHovered(ctx) then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE22) end
-    if SEL_IDX[i] == true then ImGui.TableSetBgColor(ctx, 1, 0x15B9FE44) end
-    
-    rv, SEL_IDX[i] = ImGui.Checkbox(ctx, '##fx' .. i, SEL_IDX[i])
-    ImGui.SameLine(ctx)
-    ImGui.Text(ctx, FX_LIST[i])
-
+    DrawFXListRow(i)
 
     ::continue::
   end
@@ -223,7 +227,7 @@ local function DrawExportButton()
   end
   if reaper.ImGui_Button(ctx, "Export", btn_w) and can_export then
     main()
-    open = false
+    --open = false
   end
   if not can_export then ImGui.PopStyleColor(ctx, 4) end
 end
