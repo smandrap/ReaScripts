@@ -1,6 +1,6 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.4
+-- @version 1.0.5
 -- @changelog
 --  + Add currently selected FX for export table
 --  # UI tweaks
