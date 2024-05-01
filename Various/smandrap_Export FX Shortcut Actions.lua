@@ -41,7 +41,7 @@ local radial_found
 local radial_file = radial_path .. radial_fn
 if r.file_exists(radial_file) then
     radial_found = true
-    reaper.ShowConsoleMsg('ok')
+    --reaper.ShowConsoleMsg('ok')
 end
 
 
@@ -148,6 +148,8 @@ local visible, open
 local window_flags =
     ImGui.WindowFlags_None | ImGui.WindowFlags_NoResize
 
+local child_flags = ImGui.ChildFlags_Border
+
 local font = ImGui.CreateFont('sans-serif', settings.font_size)
 ImGui.Attach(ctx, font)
 
@@ -159,7 +161,7 @@ local function DrawSearchFilter()
 end
 
 local function DrawFXList()
-  ImGui.BeginListBox(ctx, '##fxlist', list_w, list_h)
+  _ = ImGui.BeginChild(ctx, '##fxlist', list_w, list_h, child_flags)
   for i = 1, #FX_LIST do
     if not FX_LIST[i]:lower():match(filter:lower()) then goto continue end
     local rv = false
@@ -167,9 +169,13 @@ local function DrawFXList()
     if rv then UpdateCanExport() end
     ImGui.SameLine(ctx)
     ImGui.Text(ctx, FX_LIST[i])
+    if ImGui.IsItemClicked(ctx) then 
+      SEL_IDX[i] = not SEL_IDX[i]
+      UpdateCanExport()
+    end
     ::continue::
   end
-  ImGui.EndListBox(ctx)
+  ImGui.EndChild(ctx)
 end
 
 --[[ local function UpdateList()
