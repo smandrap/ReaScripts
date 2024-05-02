@@ -1,8 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.1
+-- @version 1.1.1
 -- @changelog
---  + Support adding exported scripts to radial menu
+--  # Fix checkbox for radial export
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -262,10 +262,12 @@ local function main()
   r.PromptForAction(1, actions[#actions].cmdid, 0)
   r.PromptForAction(-1, actions[#actions].cmdid, 0)
 
-  for i = 1, #actions do
-    AddActionToRadial(actions[i].cmdid, actions[i].name)
+  if export_options.TO_RADIAL then
+    for i = 1, #actions do
+      AddActionToRadial(actions[i].cmdid, actions[i].name)
+    end
+    SaveToFile('return' .. TableToString(RADIAL_TBL), radial_file)
   end
-  SaveToFile('return' .. TableToString(RADIAL_TBL), radial_file)
 end
 
 ----------------------
@@ -406,7 +408,7 @@ local function DrawOptions()
       end
     end
   end
---[[ 
+  --[[
   if pie_found then
     _, export_options.TO_PIE = ImGui.Checkbox(ctx, 'Pie3000##tgl_pie_exp', export_options.TO_PIE)
     if export_options.TO_PIE then
