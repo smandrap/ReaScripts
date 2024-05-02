@@ -1,12 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.0.6
+-- @version 1.1
 -- @changelog
---  + Add FX format filter
---  # Focus search filter on script launch
---  # Add Search filter hint
---  # Reduce UpdateList() calls
---  # Internal changes
+--  + Support adding exported scripts to radial menu
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -37,11 +33,75 @@ package.path = script_path .. "?.lua;" .. package.path -- GET DIRECTORY FOR REQU
 local os = r.GetOS():match('^Win') and 0 or 1
 local os_sep = package.config:sub(1, 1)
 
+-----------------------------
+-- HELPERS
+-----------------------------
+
+
+local function StringToTable(str)
+  local f, err = load(str)
+  return f ~= nil and f() or nil
+end
+
+local function SaveToFile(data, fn)
+  local file
+  file = io.open(fn, "w")
+  if file then
+    file:write(data)
+    file:close()
+  end
+end
+
+local function ReadFromFile(fn)
+  local file = io.open(fn, "r")
+  if not file then return end
+  local content = file:read("a")
+  if content == "" then return end
+  return StringToTable(content)
+end
+
+local function serializeTable(val, name, skipnewlines, depth)
+  skipnewlines = skipnewlines or false
+  depth = depth or 0
+  local tmp = string.rep(" ", depth)
+  if name then
+    if type(name) == "number" and math.floor(name) == name then
+      name = "[" .. name .. "]"
+    elseif not string.match(name, '^[a-zA-z_][a-zA-Z0-9_]*$') then
+      name = string.gsub(name, "'", "\\'")
+      name = "['" .. name .. "']"
+    end
+    tmp = tmp .. name .. " = "
+  end
+  if type(val) == "table" then
+    tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
+    for k, v in pairs(val) do
+      if k ~= "selected" and k ~= "guid_list" and k ~= "img_obj" then
+        tmp = tmp .. serializeTable(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
+      end
+    end
+    tmp = tmp .. string.rep(" ", depth) .. "}"
+  elseif type(val) == "number" then
+    tmp = tmp .. tostring(val)
+  elseif type(val) == "string" then
+    tmp = tmp .. string.format("%q", val)
+  elseif type(val) == "boolean" then
+    tmp = tmp .. (val and "true" or "false")
+  else
+    tmp = tmp .. "\"[inserializeable datatype:" .. type(val) .. "]\""
+  end
+  return tmp
+end
+
+local function TableToString(table, new_line)
+  local str = serializeTable(table, nil, new_line)
+  return str
+end
+
 
 ----------------------
 -- APP
 ----------------------
-
 
 local FX_LIST = {}
 local FILTERED_IDX = {}
@@ -52,6 +112,8 @@ local export_options = {
   ALWAYS_INSTANTIATE = false,
   SHOW = true,
   FLOAT_WND = true,
+  TO_RADIAL = false,
+  TO_PIE = false
 }
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
@@ -78,7 +140,53 @@ local radial_found
 local radial_file = radial_path .. radial_fn
 if r.file_exists(radial_file) then
   radial_found = true
-  --reaper.ShowConsoleMsg('ok')
+end
+
+local RADIAL_TBL = {}
+local RADIAL_MENUNAMES = {}
+local sel_radmenu = 0
+
+local function GetRadialTable()
+  local tmp = ReadFromFile(radial_file)
+  if not tmp then return end
+  for i = 0, #tmp do
+    RADIAL_MENUNAMES[i] = tmp[i].alias or ('Menu ' .. i)
+  end
+  return tmp
+end
+
+
+local function AddActionToRadial(cmdid, fxname)
+  -- Create new 'Add FX' menu if it doesn't exist
+  --[[   if sel_radmenu == -1 then
+    local tmp = { alias = 'Add FX' }
+    tmp[-1] = {
+      act = 'back',
+      lbl = 'Back'
+    }
+    table.insert(RADIAL_TBL, { alias = 'Add FX' })
+    sel_radmenu = #RADIAL_TBL
+  end
+ ]]
+
+  if RADIAL_TBL[sel_radmenu].alias == 'Add FX' then
+    fxname = fxname:gsub('^.+:%s+(.*)(%s+%(.+%))$', '%1')
+  else
+    fxname = 'Add FX: ' .. fxname:gsub('^.+:%s+(.*)(%s+%(.+%))$', '%1')
+  end
+  local tmp = {
+    act = '_' .. r.ReverseNamedCommandLookup(cmdid),
+    lbl = fxname
+  }
+  table.insert(RADIAL_TBL[sel_radmenu], tmp)
+end
+
+--local pie_found = false
+--local PIE_TBL = {}
+
+
+local function GetPieTable()
+  return {}
 end
 
 local function GetFXList()
@@ -135,17 +243,29 @@ end
 
 local function main()
   local paths = {}
+  local actions = {}
+
   for i = 1, #SEL_IDX do
     if SEL_IDX[i] == true then
+      local tmp = { cmdid = 0, name = FX_LIST[i] }
+      actions[#actions + 1] = tmp
       paths[#paths + 1] = GenerateScript(FX_LIST[i])
     end
   end
+  --if true then return end
+
+  local cmdid = 0
   for i = 1, #paths - 1 do
-    r.AddRemoveReaScript(true, 0, paths[i] or '', false)
+    actions[i].cmdid = r.AddRemoveReaScript(true, 0, paths[i] or '', false)
   end
-  local cmdid = r.AddRemoveReaScript(true, 0, paths[#paths] or '', false)
-  r.PromptForAction(1, cmdid, 0)
-  r.PromptForAction(-1, cmdid, 0)
+  actions[#actions].cmdid = r.AddRemoveReaScript(true, 0, paths[#paths] or '', false)
+  r.PromptForAction(1, actions[#actions].cmdid, 0)
+  r.PromptForAction(-1, actions[#actions].cmdid, 0)
+
+  for i = 1, #actions do
+    AddActionToRadial(actions[i].cmdid, actions[i].name)
+  end
+  SaveToFile('return' .. TableToString(RADIAL_TBL), radial_file)
 end
 
 ----------------------
@@ -244,11 +364,62 @@ local function DrawFXList()
 end
 
 local function DrawOptions()
+  local draw_extra_options = radial_found or pie_found
+
+  local w = ImGui.GetContentRegionAvail(ctx)
+  w = draw_extra_options and w * 0.5 or w
+  local h = 100
+
+  _ = ImGui.BeginChild(ctx, '##optionsBasic', w, h)
   ImGui.SeparatorText(ctx, 'Options:')
   _, export_options.ALWAYS_INSTANTIATE = ImGui.Checkbox(ctx, 'Always Instantiate##opt1',
     export_options.ALWAYS_INSTANTIATE)
   _, export_options.SHOW = ImGui.Checkbox(ctx, 'Show FX##opt2', export_options.SHOW)
   _, export_options.FLOAT_WND = ImGui.Checkbox(ctx, 'Float Window##opt3', export_options.FLOAT_WND)
+  ImGui.EndChild(ctx)
+
+  if not draw_extra_options then return end
+
+  ImGui.SameLine(ctx)
+  w = ImGui.GetContentRegionAvail(ctx)
+  _ = ImGui.BeginChild(ctx, '##optionsExtra', w, h)
+  ImGui.SeparatorText(ctx, 'Export To:')
+  if radial_found then
+    _, export_options.TO_RADIAL = ImGui.Checkbox(ctx, 'Radial   ##tgl_rad_exp', export_options.TO_RADIAL)
+
+    if export_options.TO_RADIAL then
+      ImGui.SameLine(ctx)
+      local combo_w = ImGui.GetContentRegionAvail(ctx)
+      ImGui.PushItemWidth(ctx, combo_w)
+
+      --TODO: fill the menus
+      if ImGui.BeginCombo(ctx, '##combo_radMenuSelect', RADIAL_MENUNAMES[sel_radmenu], ImGui.ComboFlags_NoArrowButton) then
+        --[[      local clicked = false
+        clicked = ImGui.Selectable(ctx, 'New Menu', sel_radmenu == -1)
+        if clicked then sel_radmenu = -1 end ]]
+
+        for i = 0, #RADIAL_MENUNAMES do
+          local clicked = ImGui.Selectable(ctx, RADIAL_MENUNAMES[i], sel_radmenu == i)
+          if clicked then sel_radmenu = i end
+        end
+        ImGui.EndCombo(ctx)
+      end
+    end
+  end
+--[[ 
+  if pie_found then
+    _, export_options.TO_PIE = ImGui.Checkbox(ctx, 'Pie3000##tgl_pie_exp', export_options.TO_PIE)
+    if export_options.TO_PIE then
+      ImGui.SameLine(ctx)
+      local combo_w = ImGui.GetContentRegionAvail(ctx)
+      ImGui.PushItemWidth(ctx, combo_w)
+      if ImGui.BeginCombo(ctx, '##combo_pieMenuSelect', 'Select Menu', ImGui.ComboFlags_NoArrowButton) then
+        ImGui.Selectable(ctx, 'menu1', false)
+        ImGui.EndCombo(ctx)
+      end
+    end
+  end ]]
+  ImGui.EndChild(ctx)
 end
 
 local function DrawExportButton()
@@ -324,11 +495,11 @@ local function DrawTypeSelectors()
   rv, type_filter.JSFX = ImGui.Checkbox(ctx, 'JSFX##typeJS', type_filter.JSFX)
   if rv then UpdateList() end
   ImGui.SameLine(ctx)
-  
+
   rv, type_filter.CLAP = ImGui.Checkbox(ctx, 'CLAP##typeCLAP', type_filter.CLAP)
   if rv then UpdateList() end
   ImGui.SameLine(ctx)
-  
+
   rv, type_filter.LV2 = ImGui.Checkbox(ctx, 'LV2##typeLV2', type_filter.LV2)
   if rv then UpdateList() end
 end
@@ -384,6 +555,9 @@ local function init()
     SEL_IDX[i] = false
     FILTERED_IDX[i] = true
   end
+
+  if radial_found then RADIAL_TBL = GetRadialTable() end
+  --if pie_found then PIE_TBL = GetPieTable() end
 
   r.RecursiveCreateDirectory(export_path, 1)
 end
