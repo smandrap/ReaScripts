@@ -1,14 +1,12 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.1.1
+-- @version 1.2
 -- @changelog
---  # Fix checkbox for radial export
+--  # Add pie export
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
 
--- TODO: radial menu direct export
--- TODO: pie menu direct export
 
 local r = reaper
 local script_name = "FX Shortcut Export"
@@ -52,12 +50,19 @@ local function SaveToFile(data, fn)
   end
 end
 
-local function ReadFromFile(fn)
+local function ReadFromFile(fn, ispiefile)
+  if ispiefile == nil then
+    ispiefile = false
+  end
+
   local file = io.open(fn, "r")
   if not file then return end
   local content = file:read("a")
   if content == "" then return end
-  return StringToTable(content)
+  content = (ispiefile and 'return ' or '') .. content
+  --reaper.ShowConsoleMsg(ispiefile)
+  local stot = StringToTable(content)
+  return stot
 end
 
 local function serializeTable(val, name, skipnewlines, depth)
@@ -181,12 +186,51 @@ local function AddActionToRadial(cmdid, fxname)
   table.insert(RADIAL_TBL[sel_radmenu], tmp)
 end
 
---local pie_found = false
---local PIE_TBL = {}
+local pie_fn = "menu_file.txt"
+local pie_path = table.concat({ r.GetResourcePath(), 'Scripts', 'Sexan_Scripts', 'Pie3000' }, os_sep) .. os_sep
+local pie_found = false
+
+local pie_file = pie_path .. pie_fn
+if r.file_exists(pie_file) then
+  pie_found = true
+end
+
+
+local PIE_TBL = {}
+local PIE_MENUNAMES = {}
+local sel_piemenu = 1
+
 
 
 local function GetPieTable()
-  return {}
+  local tmp = ReadFromFile(pie_file, true)
+  if not tmp then return end
+
+  for k, v in pairs(tmp) do
+    PIE_MENUNAMES[k] = v.name
+    --reaper.ShowConsoleMsg(k .. ' ' .. v.name .. '\n')
+  end
+
+  return tmp
+end
+
+
+local function AddActionToPie(cmdid, fxname, script_path)
+  script_path = script_path:match("^.*/(.*)$") --strip path and extension from fn
+
+  if PIE_TBL[sel_piemenu].name == 'Add FX' then
+    fxname = fxname:gsub('^.+:%s+(.*)(%s+%(.+%))$', '%1')
+  else
+    fxname = 'Add FX: ' .. fxname:gsub('^.+:%s+(.*)(%s+%(.+%))$', '%1')
+  end
+
+  local tmp = {
+    name = fxname,
+    col = 255,
+    cmd = tostring(cmdid),
+    cmd_name = 'Script: ' .. script_path
+  }
+  table.insert(PIE_TBL[sel_piemenu], tmp)
 end
 
 local function GetFXList()
@@ -268,6 +312,13 @@ local function main()
     end
     SaveToFile('return' .. TableToString(RADIAL_TBL), radial_file)
   end
+
+  if export_options.TO_PIE then
+    for i = 1, #actions do
+      AddActionToPie(actions[i].cmdid, actions[i].name, paths[i])
+    end
+    SaveToFile(TableToString(PIE_TBL), pie_file)
+  end
 end
 
 ----------------------
@@ -299,6 +350,10 @@ local wnd_h = 500
 local wnd_w = 300
 local list_w = wnd_w * 0.95
 local list_h = wnd_h * 0.5
+
+local pie_tooltip = 'Run Pie 3000 Setup to apply changes to Pie'
+local pie_tooltip_h = 0 -- in init()
+
 
 local function UpdateList()
   --[[  if filter == '' then
@@ -401,26 +456,33 @@ local function DrawOptions()
         if clicked then sel_radmenu = -1 end ]]
 
         for i = 0, #RADIAL_MENUNAMES do
-          local clicked = ImGui.Selectable(ctx, RADIAL_MENUNAMES[i], sel_radmenu == i)
+          local clicked = ImGui.Selectable(ctx, RADIAL_MENUNAMES[i] .. '##radmenuname' .. i, sel_radmenu == i)
           if clicked then sel_radmenu = i end
         end
         ImGui.EndCombo(ctx)
       end
     end
   end
-  --[[
+
   if pie_found then
     _, export_options.TO_PIE = ImGui.Checkbox(ctx, 'Pie3000##tgl_pie_exp', export_options.TO_PIE)
     if export_options.TO_PIE then
-      ImGui.SameLine(ctx)
-      local combo_w = ImGui.GetContentRegionAvail(ctx)
-      ImGui.PushItemWidth(ctx, combo_w)
-      if ImGui.BeginCombo(ctx, '##combo_pieMenuSelect', 'Select Menu', ImGui.ComboFlags_NoArrowButton) then
-        ImGui.Selectable(ctx, 'menu1', false)
-        ImGui.EndCombo(ctx)
+      if #PIE_MENUNAMES == 0 then
+        ImGui.TextColored(ctx, 0xFF0000CC, 'No Menu Found')
+      else
+        ImGui.SameLine(ctx)
+        local combo_w = ImGui.GetContentRegionAvail(ctx)
+        ImGui.PushItemWidth(ctx, combo_w)
+        if ImGui.BeginCombo(ctx, '##combo_pieMenuSelect', PIE_MENUNAMES[sel_piemenu], ImGui.ComboFlags_NoArrowButton) then
+          for i = 1, #PIE_MENUNAMES do
+            local clicked = ImGui.Selectable(ctx, PIE_MENUNAMES[i] .. '##piemenuname' .. i, sel_piemenu == i)
+            if clicked then sel_piemenu = i end
+          end
+          ImGui.EndCombo(ctx)
+        end
       end
     end
-  end ]]
+  end
   ImGui.EndChild(ctx)
 end
 
@@ -439,10 +501,11 @@ local function DrawExportButton()
   if not can_export then ImGui.PopStyleColor(ctx, 4) end
 end
 
-local function DrawExportCnt()
-  if export_cnt > 0 then
+local function DrawTooltips()
+  if export_options.TO_PIE then
     ImGui.AlignTextToFramePadding(ctx)
-    ImGui.Text(ctx, ('Exporting %d shortcut(s)'):format(export_cnt))
+
+    ImGui.TextColored(ctx, 0xFFFF00CC, pie_tooltip)
   else
     ImGui.Dummy(ctx, 0, 10)
   end
@@ -512,14 +575,15 @@ local function DrawWindow()
 
   DrawFXList()
   --ImGui.Dummy(ctx, 0, 20)
-  ImGui.SeparatorText(ctx, 'Selected:')
+  ImGui.SeparatorText(ctx, 'Selected: ' .. export_cnt)
   --ImGui.Dummy(ctx, 0, 10)
   DrawExportedFXTable()
 
   DrawOptions()
 
+
   ImGui.SeparatorText(ctx, '')
-  DrawExportCnt()
+  DrawTooltips()
   ImGui.SameLine(ctx)
   DrawExportButton()
 end
@@ -559,7 +623,9 @@ local function init()
   end
 
   if radial_found then RADIAL_TBL = GetRadialTable() end
-  --if pie_found then PIE_TBL = GetPieTable() end
+  if pie_found then PIE_TBL = GetPieTable() end
+
+  pie_tooltip_h = ImGui.CalcTextSize(ctx, pie_tooltip)
 
   r.RecursiveCreateDirectory(export_path, 1)
 end
