@@ -88,6 +88,7 @@ local settings = {
   dim_hidden_tracks = true,
   do_pre_actions = true,
   do_post_actions = true,
+  uncollapse_if_folder = true,
   font_size = 13
 }
 
@@ -440,6 +441,8 @@ local function DrawSettingsMenu()
 
     reaper.ImGui_Separator(ctx)
 
+    _, settings.uncollapse_if_folder = reaper.ImGui_MenuItem(ctx, 'Uncollapse if folder', nil,
+    settings.uncollapse_if_folder)
     _, settings.uncollapse_selection = reaper.ImGui_MenuItem(ctx, 'Uncollapse Folder', nil, settings
       .uncollapse_selection)
 
