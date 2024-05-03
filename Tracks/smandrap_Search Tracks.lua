@@ -1,11 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.1
+-- @version 1.9.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   # Fix version number
---   # (maybe) Fix crash at startup
---   # Fix myself
+--   + Support uncollapsing folder on selection
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -78,7 +76,7 @@ local extstate_section = 'smandrap_SearchTracks'
 
 
 local settings = {
-  version = '1.9.1',
+  version = '1.9.2',
   uncollapse_selection = false,
   show_in_tcp = true,
   show_in_mcp = false,
@@ -91,6 +89,7 @@ local settings = {
   dim_hidden_tracks = true,
   do_pre_actions = true,
   do_post_actions = true,
+  uncollapse_if_folder = true,
   font_size = 13
 }
 
@@ -319,16 +318,23 @@ local function DoActionOnTrack(track, add_to_selection)
 
   if PRE_ACTIONS and settings.do_pre_actions == true then DoActions(PRE_ACTIONS) end
 
+  -- if folder, then uncollapse it
+  if settings.uncollapse_if_folder and track.folderdepth == 1 then
+    reaper.SetMediaTrackInfo_Value(track.track, 'I_FOLDERCOMPACT', 0)
+  end
+
   -- Uncollapse Parents
 
-  local depth = reaper.GetTrackDepth(track.track)
-  local track_buf = track.track
+  if settings.uncollapse_selection then
+    local depth = reaper.GetTrackDepth(track.track)
+    local track_buf = track.track
 
-  for i = settings.uncollapse_selection and (depth + 1) or depth, 1, -1 do
-    local parent = reaper.GetParentTrack(track_buf)
+    for i = depth, 1, -1 do
+      local parent = reaper.GetParentTrack(track_buf)
 
-    if parent then track_buf = parent end
-    reaper.SetMediaTrackInfo_Value(track_buf, 'I_FOLDERCOMPACT', 0)
+      if parent then track_buf = parent end
+      reaper.SetMediaTrackInfo_Value(track_buf, 'I_FOLDERCOMPACT', 0)
+    end
   end
 
   -- Show
@@ -470,7 +476,9 @@ local function DrawSettingsMenu()
 
     reaper.ImGui_Separator(ctx)
 
-    _, settings.uncollapse_selection = reaper.ImGui_MenuItem(ctx, 'Uncollapse folder', nil, settings
+    _, settings.uncollapse_if_folder = reaper.ImGui_MenuItem(ctx, 'Uncollapse if folder', nil,
+      settings.uncollapse_if_folder)
+    _, settings.uncollapse_selection = reaper.ImGui_MenuItem(ctx, 'Uncollapse parents', nil, settings
       .uncollapse_selection)
 
     reaper.ImGui_Separator(ctx)
