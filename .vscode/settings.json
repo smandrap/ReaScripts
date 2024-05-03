@@ -1,0 +1,11 @@
+{
+  "Lua.workspace.library": [
+    "/Users/Federico/.vscode/extensions/antoinebalaine.reascript-docs-0.1.2/resources/reaper-types.lua",
+    "/Users/Federico/Desktop/Reascript Env/smandrap repo/ReaScripts/Utils/imgui_defs.lua",
+    "/Users/Federico/Desktop/Reascript Env/smandrap repo/ReaScripts/Utils/imgui_defs.lua"
+  ],
+  "Lua.workspace.preloadFileSize": 1024,
+  "Lua.completion.autoRequire": false,
+  "todo-tree.tree.scanMode": "workspace",
+  "todo-tree.ripgrep.ripgrep": "/usr/local/Cellar/ripgrep/14.1.0/bin/rg"
+}

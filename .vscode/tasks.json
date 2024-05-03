@@ -1,0 +1,16 @@
+{   
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Reaper Script",
+            "type": "shell",
+            "command": "/Applications/REAPER.app/Contents/MacOS/REAPER",
+            "args": [
+    "-nonewinst",
+                "${file}"
+            ],
+            "problemMatcher": [],
+        }
+
+    ]
+}
