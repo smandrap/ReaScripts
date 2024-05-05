@@ -1,8 +1,7 @@
 {
   "Lua.workspace.library": [
-    "/Users/Federico/.vscode/extensions/antoinebalaine.reascript-docs-0.1.2/resources/reaper-types.lua",
-    "/Users/Federico/Desktop/Reascript Env/smandrap repo/ReaScripts/Utils/imgui_defs.lua",
-    "/Users/Federico/Desktop/Reascript Env/smandrap repo/ReaScripts/Utils/imgui_defs.lua"
+    "/Users/Federico/.vscode/extensions/antoinebalaine.reascript-docs-0.1.4/resources/Sexan_reaper_defs.lua",
+    "/Users/Federico/.vscode/extensions/antoinebalaine.reascript-docs-0.1.4/resources/imgui_defs_0.9.lua"
   ],
   "Lua.workspace.preloadFileSize": 1024,
   "Lua.completion.autoRequire": false,
