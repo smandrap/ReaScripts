@@ -1,0 +1,9 @@
+-- @author smandrap
+-- @description Trim items left-right of cursor pack
+-- @version 1.0
+-- @about
+--   Same as native actions, but do not operate on locked actions and do not delete items if edit cursor is in a position that would delete them
+-- @metapackage
+-- @provides
+--   [main] smandrap_Trim items left of cursor.lua
+--   [main] smandrap_Trim items right of cursor.lua
