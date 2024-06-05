@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="fd820259a0c88a70469ec145c32570923d1eda18">
+<index version="1" name="smandrap ReaScripts" commit="29792538d253257ecfc98bfa26c315cc883f1001">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -325,6 +325,21 @@
       <version name="1.1" author="smandrap" time="2023-10-06T10:03:41Z">
         <changelog><![CDATA[+ fixed undo]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/c8c69f454bf08cc42b25e4c2cf7dd51210e81114/Various/smandrap_Apply%20x%20db%20to%20send%20y%20on%20selected%20tracks.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Create take markers from project markers in first selected item.lua" type="script" desc="Create take markers from project markers in first selected item">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Useful when spotting to video. I just press M like crazy to create project markers and "print" the markers to the video item when finished.\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-06-05T15:10:11Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/29792538d253257ecfc98bfa26c315cc883f1001/Various/smandrap_Create%20take%20markers%20from%20project%20markers%20in%20first%20selected%20item.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Export FX Shortcut Actions.lua" type="script" desc="Export FX shortcut Actions">
