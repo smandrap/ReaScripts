@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="29792538d253257ecfc98bfa26c315cc883f1001">
+<index version="1" name="smandrap ReaScripts" commit="0a2ba58826056d2504a3a3ccaab63e6a6ae713bb">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -236,6 +236,10 @@
         <changelog><![CDATA[# Update to ReaImGui 0.9
 # Support using Numpad Enter key for Apply]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/8b4e7a4007dc4249f39c6cb33b263c78b6b1c85a/Tracks/smandrap_Duplicate%20Tracks.lua</source>
+      </version>
+      <version name="1.5.4" author="smandrap" time="2024-06-08T08:30:51Z">
+        <changelog><![CDATA[# Respect default new track preference to disable fixed lanes if duplication would result in no lanes]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/0a2ba58826056d2504a3a3ccaab63e6a6ae713bb/Tracks/smandrap_Duplicate%20Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Search Tracks.lua" type="script" desc="Search Tracks">
