@@ -1,9 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.5.3
+-- @version 1.5.4
 -- @changelog
---    # Update to ReaImGui 0.9
---    # Support using Numpad Enter key for Apply
+--   # Respect default new track preference to disable fixed lanes if duplication would result in no lanes
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -54,6 +53,7 @@ dupeElements.renameDupes = true
 
 local duplicated_tracks = {}
 
+local disable_lanes_onempty = reaper.SNM_GetIntConfigVar('newtflag', -1) & 8 == 0
 local insertLastSel = false
 
 
@@ -198,13 +198,13 @@ local function DoDuplicateStuff()
           DeleteActiveLanes(sel_tracks[j])
         end
 
-        if not dupeElements.otherLanes and not dupeElements.activeLane then
+        if disable_lanes_onempty and not dupeElements.otherLanes and not dupeElements.activeLane then
           r.Main_OnCommand(40752, 0) -- Disable lanes
         end
 
 
         -- If only one lane is left and it's playing then disable lanes
-        if r.GetMediaTrackInfo_Value(sel_tracks[j], "I_NUMFIXEDLANES") == 1 and
+        if disable_lanes_onempty and r.GetMediaTrackInfo_Value(sel_tracks[j], "I_NUMFIXEDLANES") == 1 and
             r.GetMediaTrackInfo_Value(sel_tracks[j], "C_LANEPLAYS:0") > 0 then
           r.Main_OnCommand(40752, 0) -- Disable lanes
         end
