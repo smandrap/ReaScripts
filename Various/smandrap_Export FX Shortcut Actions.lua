@@ -1,8 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.2
+-- @version 1.3
 -- @changelog
---  # Add pie export
+--  + Support Take FX
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -118,7 +118,8 @@ local export_options = {
   SHOW = true,
   FLOAT_WND = true,
   TO_RADIAL = false,
-  TO_PIE = false
+  TO_PIE = false,
+  IS_TAKE_FX = false
 }
 local export_path = script_path .. 'Exported FX Shortcuts' .. os_sep
 
@@ -249,7 +250,7 @@ local function GetFXList()
   return fx_list
 end
 
-local function GenerateScript(FX_NAME)
+local function GenerateScript_TrackFX(FX_NAME)
   local export_str = ([[
   FX_NAME = "%s"
   ALWAYS_INSTANTIATE = %s
@@ -264,6 +265,37 @@ local function GenerateScript(FX_NAME)
   ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
 
   local fn = 'Insert FX - ' .. FX_NAME .. '.lua'
+  local full_path = export_path .. fn
+
+  local f = io.open(full_path, 'w+')
+  if f == nil then return end
+  f:write(export_str)
+  f:close()
+
+
+  return full_path
+end
+
+local function GenerateScript_TakeFX(FX_NAME)
+  local export_str = ([[
+    local reaper = reaper
+    local FX_NAME = "%s"
+    local ALWAYS_INSTANTIATE = %s
+    local SHOW = %s
+    local FLOAT_WND = %s
+
+    for i = 0, reaper.CountSelectedMediaItems(0) - 1 do
+      local itm = reaper.GetSelectedMediaItem(0, i)
+      local tk = reaper.GetActiveTake(itm)
+      if not tk then goto continue end
+
+      local fxidx = reaper.TakeFX_AddByName(tk, FX_NAME, ALWAYS_INSTANTIATE and -1 or 1)
+      if SHOW then reaper.TakeFX_Show(tk, fxidx, FLOAT_WND and 3 or 1) end
+      ::continue::
+      end
+    ]]):format(FX_NAME, export_options.ALWAYS_INSTANTIATE, export_options.SHOW, export_options.FLOAT_WND)
+
+  local fn = 'Insert Take FX on selected items active take - ' .. FX_NAME .. '.lua'
   local full_path = export_path .. fn
 
   local f = io.open(full_path, 'w+')
@@ -293,7 +325,8 @@ local function main()
     if SEL_IDX[i] == true then
       local tmp = { cmdid = 0, name = FX_LIST[i] }
       actions[#actions + 1] = tmp
-      paths[#paths + 1] = GenerateScript(FX_LIST[i])
+      paths[#paths + 1] = export_options.IS_TAKE_FX and GenerateScript_TakeFX(FX_LIST[i]) or
+      GenerateScript_TrackFX(FX_LIST[i])
     end
   end
   --if true then return end
@@ -354,6 +387,12 @@ local list_h = wnd_h * 0.5
 local pie_tooltip = 'Run Pie 3000 Setup to apply changes to Pie'
 local pie_tooltip_h = 0 -- in init()
 
+local take_fx_tooltip = 
+[[ON:
+Create actions to add FX to selected item active take
+
+OFF:
+Create actions to add FX to selected tracks]]
 
 local function UpdateList()
   --[[  if filter == '' then
@@ -425,10 +464,18 @@ local function DrawOptions()
 
   local w = ImGui.GetContentRegionAvail(ctx)
   w = draw_extra_options and w * 0.5 or w
-  local h = 100
+  local h = 110
 
   _ = ImGui.BeginChild(ctx, '##optionsBasic', w, h)
   ImGui.SeparatorText(ctx, 'Options:')
+  _, export_options.IS_TAKE_FX = ImGui.Checkbox(ctx, "Take FX##opt4", export_options.IS_TAKE_FX)
+  if ImGui.IsItemHovered(ctx) then
+    if ImGui.BeginTooltip(ctx) then
+      ImGui.Text(ctx, take_fx_tooltip)
+      ImGui.EndTooltip(ctx)
+    end
+  end
+
   _, export_options.ALWAYS_INSTANTIATE = ImGui.Checkbox(ctx, 'Always Instantiate##opt1',
     export_options.ALWAYS_INSTANTIATE)
   _, export_options.SHOW = ImGui.Checkbox(ctx, 'Show FX##opt2', export_options.SHOW)
