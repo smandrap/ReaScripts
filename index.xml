@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="9b70736ea29858e57d3fe984c2e24812146f4874">
+<index version="1" name="smandrap ReaScripts" commit="422d8931d22194adc9514e82933407c802a9ebb3">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -458,6 +458,21 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2023-08-30T09:39:29Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/19662dfb1ff4ed8b339bb6d0763ac8a82cfc4716/Various/smandrap_Set%20selected%20tracks%20pan%20mode%20based%20on%20media%20items.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Show equivalent BPM when changing playrate.lua" type="script" desc="Show equivalent BPM when changing playrate">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 https://forum.cockos.com/showthread.php?t=291877\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-06-11T13:49:35Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/422d8931d22194adc9514e82933407c802a9ebb3/Various/smandrap_Show%20equivalent%20BPM%20when%20changing%20playrate.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Show-hide media explorer with focus.lua" type="script" desc="Media Explorer: Show/hide media explorer with focus">
