@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="422d8931d22194adc9514e82933407c802a9ebb3">
+<index version="1" name="smandrap ReaScripts" commit="d1772b14ff533b2f4f42932d6c0b1414e8573131">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -97,6 +97,23 @@
         <source main="main" file="smandrap_Add previous track in TCP or in Mixer to selection.lua">https://github.com/smandrap/ReaScripts/raw/81acdd565fa8011c0df0dade5c8a13122a7cfccf/Navigation/smandrap_Add%20previous%20track%20in%20TCP%20or%20in%20Mixer%20to%20selection.lua</source>
         <source main="main" file="smandrap_Select next track in TCP or in Mixer.lua">https://github.com/smandrap/ReaScripts/raw/81acdd565fa8011c0df0dade5c8a13122a7cfccf/Navigation/smandrap_Select%20next%20track%20in%20TCP%20or%20in%20Mixer.lua</source>
         <source main="main" file="smandrap_Select previous track in TCP or in Mixer.lua">https://github.com/smandrap/ReaScripts/raw/81acdd565fa8011c0df0dade5c8a13122a7cfccf/Navigation/smandrap_Select%20previous%20track%20in%20TCP%20or%20in%20Mixer.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Preferences">
+    <reapack name="smandrap_Toggle show faint peaks in automation envelope lanes.lua" type="script" desc="Options: Toggle show faint peaks in automation envelope lanes">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Toggles Preferences > Peaks/Waveforms > Draw faint peaks in automation envelope lanes. Requires SWS.\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-06-17T10:34:14Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d1772b14ff533b2f4f42932d6c0b1414e8573131/Preferences/smandrap_Toggle%20show%20faint%20peaks%20in%20automation%20envelope%20lanes.lua</source>
       </version>
     </reapack>
   </category>
