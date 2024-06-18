@@ -1,6 +1,6 @@
 -- @description Trim items right of cursor
 -- @author smandrap
--- @version 1.0
+-- @version 1.1
 -- @noindex
 -- @donation https://paypal.me/smandrap
 -- @about
@@ -33,6 +33,7 @@ end
 ---@param item MediaItem
 ---@return boolean
 local function CanTrim(item)
+  if not reaper.ValidatePtr(item, 'MediaItem*') then return false end
   if r.GetMediaItemInfo_Value(item, 'D_POSITION') == CUR_POS then return false end
   if r.GetMediaItemInfo_Value(item, 'C_LOCK') == 1 then return false end
 
@@ -58,7 +59,11 @@ local function SetItemsSelected(item_t, cnt)
   cnt = cnt or #item_t
   local SetMediaItemSelected = r.SetMediaItemSelected
 
-  for i = 1, cnt do SetMediaItemSelected(item_t[i], true) end
+  for i = 1, cnt do 
+    if reaper.ValidatePtr(item_t[i], 'MediaItem*') then
+      SetMediaItemSelected(item_t[i], true) 
+    end
+  end
 end
 
 local function main()
