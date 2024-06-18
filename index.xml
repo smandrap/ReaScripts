@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="d1772b14ff533b2f4f42932d6c0b1414e8573131">
+<index version="1" name="smandrap ReaScripts" commit="9b16686a03bb159a5f79ae49839f1b4f83a940fa">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -47,6 +47,11 @@
       <version name="1.0" author="smandrap" time="2024-05-16T19:19:39Z">
         <source main="main" file="smandrap_Trim items left of cursor.lua">https://github.com/smandrap/ReaScripts/raw/fd820259a0c88a70469ec145c32570923d1eda18/Items/smandrap_Trim%20items%20left%20of%20cursor.lua</source>
         <source main="main" file="smandrap_Trim items right of cursor.lua">https://github.com/smandrap/ReaScripts/raw/fd820259a0c88a70469ec145c32570923d1eda18/Items/smandrap_Trim%20items%20right%20of%20cursor.lua</source>
+      </version>
+      <version name="1.1" author="smandrap" time="2024-06-18T13:47:17Z">
+        <changelog><![CDATA[- Fix script crashing at exit in certain situations (grouped items, etc)]]></changelog>
+        <source main="main" file="smandrap_Trim items left of cursor.lua">https://github.com/smandrap/ReaScripts/raw/9b16686a03bb159a5f79ae49839f1b4f83a940fa/Items/smandrap_Trim%20items%20left%20of%20cursor.lua</source>
+        <source main="main" file="smandrap_Trim items right of cursor.lua">https://github.com/smandrap/ReaScripts/raw/9b16686a03bb159a5f79ae49839f1b4f83a940fa/Items/smandrap_Trim%20items%20right%20of%20cursor.lua</source>
       </version>
     </reapack>
   </category>
