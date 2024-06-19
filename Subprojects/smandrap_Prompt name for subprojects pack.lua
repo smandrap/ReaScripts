@@ -1,11 +1,15 @@
 -- @author smandrap
 -- @description Prompt name for subprojects (pack)
--- @version 1.3
+-- @version 1.4
 -- @changelog
---   + Refactor, more fixes
---   # Insert in subproject folder can't create a subdirectory atm. Will fix in the future. sorries
+--   + Add script to move each item to its own subproject.
+--     Useful if doing sound design for a lot of separate clips and you want to leverage subprojects.
 -- @about
---   When creating a subproject, prompts for a name and optionally create it in a Subprojects folder
+--   EXPERIMENTAL!! No risks (uses native actions) but things may be quirky.
+--   Please leave your feedback!
+--
+--   When creating a subproject, prompts for a name and optionally create it in a Subprojects folder.
+--   Includes scripts to move items or tracks to subprojects, in dedicated folder and with your labeling.
 -- @metapackage
 -- @provides
 --   [main] smandrap_Insert new subproject in Subproject folder (prompt for name).lua
