@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="74f2328627f72e506e0ddd3299fca7690349fa01">
+<index version="1" name="smandrap ReaScripts" commit="b27fe35b7af5b3761994243832bfbd35561c2d89">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -146,7 +146,8 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 When creating a subproject, prompts for a name and optionally create it in a Subprojects folder\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 EXPERIMENTAL!! No risks (uses native actions) but things may be quirky. Please leave your feedback!\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 When creating a subproject, prompts for a name and optionally create it in a Subprojects folder. Includes scripts to move items or tracks to subprojects, in dedicated folder and with your labeling.\par}
 }
 ]]></description>
       </metadata>
@@ -180,6 +181,13 @@
         <source main="main" file="smandrap_Insert new subproject in Subproject folder (prompt for name).lua">https://github.com/smandrap/ReaScripts/raw/74f2328627f72e506e0ddd3299fca7690349fa01/Subprojects/smandrap_Insert%20new%20subproject%20in%20Subproject%20folder%20(prompt%20for%20name).lua</source>
         <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/74f2328627f72e506e0ddd3299fca7690349fa01/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
         <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/74f2328627f72e506e0ddd3299fca7690349fa01/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
+      </version>
+      <version name="1.4" author="smandrap" time="2024-06-19T15:04:57Z">
+        <changelog><![CDATA[+ Add script to move each item to its own subproject.
+  Useful if doing sound design for a lot of separate clips and you want to leverage subprojects.]]></changelog>
+        <source main="main" file="smandrap_Insert new subproject in Subproject folder (prompt for name).lua">https://github.com/smandrap/ReaScripts/raw/b27fe35b7af5b3761994243832bfbd35561c2d89/Subprojects/smandrap_Insert%20new%20subproject%20in%20Subproject%20folder%20(prompt%20for%20name).lua</source>
+        <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/b27fe35b7af5b3761994243832bfbd35561c2d89/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
+        <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/b27fe35b7af5b3761994243832bfbd35561c2d89/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
       </version>
     </reapack>
   </category>
