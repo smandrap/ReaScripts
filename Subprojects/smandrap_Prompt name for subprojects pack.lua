@@ -1,8 +1,9 @@
 -- @author smandrap
 -- @description Prompt name for subprojects (pack)
--- @version 1.2
+-- @version 1.3
 -- @changelog
---   - Fix a bunch of things, should be in working state (almost)
+--   + Refactor, more fixes
+--   # Insert in subproject folder can't create a subdirectory atm. Will fix in the future. sorries
 -- @about
 --   When creating a subproject, prompts for a name and optionally create it in a Subprojects folder
 -- @metapackage

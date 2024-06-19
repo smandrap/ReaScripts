@@ -1,68 +1,93 @@
 -- @description Move items to subproject, prompt for name (non-destructive glue)
 -- @author smandrap
--- @version 1.2
+-- @version 1.3
 -- @changelog
---  Fix a bunch of things
+--  Fix a bunch more things
 -- @noindex
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Does what it says. Requires SWS.
 -- @readme_skip
 
-
-
-PREFIX_PROJECT_NAME = true -- Prefix the subproject with the parent project name
-CREATE_SUBDIRECTORY = true -- Self-Contain the subproject in its own folder
-USE_SUBFOLDER = true       -- Create the subproject in a subfolder next to parent project location
-SUBFOLDER = 'SubProjects'  -- Name of the subfolder
+PREFIX_PROJECT_NAME = true     -- Prefix the subproject with the parent project name
+CREATE_SUBDIRECTORY = true     -- Self-Contain the subproject in its own folder
+USE_SUBFOLDER = true           -- Create the subproject in a subfolder next to parent project location
+SUBFOLDER_NAME = 'SubProjects' -- Name of the subfolder
 
 local r = reaper
 
-local swsok = false
 if not r.CF_GetSWSVersion then
   r.MB("This script requires SWS extensions", "SWS REQUIRED", 0)
+  return
 end
 
-
-local rec_path = select(2, r.GetSetProjectInfo_String(0, 'RECORD_PATH', '', false))
-local _, rec_filename = r.get_config_var_string('recfile_wildcards')
+local orig_recpath = select(2, r.GetSetProjectInfo_String(0, 'RECORD_PATH', '', false))
+local _, orig_recfile = r.get_config_var_string('recfile_wildcards')
 
 local os_sep = package.config:sub(1, 1)
 
-local function CreateProjectLabel()
+local function CreateSubProjectLabel()
   local first_sel_take = r.GetActiveTake(r.GetSelectedMediaItem(0, 0))
+  if not first_sel_take then return 'SubProject' end -- Guard against something not returning correctly
 
-  local _, itemname = r.GetSetMediaItemTakeInfo_String(first_sel_take, 'P_NAME', '', false)
-  itemname = itemname:gsub('%..*$', '')
+  local _, item_name = r.GetSetMediaItemTakeInfo_String(first_sel_take, 'P_NAME', '', false)
+  item_name = item_name:gsub('%..*$', '') -- Strip file extension from take name
 
-  return itemname
+  return item_name == '' and 'SubProject' or item_name
 end
 
-local function main()
-  local rv, LABEL = r.GetUserInputs('Move items to subproject', 1, 'extrawidth=100,Name:', CreateProjectLabel())
-  if not rv then return end
+local function GetSubProjectLabelFromInput()
+  local rv, label = r.GetUserInputs('Move items to subproject', 1, 'extrawidth=100,Name:', CreateSubProjectLabel())
+  label = label:gsub("^%s+(.*)%s+$", "%1")
+  return rv, label == '' and 'SubProject' or label
+end
 
-  local final_label = ('%s - %s'):format(PREFIX_PROJECT_NAME and '$project' or '', LABEL)
-  r.SNM_SetStringConfigVar('recfile_wildcards', final_label)
+local function SetRecFileName(name)
+  local subproject_name = ('%s - %s'):format(PREFIX_PROJECT_NAME and '$project' or '', name)
+  r.SNM_SetStringConfigVar('recfile_wildcards', subproject_name)
+end
 
-  if USE_SUBFOLDER then
-    local proj_name = r.GetProjectName():gsub('%.RPP$', '')
-    local new_path = CREATE_SUBDIRECTORY and ("%s%s%s - %s"):format(SUBFOLDER, os_sep, proj_name, LABEL) or SUBFOLDER
-    r.GetSetProjectInfo_String(0, 'RECORD_PATH', new_path, true)
+local function SetRecPath(label)
+  local new_path = orig_recpath
+
+  if CREATE_SUBDIRECTORY then
+    new_path = label
+
+    if PREFIX_PROJECT_NAME then
+      local parent_proj_name = r.GetProjectName():gsub('%.RPP$', '')
+      new_path = ("%s - %s"):format(parent_proj_name, new_path)
+    end
   end
 
+  if USE_SUBFOLDER then new_path = ("%s%s%s"):format(SUBFOLDER_NAME, os_sep, new_path) end
+
+  r.GetSetProjectInfo_String(0, 'RECORD_PATH', new_path, true)
+end
+
+local function CreateSubProject()
   r.Undo_BeginBlock()
   r.Main_OnCommand(41996, 0)
   r.Undo_EndBlock('Move items to subproject', 0)
 end
 
-local function RestorePaths()
-  r.GetSetProjectInfo_String(0, 'RECORD_PATH', rec_path, true)
-  r.SNM_SetStringConfigVar('recfile_wildcards', rec_filename)
+local function main()
+  local ok, label = GetSubProjectLabelFromInput()
+  if not ok then return end
+
+  SetRecFileName(label)
+  SetRecPath(label)
+
+  CreateSubProject()
 end
 
-local function err()
+local function RestorePaths()
+  r.GetSetProjectInfo_String(0, 'RECORD_PATH', orig_recpath, true)
+  r.SNM_SetStringConfigVar('recfile_wildcards', orig_recfile)
+end
+
+local function err(e)
   RestorePaths()
+  r.ShowConsoleMsg(e..'\n\n')
   r.ShowConsoleMsg(debug.traceback())
 end
 
