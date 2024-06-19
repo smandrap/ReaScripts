@@ -1,8 +1,8 @@
 -- @author smandrap
 -- @description Prompt name for subprojects (pack)
--- @version 1.1
+-- @version 1.2
 -- @changelog
---   #oopsie with filenames
+--   - Fix a bunch of things, should be in working state (almost)
 -- @about
 --   When creating a subproject, prompts for a name and optionally create it in a Subprojects folder
 -- @metapackage
