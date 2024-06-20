@@ -1,8 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.3
+-- @version 1.3.1
 -- @changelog
---  + Support Take FX
+--  # Prevent window docking (causes problems, don't do it, you'll regret it, i'm preventing you to screw things)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -366,7 +366,7 @@ local settings = {
 local ctx = ImGui.CreateContext(script_name)
 local visible, open
 local window_flags =
-    ImGui.WindowFlags_None | ImGui.WindowFlags_AlwaysAutoResize
+    ImGui.WindowFlags_None | ImGui.WindowFlags_AlwaysAutoResize | ImGui.WindowFlags_NoDocking
 
 local child_flags = ImGui.ChildFlags_Border
 local table_flags =
@@ -675,6 +675,9 @@ local function init()
   pie_tooltip_h = ImGui.CalcTextSize(ctx, pie_tooltip)
 
   r.RecursiveCreateDirectory(export_path, 1)
+
+  -- Undock script if it was docked for some reason
+  ImGui.SetNextWindowDockID(ctx, 0, ImGui.Cond_Appearing)
 end
 
 local function Exit()
