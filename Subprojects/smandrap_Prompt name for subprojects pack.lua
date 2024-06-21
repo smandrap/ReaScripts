@@ -1,10 +1,8 @@
 -- @author smandrap
 -- @description Prompt name for subprojects (pack)
--- @version 1.4.1
+-- @version 1.4.2
 -- @changelog
---   # You might notice i'm very dumb
---   + Add script to move each item to its own subproject.
---     Useful if doing sound design for a lot of separate clips and you want to leverage subprojects.
+--   # Fix move tracks to subproject not working when no items selected (WUT?)
 -- @about
 --   EXPERIMENTAL!! No risks (uses native actions) but things may be quirky.
 --   Please leave your feedback!

@@ -98,7 +98,7 @@ end
 
 local function noundo() r.defer(function() end) end
 
-if r.CountSelectedMediaItems(0) == 0 then
+if r.CountSelectedTracks(0) == 0 then
   noundo()
   return
 end
