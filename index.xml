@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="682cb8838aeda0d037556c63dd496bc3dc8832af">
+<index version="1" name="smandrap ReaScripts" commit="5d4f9f710d30575932d967abc938e7c7fc535967">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -197,6 +197,13 @@
         <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/ac7446b4cca14374bc2cf157ad92b6a740a2958f/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
         <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/ac7446b4cca14374bc2cf157ad92b6a740a2958f/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
         <source main="main" file="smandrap_Move items to subproject individually (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/ac7446b4cca14374bc2cf157ad92b6a740a2958f/Subprojects/smandrap_Move%20items%20to%20subproject%20individually%20(non-destructive%20glue).lua</source>
+      </version>
+      <version name="1.4.2" author="smandrap" time="2024-06-21T07:34:45Z">
+        <changelog><![CDATA[# Fix move tracks to subproject not working when no items selected (WUT?)]]></changelog>
+        <source main="main" file="smandrap_Insert new subproject in Subproject folder (prompt for name).lua">https://github.com/smandrap/ReaScripts/raw/5d4f9f710d30575932d967abc938e7c7fc535967/Subprojects/smandrap_Insert%20new%20subproject%20in%20Subproject%20folder%20(prompt%20for%20name).lua</source>
+        <source main="main" file="smandrap_Move items to subproject, prompt for name (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/5d4f9f710d30575932d967abc938e7c7fc535967/Subprojects/smandrap_Move%20items%20to%20subproject,%20prompt%20for%20name%20(non-destructive%20glue).lua</source>
+        <source main="main" file="smandrap_Move tracks to subprojects, prompt for name.lua">https://github.com/smandrap/ReaScripts/raw/5d4f9f710d30575932d967abc938e7c7fc535967/Subprojects/smandrap_Move%20tracks%20to%20subprojects,%20prompt%20for%20name.lua</source>
+        <source main="main" file="smandrap_Move items to subproject individually (non-destructive glue).lua">https://github.com/smandrap/ReaScripts/raw/5d4f9f710d30575932d967abc938e7c7fc535967/Subprojects/smandrap_Move%20items%20to%20subproject%20individually%20(non-destructive%20glue).lua</source>
       </version>
     </reapack>
   </category>
