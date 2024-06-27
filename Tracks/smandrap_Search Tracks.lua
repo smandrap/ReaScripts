@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.2
+-- @version 1.9.3
 -- @donation https://paypal.me/smandrap
 -- @changelog
---   + Support uncollapsing folder on selection
+--   + Add nav mode (experimental, might go away, default: off)
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -90,8 +90,10 @@ local settings = {
   do_pre_actions = true,
   do_post_actions = true,
   uncollapse_if_folder = true,
+  nav_mode = false,
   font_size = 13
 }
+
 
 ----------------------
 -- APP VARS
@@ -371,6 +373,21 @@ local function DoActionOnTrack(track, add_to_selection)
   if settings.close_on_action then open = false end
 end
 
+local function DoNavModeAction(track)
+  if track.showtcp == 0 and track.showmcp == 0 then return end
+
+  reaper.SetOnlyTrackSelected(track.track)
+
+  if track.showtcp == 1 then
+    reaper.Main_OnCommand(40913, 0) -- Vertical scroll to track
+  end
+  if track.showmcp == 1 then
+    reaper.SetMixerScroll(track.track)
+  end
+end
+
+
+
 local function DoAlfredStyleCmd()
   local trackidx = -1
 
@@ -500,6 +517,7 @@ local function DrawSettingsMenu()
 
     reaper.ImGui_Separator(ctx)
     _, settings.close_on_action = reaper.ImGui_MenuItem(ctx, 'Quit after selection', nil, settings.close_on_action)
+    _, settings.nav_mode = reaper.ImGui_MenuItem(ctx, 'Nav Mode', nil, settings.nav_mode)
 
     reaper.ImGui_Separator(ctx)
 
@@ -725,6 +743,10 @@ local function SetupTrackTree()
       local fp_x, fp_y = reaper.ImGui_GetStyleVar(ctx, reaper.ImGui_StyleVar_FramePadding())
 
       is_parent_open = reaper.ImGui_TreeNodeEx(ctx, 'treenode' .. i, '', node_flags)
+
+      if settings.nav_mode and reaper.ImGui_IsItemFocused(ctx) then
+        DoNavModeAction(track)
+      end
 
       if IsItemDoubleClicked() or IsEnterPressedOnItem() then
         DoActionOnTrack(track,
