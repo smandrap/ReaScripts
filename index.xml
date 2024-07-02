@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="5d4f9f710d30575932d967abc938e7c7fc535967">
+<index version="1" name="smandrap ReaScripts" commit="9b5fe63ac38eb6fdda93fb1bc8f3ceff57bf9bd9">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -369,6 +369,11 @@
         <changelog><![CDATA[+ Support uncollapsing target track if it's a folder]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/61d8462718f8fced86833f6ca88e95da32c960bd/Tracks/smandrap_Search%20Tracks.lua</source>
         <source file="smandrap_Search Tracks/modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/61d8462718f8fced86833f6ca88e95da32c960bd/Tracks/smandrap_Search%20Tracks/modules/fzy.lua</source>
+      </version>
+      <version name="1.9.6" author="smandrap" time="2024-06-27T13:36:57Z">
+        <changelog><![CDATA[+ Add nav mode (experimental, might go away, enable in preferences, default: off)]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/9b5fe63ac38eb6fdda93fb1bc8f3ceff57bf9bd9/Tracks/smandrap_Search%20Tracks.lua</source>
+        <source file="smandrap_Search Tracks/modules/fzy.lua">https://github.com/smandrap/ReaScripts/raw/9b5fe63ac38eb6fdda93fb1bc8f3ceff57bf9bd9/Tracks/smandrap_Search%20Tracks/modules/fzy.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all visible tracks in Mixer.lua" type="script" desc="Select all visible tracks in Mixer">
