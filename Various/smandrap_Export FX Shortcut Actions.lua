@@ -1,8 +1,8 @@
 -- @description Export FX shortcut Actions
 -- @author smandrap
--- @version 1.3.1
+-- @version 1.3.2
 -- @changelog
---  # Prevent window docking (causes problems, don't do it, you'll regret it, i'm preventing you to screw things)
+--  # minor internal changes (very minor fix)
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select FX and run Export to add actions to open/show said fx
@@ -335,7 +335,7 @@ local function main()
   for i = 1, #paths - 1 do
     actions[i].cmdid = r.AddRemoveReaScript(true, 0, paths[i] or '', false)
   end
-  actions[#actions].cmdid = r.AddRemoveReaScript(true, 0, paths[#paths] or '', false)
+  actions[#actions].cmdid = r.AddRemoveReaScript(true, 0, paths[#paths] or '', true)
   r.PromptForAction(1, actions[#actions].cmdid, 0)
   r.PromptForAction(-1, actions[#actions].cmdid, 0)
 
