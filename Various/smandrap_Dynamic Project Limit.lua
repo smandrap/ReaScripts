@@ -2,8 +2,8 @@
 -- @author smandrap
 -- @version 1.0
 -- @about
--- Allows you to avoid zooming out of space by setting the project limit automagically.
--- Requires SWS. Does not take into account automation. Use at own risk.
+--   Allows you to avoid zooming out of space by setting the project limit automagically.
+--   Requires SWS. Does not take into account automation. Use at own risk.
 
 local reaper = reaper
 
