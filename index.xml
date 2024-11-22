@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="61d5e7e72cd5c082acb3504dadc78a526960d3b7">
+<index version="1" name="smandrap ReaScripts" commit="4c7a37bc7d5ddda7a8b45713bacd6a7713d0a186">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -425,6 +425,20 @@
       </metadata>
       <version name="1.0" author="smandrap" time="2024-06-05T15:10:11Z">
         <source main="main">https://github.com/smandrap/ReaScripts/raw/29792538d253257ecfc98bfa26c315cc883f1001/Various/smandrap_Create%20take%20markers%20from%20project%20markers%20in%20first%20selected%20item.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Dynamic Project Limit.lua" type="script" desc="Dynamic project limit">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Allows you to avoid zooming out of space by setting the project limit automagically. Requires SWS. Does not take into account automation. Use at own risk.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-11-22T12:31:15Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/4c7a37bc7d5ddda7a8b45713bacd6a7713d0a186/Various/smandrap_Dynamic%20Project%20Limit.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Export FX Shortcut Actions.lua" type="script" desc="Export FX shortcut Actions">
