@@ -1,6 +1,6 @@
 -- @description Trim items right of cursor
 -- @author smandrap
--- @version 1.1
+-- @version 1.2
 -- @noindex
 -- @donation https://paypal.me/smandrap
 -- @about
@@ -66,9 +66,20 @@ local function SetItemsSelected(item_t, cnt)
   end
 end
 
+local function IsLockingEnabled()
+  -- Check full item lock or item edges lock, then if locking is on return true
+  if r.GetToggleCommandState(40576) == 1 or  r.GetToggleCommandState(40597) == 1 then
+    return true
+  end
+  return false
+end
+
+
 local function main()
   local sel_itm, cnt = GetSelItems()
   if not sel_itm then return end
+  
+  if IsLockingEnabled() then return end
 
   r.Main_OnCommand(UNSELECT_ITM_CMDID, 0)
 
