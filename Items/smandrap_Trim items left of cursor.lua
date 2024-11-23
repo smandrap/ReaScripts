@@ -1,6 +1,6 @@
 -- @description Trim items left of cursor
 -- @author smandrap
--- @version 1.1
+-- @version 1.2
 -- @noindex
 -- @donation https://paypal.me/smandrap
 -- @about
@@ -35,8 +35,8 @@ end
 ---@return boolean
 local function CanTrim(item)
   if not reaper.ValidatePtr(item, 'MediaItem*') then return false end
-  if r.GetMediaItemInfo_Value(item, 'D_POSITION') + r.GetMediaItemInfo_Value(item, 'D_LENGTH') == CUR_POS then return false end
   if r.GetMediaItemInfo_Value(item, 'C_LOCK') == 1 then return false end
+  if r.GetMediaItemInfo_Value(item, 'D_POSITION') + r.GetMediaItemInfo_Value(item, 'D_LENGTH') == CUR_POS then return false end
 
   return true
 end
@@ -67,12 +67,22 @@ local function SetItemsSelected(item_t, cnt)
   end
 end
 
+local function IsLockingEnabled()
+  -- Check full item lock or item edges lock, then if locking is on return true
+  if r.GetToggleCommandState(40576) == 1 or  r.GetToggleCommandState(40597) == 1 then
+    return true
+  end
+  return false
+end
+
 local function main()
   local sel_itm, cnt = GetSelItems()
   if not sel_itm then return end
-
+  
+  if IsLockingEnabled() then return end
+  
   r.Main_OnCommand(UNSELECT_ITM_CMDID, 0)
-
+  
   for i = 1, cnt do
     if CanTrim(sel_itm[i]) then
       sel_itm[i] = TrimItem(sel_itm[i])
