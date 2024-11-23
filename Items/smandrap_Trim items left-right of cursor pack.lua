@@ -1,6 +1,6 @@
 -- @author smandrap
 -- @description Trim items left-right of cursor pack
--- @version 1.1
+-- @version 1.2
 -- @changelog
 --   - Fix script crashing at exit in certain situations (grouped items, etc)
 -- @about
