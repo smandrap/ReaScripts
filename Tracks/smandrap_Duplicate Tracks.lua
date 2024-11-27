@@ -1,8 +1,8 @@
 -- @description Duplicate Tracks
 -- @author smandrap
--- @version 1.5.4
+-- @version 1.5.5
 -- @changelog
---   # Respect default new track preference to disable fixed lanes if duplication would result in no lanes
+--   # Fix applying lanes operation on grouped track when duplicating
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Pro Tools style Duplicate Tracks window
@@ -179,6 +179,9 @@ local function DoDuplicateStuff()
 
   local is_first_dupe = true
 
+  local grouping_state = r.GetToggleCommandState(1156)
+  if grouping_state == 1 then r.Main_OnCommand(1156, 0) end -- Disable grouping if enabled
+
   for i = 1, dupenum do
     r.Main_OnCommand(40062, 0) --Dupe
 
@@ -241,6 +244,8 @@ local function DoDuplicateStuff()
   for i = 1, #duplicated_tracks do
     r.SetTrackSelected(duplicated_tracks[i], true)
   end
+
+  if grouping_state == 1 then r.Main_OnCommand(1156, 0) end -- Re-enable grouping if it was enabled
 
   r.PreventUIRefresh(1)
   r.Undo_EndBlock("Duplicate Tracks " .. dupenum .. " times", 0)
