@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="bc38fe57007b76646304f0383cad0a4c905c293d">
+<index version="1" name="smandrap ReaScripts" commit="46b26a9ba99dc6ebd783f29ae813d11305b7c7c7">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -13,6 +13,23 @@
       <version name="1.0" author="smandrap" time="2023-08-30T15:21:09Z">
         <changelog><![CDATA[Initial release]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/afae86833f7205a1daa8f7987fb21dd7df78ec5d/Items/smandrap_Add%20Empty%20MIDI%20take%20to%20selected%20MIDI%20Items.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Grow-Shrink left-right edge of items by grid unit pack.lua" type="script" desc="Grow/Shrink left/right edge of items by grid unit">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Similar to native actions, but works by grid unit. If grid or snap is disabled, uses native action. If relative snap is off, then grow/shrink to previous/next grid. If relative snap is on, then grow/shrink by grid unit. Got some stuff from X-Raym, thanks\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2024-12-02T15:12:43Z">
+        <source main="main" file="smandrap_Shrink left edge of items by grid unit.lua">https://github.com/smandrap/ReaScripts/raw/46b26a9ba99dc6ebd783f29ae813d11305b7c7c7/Items/smandrap_Shrink%20left%20edge%20of%20items%20by%20grid%20unit.lua</source>
+        <source main="main" file="smandrap_Grow left edge of items by grid unit.lua">https://github.com/smandrap/ReaScripts/raw/46b26a9ba99dc6ebd783f29ae813d11305b7c7c7/Items/smandrap_Grow%20left%20edge%20of%20items%20by%20grid%20unit.lua</source>
+        <source main="main" file="smandrap_Shrink right edge of items by grid unit.lua">https://github.com/smandrap/ReaScripts/raw/46b26a9ba99dc6ebd783f29ae813d11305b7c7c7/Items/smandrap_Shrink%20right%20edge%20of%20items%20by%20grid%20unit.lua</source>
+        <source main="main" file="smandrap_Grow right edge of items by grid unit.lua">https://github.com/smandrap/ReaScripts/raw/46b26a9ba99dc6ebd783f29ae813d11305b7c7c7/Items/smandrap_Grow%20right%20edge%20of%20items%20by%20grid%20unit.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Select all items with crossfades.lua" type="script" desc="Select all items with crossfades">
