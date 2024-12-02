@@ -11,5 +11,5 @@
 -- @provides
 --   [main] smandrap_Shrink left edge of items by grid unit.lua
 --   [main] smandrap_Grow left edge of items by grid unit.lua
---   [main] smandrap_Shrink edge side of items by grid unit.lua
+--   [main] smandrap_Shrink right edge of items by grid unit.lua
 --   [main] smandrap_Grow right edge of items by grid unit.lua
