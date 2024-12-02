@@ -1,0 +1,15 @@
+-- @author smandrap
+-- @description Grow/Shrink left/right edge of items by grid unit
+-- @version 1.0
+-- @about
+--  Similar to native actions, but works by grid unit.
+--  If grid or snap is disabled, uses native action. 
+--  If relative snap is off, then grow/shrink to previous/next grid.
+--  If relative snap is on, then grow/shrink by grid unit.
+--  Got some stuff from X-Raym, thanks
+-- @metapackage
+-- @provides
+--   [main] smandrap_Shrink left edge of items by grid unit.lua
+--   [main] smandrap_Grow left edge of items by grid unit.lua
+--   [main] smandrap_Shrink edge side of items by grid unit.lua
+--   [main] smandrap_Grow right edge of items by grid unit.lua
