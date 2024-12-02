@@ -1,6 +1,6 @@
 -- @author smandrap
 -- @description Grow/Shrink left/right edge of items by grid unit
--- @version 1.0
+-- @version 1.1
 -- @about
 --  Similar to native actions, but works by grid unit.
 --  If grid or snap is disabled, uses native action. 
