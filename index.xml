@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="7f6be8c6b85dc4d439739754045d187c1b9e6bbd">
+<index version="1" name="smandrap ReaScripts" commit="d80ddc6617ad1bc0603b375697c8f27c90c0319f">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -250,6 +250,21 @@
       <version name="1.0" author="smandrap" time="2024-04-24T09:06:05Z">
         <changelog><![CDATA[+ first commit]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/014b459ed236a6dda6b28a324b399daead1a4b77/Tracks/smandrap_Auto-Solo%20Selected%20Tracks%20(background).lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Create AUX from selected tracks.lua" type="script" desc="Create AUX track from selected tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Creates a track and add sends from all selected tracks to the new track.\par}
+}
+]]></description>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2025-01-27T17:40:45Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/d80ddc6617ad1bc0603b375697c8f27c90c0319f/Tracks/smandrap_Create%20AUX%20from%20selected%20tracks.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Duplicate Tracks.lua" type="script" desc="Duplicate Tracks">
@@ -650,12 +665,12 @@
     </reapack>
   </category>
   <metadata>
-    <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+    <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 smandrap ReaScripts\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 INSTALL\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 smandrap ReaScripts\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 INSTALL\par}
 {\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab {\field{\*\fldinst{HYPERLINK "https://reapack.com/"}}{\fldrslt{\ul
 Install ReaPack from Website
 }}}
@@ -668,13 +683,13 @@ this link
 {\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab Go to Extensions -> Reapack -> Browse packages...\par}
 {\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab Type smandrap in the search box\par}
 {\pard \ql \f0 \sa180 \li360 \fi-360 \bullet \tx360\tab To install a script right click it, select "Install" and press Apply (bottom right of the window)\sa180\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 DONATION\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 DONATION\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 If you find my scripts useful, {\field{\*\fldinst{HYPERLINK "https://paypal.me/smandrap"}}{\fldrslt{\ul
 a donation is VERY appreciated
 }}}
 . Thanks for your support.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 CONTENTS\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs28 {\field{\*\fldinst{HYPERLINK "https://forum.cockos.com/showthread.php?p=2720878#post2720878"}}{\fldrslt{\ul
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 CONTENTS\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 {\field{\*\fldinst{HYPERLINK "https://forum.cockos.com/showthread.php?p=2720878#post2720878"}}{\fldrslt{\ul
 {\b Search Tracks}
 }}}
  : Cubase style Track search with routing capabilities\par}
