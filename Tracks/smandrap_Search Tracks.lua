@@ -1,9 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.8.1
+-- @version 1.9.8.2
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  fixies
+--  oopsies
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -67,8 +67,6 @@ package.path = package.path ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
 local fzy = require("smandrap_Search Tracks.modules.fzy")
--- local lib = require("smandrap_Search Tracks.modules.lib")
-local lib = loadfile("smandrap_Search Tracks/modules/lib.lua")
 
 local extstate_section = 'smandrap_SearchTracks'
 
@@ -78,7 +76,7 @@ local extstate_section = 'smandrap_SearchTracks'
 
 
 local settings = {
-    version = '1.9.8.1',
+    version = '1.9.8.2',
     uncollapse_selection = false,
     show_in_tcp = true,
     show_in_mcp = false,
@@ -100,7 +98,6 @@ local settings = {
 -- APP VARS
 ----------------------
 
-local is_macOS
 local proj_change_cnt = 0
 
 local tracks = {}
@@ -131,8 +128,6 @@ local colorbox_size
 
 local font
 local tooltip_font
-
-
 
 local default_wflags = imgui.WindowFlags_NoCollapse
 local notitle_wflags = default_wflags | imgui.WindowFlags_NoTitleBar
@@ -170,6 +165,8 @@ local help_text = script_name .. ' v' .. settings.version .. '\n\n' ..
 local help_text_actions = [[You can define actions to execute before and/or after the track selection happens.
 These actions are defined inside the script, search for "USER AREA".
 ]]
+
+
 ----------------------
 -- HELPERS
 ----------------------
@@ -557,7 +554,6 @@ local function DrawSearchFilter()
 end
 
 
-
 local function SetupDragDrop(track)
     if imgui.BeginDragDropSource(ctx) then
         imgui.SetDragDropPayload(ctx, 'dragdrop', 'track', 0)
@@ -803,9 +799,6 @@ local function PrepRandomShit()
     imgui.Attach(ctx, tooltip_font)
     imgui.SetConfigVar(ctx, imgui.ConfigVar_MouseDoubleClickTime, 0.2)
 
-    local os = r.GetOS()
-    if os:match("OSX") or os:match("macOS") then is_macOS = true end
-    if is_macOS then imgui.SetConfigVar(ctx, imgui.ConfigVar_MacOSXBehaviors, 1) end
 
     if not js_api then settings.use_routing_cursor = false end
 end
