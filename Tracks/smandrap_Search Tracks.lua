@@ -1,11 +1,9 @@
 -- @description Search Tracks
 -- @author smandrap
--- @version 1.9.8
+-- @version 1.9.8.1
 -- @donation https://paypal.me/smandrap
 -- @changelog
---  # Upgrade imgui
---  # Minor refactoring;
---  + Show all children if track is folder and cmd/ctrl is held
+--  fixies
 -- @provides
 --   smandrap_Search Tracks/modules/*.lua
 -- @about
@@ -69,6 +67,8 @@ package.path = package.path ..
     debug.getinfo(1, "S").source:match [[^@?(.*[\/])[^\/]-$]] ..
     "?.lua;" -- GET DIRECTORY FOR REQUIRE
 local fzy = require("smandrap_Search Tracks.modules.fzy")
+-- local lib = require("smandrap_Search Tracks.modules.lib")
+local lib = loadfile("smandrap_Search Tracks/modules/lib.lua")
 
 local extstate_section = 'smandrap_SearchTracks'
 
@@ -78,7 +78,7 @@ local extstate_section = 'smandrap_SearchTracks'
 
 
 local settings = {
-    version = '1.9.5',
+    version = '1.9.8.1',
     uncollapse_selection = false,
     show_in_tcp = true,
     show_in_mcp = false,
@@ -120,7 +120,7 @@ local FLT_MIN, FLT_MAX = imgui.NumericLimits_Float()
 
 local ctx = imgui.CreateContext(script_name, imgui.ConfigFlags_NavEnableKeyboard)
 local visible
-local open
+local app_open
 local first_frame = true
 
 local open_settings = false
@@ -296,57 +296,52 @@ local function ShowTrack(track)
     if settings.show_in_mcp then r.SetMediaTrackInfo_Value(track, 'B_SHOWINMIXER', 1) end
 end
 
+local function UncollapseTrackParents(track)
+    local depth = r.GetTrackDepth(track.track)
+    local track_buf = track.track
+
+    for i = depth, 1, -1 do
+        local parent = r.GetParentTrack(track_buf)
+
+        if parent then track_buf = parent end
+        r.SetMediaTrackInfo_Value(track_buf, 'I_FOLDERCOMPACT', 0)
+    end
+end
+
+local function ShowTrackParents(track)
+    local buf = track.track
+
+    for j = r.GetTrackDepth(buf), 0, -1 do
+        buf = r.GetParentTrack(buf)
+        if buf then ShowTrack(buf) end
+    end
+end
+
+local function ShowTrackChildren(track)
+    for i = track.number, #tracks - 1 do
+        local buf = r.GetTrack(0, i)
+        if r.GetTrackDepth(buf) < track.folderdepth then break end
+
+        ShowTrack(buf)
+    end
+end
+
 local function DoActionOnTrack(track, add_to_selection, unhide_children)
     if not track then return end
     if unhide_children == nil then unhide_children = false end
-
 
     r.Undo_BeginBlock()
 
     if PRE_ACTIONS and settings.do_pre_actions == true then DoActions(PRE_ACTIONS) end
 
-    -- if folder, then uncollapse it
-    if settings.uncollapse_if_folder and track.folderdepth == 1 then
-        r.SetMediaTrackInfo_Value(track.track, 'I_FOLDERCOMPACT', 0)
-    end
-
-
-    -- Show
     ShowTrack(track.track)
 
-    -- Uncollapse Parents
-    if settings.uncollapse_selection then
-        local depth = r.GetTrackDepth(track.track)
-        local track_buf = track.track
-
-        for i = depth, 1, -1 do
-            local parent = r.GetParentTrack(track_buf)
-
-            if parent then track_buf = parent end
-            r.SetMediaTrackInfo_Value(track_buf, 'I_FOLDERCOMPACT', 0)
-        end
+    if settings.uncollapse_if_folder and track.folderdepth > 0 then
+        r.SetMediaTrackInfo_Value(track.track, 'I_FOLDERCOMPACT', 0)
     end
-
-    -- Unhide Parents
-    if settings.unhide_parents then
-        local buf = track.track
-
-        for j = r.GetTrackDepth(buf), 0, -1 do
-            buf = r.GetParentTrack(buf)
-            if buf then ShowTrack(buf) end
-        end
-    end
-
-    -- Unhide Children if is folder and Ctrl is held
-    if unhide_children and track.folderdepth > 0 then
-        for i = track.number, #tracks - 1 do
-            local buf = r.GetTrack(0, i)
-            r.ShowConsoleMsg(track.folderdepth .. ' ' .. r.GetTrackDepth(buf)..'\n')
-            if r.GetTrackDepth(buf) < track.folderdepth then break end
-
-            ShowTrack(buf)
-        end
-    end
+    if settings.uncollapse_selection then UncollapseTrackParents(track) end
+    if settings.unhide_parents then ShowTrackParents(track) end
+    if unhide_children and track.folderdepth > 0 then ShowTrackChildren(track) end
 
 
     if add_to_selection then
@@ -354,6 +349,7 @@ local function DoActionOnTrack(track, add_to_selection, unhide_children)
     else
         r.SetOnlyTrackSelected(track.track)
     end
+
     r.Main_OnCommand(40913, 0) -- Vertical scroll to track
     r.SetMixerScroll(track.track)
 
@@ -362,21 +358,20 @@ local function DoActionOnTrack(track, add_to_selection, unhide_children)
     r.Undo_EndBlock("Change Track Selection", -1)
     r.TrackList_AdjustWindows(true)
 
-    -- Close program
-    if settings.close_on_action then open = false end
+    if settings.close_on_action then app_open = false end
 end
 
 local function DoAlfredStyleCmd()
+    if not imgui.IsKeyDown(ctx, imgui.Mod_Ctrl) then return end
+
     local trackidx = -1
 
-    if imgui.IsKeyDown(ctx, imgui.Mod_Ctrl) then
-        for i = 1, 9 do
-            local key = imgui["Key_" .. i]
-            local keypadKey = imgui["Key_Keypad" .. i]
-            if imgui.IsKeyPressed(ctx, key) or imgui.IsKeyPressed(ctx, keypadKey) then
-                trackidx = i
-                break
-            end
+    for i = 1, 9 do
+        local key = imgui["Key_" .. i]
+        local keypadKey = imgui["Key_Keypad" .. i]
+        if imgui.IsKeyPressed(ctx, key) or imgui.IsKeyPressed(ctx, keypadKey) then
+            trackidx = i
+            break
         end
     end
 
@@ -395,8 +390,6 @@ local function DoNavModeAction(track)
         r.SetMixerScroll(track.track)
     end
 end
-
-
 
 local function ReadSettingsFromExtState()
     if not r.HasExtState(extstate_section, 'version') then return end
@@ -566,11 +559,6 @@ end
 
 
 local function SetupDragDrop(track)
-    -- TODO: Optimize Drag drop
-
-
-    -- TODO: OMG REFACTOR THIS SHIT
-
     if imgui.BeginDragDropSource(ctx) then
         imgui.SetDragDropPayload(ctx, 'dragdrop', 'track', 0)
         if js_api and settings.use_routing_cursor and routing_cursor then
@@ -736,17 +724,9 @@ end
 
 
 local function BeginTrackTree()
-    if #tracks == 0 then
-        imgui.PushStyleVar(ctx, imgui.StyleVar_Alpha, 0.5)
-        imgui.Text(ctx, 'No Tracks')
-        imgui.PopStyleVar(ctx)
-        return
-    end
-
-
     if #filtered_tracks == 0 then
         imgui.PushStyleVar(ctx, imgui.StyleVar_Alpha, 0.5)
-        imgui.Text(ctx, 'No Match')
+        imgui.Text(ctx, #tracks == 0 and 'No Tracks' or 'No Match')
         imgui.PopStyleVar(ctx)
 
         return
@@ -782,7 +762,7 @@ local function BeginGui()
     imgui.PushStyleVar(ctx, imgui.StyleVar_WindowRounding, 5)
     imgui.SetNextWindowSize(ctx, 250, 350, imgui.Cond_FirstUseEver)
 
-    visible, open = imgui.Begin(ctx, script_name, true,
+    visible, app_open = imgui.Begin(ctx, script_name, true,
         settings.hide_titlebar and notitle_wflags or default_wflags)
 
     if visible then
@@ -793,7 +773,7 @@ local function BeginGui()
     imgui.PopStyleVar(ctx)
     imgui.PopFont(ctx)
 
-    if imgui.IsKeyPressed(ctx, imgui.Key_Escape) then open = false end
+    if imgui.IsKeyPressed(ctx, imgui.Key_Escape) then app_open = false end
 end
 
 
@@ -807,7 +787,7 @@ local function main()
     BeginGui()
     if not dragged_track then DoAlfredStyleCmd() end
 
-    if open then r.defer(main) end
+    if app_open then r.defer(main) end
     if first_frame then first_frame = false end
 end
 
