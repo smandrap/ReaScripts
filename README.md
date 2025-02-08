@@ -8,10 +8,3 @@
 - Type smandrap in the search box
   
 - To install a script right click it, select "Install" and press Apply (bottom right of the window)
-
-## DONATION
-If you find my scripts useful, [a donation is VERY appreciated](https://paypal.me/smandrap). Thanks for your support.
-
-## CONTENTS
-### [**Search Tracks**](https://forum.cockos.com/showthread.php?p=2720878#post2720878) : Cubase style Track search with routing capabilities
-![Search Tracks gif](https://i.postimg.cc/XJXyprpT/1.gif)
