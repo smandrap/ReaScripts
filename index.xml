@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="bd00b0234150106dae98437a8109f35d65ac5ae5">
+<index version="1" name="smandrap ReaScripts" commit="c66c6e5d4040ad36dcd15e3e02694c99c84c5050">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -13,6 +13,14 @@
       <version name="1.0" author="smandrap" time="2023-08-30T15:21:09Z">
         <changelog><![CDATA[Initial release]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/afae86833f7205a1daa8f7987fb21dd7df78ec5d/Items/smandrap_Add%20Empty%20MIDI%20take%20to%20selected%20MIDI%20Items.lua</source>
+      </version>
+    </reapack>
+    <reapack name="smandrap_Group selected overlapping items.lua" type="script" desc="Group selected overlapping items">
+      <metadata>
+        <link rel="donation">https://paypal.me/smandrap</link>
+      </metadata>
+      <version name="1.0" author="smandrap" time="2025-09-08T16:01:29Z">
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/c66c6e5d4040ad36dcd15e3e02694c99c84c5050/Items/smandrap_Group%20selected%20overlapping%20items.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Grow-Shrink left-right edge of items by grid unit pack.lua" type="script" desc="Grow/Shrink left/right edge of items by grid unit">
