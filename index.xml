@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="smandrap ReaScripts" commit="349a26b86c69e72db19547aae5ddd8ee7fa0db92">
+<index version="1" name="smandrap ReaScripts" commit="f6aa0ddf3b21934e70ac3b0480ad6831a2f84f7e">
   <category name="Freeze">
     <reapack name="smandrap_Freeze tracks up to first instrument.lua" type="script" desc="Freeze tracks up to first instrument">
       <version name="1.0" author="smandrap" time="2023-08-30T15:30:32Z">
@@ -497,6 +497,10 @@
       <version name="1.1" author="smandrap" time="2025-09-17T11:51:43Z">
         <changelog><![CDATA[fix my brain]]></changelog>
         <source main="main">https://github.com/smandrap/ReaScripts/raw/349a26b86c69e72db19547aae5ddd8ee7fa0db92/Various/Auto-set%20loop%20points%20to%20selected%20items.lua</source>
+      </version>
+      <version name="1.2" author="smandrap" time="2025-09-17T11:56:28Z">
+        <changelog><![CDATA[moar fix]]></changelog>
+        <source main="main">https://github.com/smandrap/ReaScripts/raw/f6aa0ddf3b21934e70ac3b0480ad6831a2f84f7e/Various/Auto-set%20loop%20points%20to%20selected%20items.lua</source>
       </version>
     </reapack>
     <reapack name="smandrap_Apply x db to send y on selected tracks.lua" type="script" desc="Apply x db to send y on selected tracks">
