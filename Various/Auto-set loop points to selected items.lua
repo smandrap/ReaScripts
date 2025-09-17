@@ -1,8 +1,8 @@
 -- @description Auto-set loop points to selected items (background)
 -- @author smandrap
--- @version 1.1
+-- @version 1.2
 -- @changelog
---  fix my brain
+--  moar fix
 -- @donation https://paypal.me/smandrap
 -- @about
 --   Select items -> loop points are set to those items. Useful for quickly auditioning loops.
@@ -69,6 +69,7 @@ local function exit()
   reaper.set_action_options(8)
 end
 
+reaper.Main_OnCommand(41039, 0) -- "set loop points"
 sel_items, sel_item_cnt = get_items(sel_items)
 
 reaper.atexit(exit)
